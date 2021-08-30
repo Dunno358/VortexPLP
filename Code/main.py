@@ -122,11 +122,17 @@ TD_consoleRects = []
 TD_time = ""
 TD_wdthStart = size_w/4.9
 TD_hghtStart = size_h/1.63
+TD_wdthStart2 = size_w/4.9
+TD_hghtStart2 = size_h/1.63
 TD_hp = size_w/19
+TD_hp2 = size_w/19
 TD_firstDone = False
+TD_firstDone2 = False
 TD_done = False
 TD_enemy = None
+TD_enemy2 = None
 TD_actualEnemy = None
+TD_actualEnemy2 = None
 TD_consoleShown = False
 TD_consoleOK = True
 TD_active = []
@@ -926,7 +932,8 @@ class Course(pygame.sprite.Sprite):
             global iterator,TD_wdthStart,TD_hghtStart,TD_firstDone,TD_guardRects,eventsBlocked
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_consoleShown,TD_friends,TD_enemies
-            global TD_actualEnemy
+            global TD_actualEnemy,TD_actualEnemy2,TD_wdthStart2,TD_hghtStart2,TD_enemy2,TD_firstDone2
+            global TD_hp2
             courseLvls = [7]
             lessonOk = str(activeLesson)[17:-23]=="lesson4"
             lvlOk = courseLvl in courseLvls
@@ -942,20 +949,23 @@ class Course(pygame.sprite.Sprite):
                 TD_friends = [friendJav]
                 queue = [enemyGhost,friendJav]
                 try:
-                    TD_actualEnemy = queue[iterator-1]
+                    TD_actualEnemy = queue[iterator]
+                    TD_actualEnemy2 = queue[iterator-1]
                 except:
                     TD_actualEnemy = None
+                secondGo = True
                 if getActualSecond()%100>=1 and not TD_done:
                     if TD_wdthStart<size_w/2.36 and not TD_firstDone:
                         course.tower_defence.drawPath()
                         TD_wdthStart += size_w/1000*TD_iterator
+                        secondGo = False
                     elif TD_hghtStart>size_h/2.76 and not TD_firstDone:
                         course.tower_defence.drawPath()
                         TD_hghtStart -= size_h/700*TD_iterator
                     elif TD_wdthStart<size_w/1.52:
-                        TD_firstDone = True
                         course.tower_defence.drawPath()
                         TD_wdthStart += size_w/1000*TD_iterator
+                        TD_firstDone = True
                     elif TD_hghtStart<size_h/1.63:
                         course.tower_defence.drawPath()
                         TD_hghtStart += size_h/700*TD_iterator
@@ -975,29 +985,76 @@ class Course(pygame.sprite.Sprite):
                             print("Line 929 Error occured | TDGUARDS",TD_guardRects)
                         if pygame.event.get_blocked(MOUSEMOTION):
                             pygame.event.set_allowed(MOUSEMOTION)
-                        TD_done = True
+                        #TD_done = True
                         holdIterator = iterator
                         course.tower_defence.reset()
                         course.tower_defence.drawMap()
                         iterator = holdIterator + 1
+                    if secondGo:
+                        if TD_wdthStart2<size_w/2.36 and not TD_firstDone2:
+                            course.tower_defence.drawPath()
+                            TD_wdthStart2 += size_w/1000*TD_iterator
+                        elif TD_hghtStart2>size_h/2.76 and not TD_firstDone2:
+                            course.tower_defence.drawPath()
+                            TD_hghtStart2 -= size_h/700*TD_iterator
+                        elif TD_wdthStart2<size_w/1.52:
+                            TD_firstDone2 = True
+                            course.tower_defence.drawPath()
+                            TD_wdthStart2 += size_w/1000*TD_iterator
+                        elif TD_hghtStart2<size_h/1.63:
+                            course.tower_defence.drawPath()
+                            TD_hghtStart2 += size_h/700*TD_iterator
+                        elif TD_wdthStart2<size_w/1.23:
+                            course.tower_defence.drawPath()
+                            TD_wdthStart2 += size_w/1000*TD_iterator
+                        else:
+                            guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
+                            guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
+                            course.tower_defence.drawPath()
+                            pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[3], width=0)
+                            try:
+                                guardW = TD_guardRects[3][0]
+                                guardH = TD_guardRects[3][1]
+                                screen.blit(guard,[guardW,guardH]) 
+                            except:
+                                print("Line 929 Error occured | TDGUARDS",TD_guardRects)
+                            if pygame.event.get_blocked(MOUSEMOTION):
+                                pygame.event.set_allowed(MOUSEMOTION)
+                            #TD_done = True
+                            holdIterator = iterator
+                            course.tower_defence.reset()
+                            course.tower_defence.drawMap()
+                            iterator = holdIterator + 1
 
                 try:
                     if not TD_done:
-                        enemy = screen.blit(TD_actualEnemy,[TD_wdthStart,TD_hghtStart])
-                        wdth = TD_wdthStart-size_w/800
-                        hght = TD_hghtStart-size_h/40
-                        hp = pygame.draw.rect(screen, dark_red, [wdth,hght,TD_hp,size_h/45], 0,size_w//200)
-                        hpBar = pygame.draw.rect(screen, color1, [wdth,hght,size_w/19,size_h/45], size_w//800,size_w//200)
+                        if TD_hp>0:
+                            enemy = screen.blit(TD_actualEnemy,[TD_wdthStart,TD_hghtStart])
+                            wdth = TD_wdthStart-size_w/800
+                            hght = TD_hghtStart-size_h/40
+                            hp = pygame.draw.rect(screen, dark_red, [wdth,hght,TD_hp,size_h/45], 0,size_w//200)
+                            hpBar = pygame.draw.rect(screen, color1, [wdth,hght,size_w/19,size_h/45], size_w//800,size_w//200)
+                        if secondGo and TD_hp2>0:
+                            enemy2 = screen.blit(TD_actualEnemy2,[TD_wdthStart2,TD_hghtStart2])
+                            wdth2 = TD_wdthStart2-size_w/800
+                            hght2 = TD_hghtStart2-size_h/40
+                            hp2 = pygame.draw.rect(screen, dark_red, [wdth2,hght2,TD_hp2,size_h/45], 0,size_w//200)
+                            hpBar2 = pygame.draw.rect(screen, color1, [wdth2,hght2,size_w/19,size_h/45], size_w//800,size_w//200)
+                            enemy2 = [enemy2[0] + enemy2[2]/2,enemy2[1] + enemy2[3]/2]
+                            TD_enemy2 = enemy2
                     enemy = [enemy[0] + enemy[2]/2,enemy[1] + enemy[3]/2]
                     TD_enemy = enemy
                 except:
                     enemy = [0,0]
+                    enemy2 = [0,0]
         def targeting():
             global TD_consoleShown
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and courseLvl == 7 and not TD_consoleShown:
-                global TD_enemy,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
-                global iterator,TD_hp,TD_round,TD_consoleTxts,TD_friends,TD_enemies
+                global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
+                global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
                 if not TD_done:
+                    if TD_hp2<=0:
+                        course.tower_defence.reset()
                     pygame.event.set_blocked(MOUSEMOTION)
                     pygame.event.set_blocked(KEYDOWN)
                     pygame.event.set_blocked(KEYUP)
@@ -1010,7 +1067,6 @@ class Course(pygame.sprite.Sprite):
                     else:
                         first = None
                         second = None
-                    #print(1,first,2,second)
                     TD_guardSubRects = [
                         [size_w/3.43,size_h/2.31,size_w/8.5,size_h/6.7],
                         [size_w/2.1,size_h/2.18,size_w/11,size_h/5.5],
@@ -1022,7 +1078,7 @@ class Course(pygame.sprite.Sprite):
                     for circ in TD_circs:
                         try:
                             index = TD_circs.index(circ)
-                            if circ.collidepoint(TD_enemy):
+                            if circ.collidepoint(TD_enemy) and TD_hp>0:
                                 if index not in TD_active:
                                     TD_active.append(index)
                                 try:
@@ -1039,11 +1095,39 @@ class Course(pygame.sprite.Sprite):
                                 letFriend = first == "friend" and TD_consoleTxts[1].lower() == "wait()" or second == "friend" and TD_consoleTxts[3].lower() == "wait()"
                                 if letEnemy and TD_actualEnemy in TD_enemies or letFriend and TD_actualEnemy in TD_friends:
                                     pass
-                                    TD_round += 1
                                 else:
                                     if getActualSecond()%3==0:
                                         if TD_hp > 0:
-                                            TD_hp -= size_w/800*TD_round*len(TD_active)
+                                            TD_hp -= size_w/1000*TD_round*len(TD_active) #TD_hp -= size_w/800*TD_round*len(TD_active)
+                                            lineColor = lt_blue
+                                        else:
+                                            #course.tower_defence.reset()
+                                            course.tower_defence.drawMap()
+                                            TD_round +=1
+                                    wdthStart = circ[0] + circ[2]/2
+                                    hghtStart = circ[1] + circ[3]/2
+                                    pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy, 3) 
+                            if circ.collidepoint(TD_enemy2) and TD_hp2>0:
+                                if index not in TD_active:
+                                    TD_active.append(index)
+                                try:
+                                    pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[index], width=0)
+                                    guardW = TD_guardRects[index][0]
+                                    guardH = TD_guardRects[index][1]
+                                    screen.blit(guard,[guardW,guardH])
+                                except:
+                                    pass
+                                lineColor = red
+                                attackEnemy = first == "enemy" and TD_consoleTxts[1].lower() == "attack()" or second == "enemy" and TD_consoleTxts[3].lower() == "attack()"
+                                attackFriend = first == "friend" and TD_consoleTxts[1].lower() == "attack()" or second == "friend" and TD_consoleTxts[3].lower() == "attack()"
+                                letEnemy = first == "enemy" and TD_consoleTxts[1].lower() == "wait()" or second == "enemy" and TD_consoleTxts[3].lower() == "wait()"
+                                letFriend = first == "friend" and TD_consoleTxts[1].lower() == "wait()" or second == "friend" and TD_consoleTxts[3].lower() == "wait()"
+                                if letEnemy and TD_actualEnemy2 in TD_enemies or letFriend and TD_actualEnemy2 in TD_friends:
+                                    pass
+                                else:
+                                    if getActualSecond()%3==0:
+                                        if TD_hp2 > 0:
+                                            TD_hp2 -= size_w/800*TD_round*len(TD_active)
                                             lineColor = lt_blue
                                         else:
                                             course.tower_defence.reset()
@@ -1051,7 +1135,7 @@ class Course(pygame.sprite.Sprite):
                                             TD_round +=1
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
-                                    pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy, 3) 
+                                    pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy2, 3) 
                             else:
                                 if index in TD_active:
                                     TD_active.remove(index)
@@ -1101,7 +1185,8 @@ class Course(pygame.sprite.Sprite):
             global iterator,TD_wdthStart,TD_hghtStart,TD_firstDone,TD_guardRects,eventsBlocked
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
-            global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends
+            global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
+            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2
             TD_circs = []
             TD_pathCords = []
             TD_guards = []
@@ -1115,14 +1200,20 @@ class Course(pygame.sprite.Sprite):
             TD_time = ""
             TD_wdthStart = size_w/4.9
             TD_hghtStart = size_h/1.63
+            TD_wdthStart2 = size_w/4.9
+            TD_hghtStart2 = size_h/1.63
             TD_firstDone = False
+            TD_firstDone2 = False
             TD_done = False
             TD_enemy = None
+            TD_enemy2 = None
+            TD_actualEnemy2 = None
             TD_active = []  
             TD_iterator = 1   
             iterator = 1   
             TD_round = 1
             TD_hp = size_w/19 
+            TD_hp2 = size_w/19 
             TD_consoleShown = False
         def console():
             global TD_consoleShown
