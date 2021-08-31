@@ -407,7 +407,7 @@ class Start(pygame.sprite.Sprite):
 
         pygame.display.update()
     def sideBarEvents():
-        global sideBarOpts,iterator,activeAny
+        global sideBarOpts,iterator,activeAny,activeMain
         sideBarOpts = [sideBarOpt1,sideBarOpt2,sideBarOpt3,sideBarOpt4,sideBarOpt5]
         exitBtn = pygame.draw.rect(screen, dark_red, [size_w/1.13,size_h/153.6,size_w/10,size_h/12], 0,15)
         if language == "ENG":
@@ -439,6 +439,7 @@ class Start(pygame.sprite.Sprite):
                 if opt.collidepoint(mouse_pos):
                     index = sideBarOpts.index(opt)  
                     activeAny = True
+                    activeMain = True
                     for actIndex in range(len(activities)):
                         activities[actIndex] = False
                     activities[index] = True
@@ -953,6 +954,7 @@ class Course(pygame.sprite.Sprite):
                     TD_actualEnemy2 = queue[iterator-1]
                 except:
                     TD_actualEnemy = None
+                    TD_actualEnemy2 = None
                 secondGo = True
                 if getActualSecond()%100>=1 and not TD_done:
                     if TD_wdthStart<size_w/2.36 and not TD_firstDone:
@@ -1058,6 +1060,18 @@ class Course(pygame.sprite.Sprite):
                     pygame.event.set_blocked(MOUSEMOTION)
                     pygame.event.set_blocked(KEYDOWN)
                     pygame.event.set_blocked(KEYUP)
+                    pygame.event.set_blocked(MOUSEBUTTONDOWN)
+                    menuConditionW = mouse_pos[0]>size_w/4.95 and mouse_pos[0]<size_w/3.32
+                    menuConditionH = mouse_pos[1]>size_h/14.77 and mouse_pos[1]<size_h/6.05
+                    onMenu = menuConditionH and menuConditionH
+                    consoleCondW = mouse_pos[0]>size_w/5 and mouse_pos[0]<size_w/4.39
+                    consoleCondH = mouse_pos[1]>size_h/3.75 and mouse_pos[1]<size_h/2.31
+                    onConsole = consoleCondW and consoleCondH
+                    inRectW = mouse_pos[0]>size_w/5 and mouse_pos[0]<size_w/1.17
+                    inRectH = mouse_pos[1]>size_h/16 and mouse_pos[1]<size_h/1.03
+                    inRect = inRectW and inRectH
+                    if onMenu or onConsole or not inRect:
+                        pygame.event.set_allowed(MOUSEBUTTONDOWN)
                     if "ENEMY" in TD_consoleTxts[0].upper() and TD_consoleOK:
                         first = "enemy"
                         second = "friend"
@@ -3043,7 +3057,7 @@ class Course(pygame.sprite.Sprite):
                         "Correct order to append: petals,pollen,stalks",
                         "cauldron = [petals]",
                         "cauldron = [petals,pollen]",
-                        "cauldron = [petals,pollen,stalks]"
+                        "cauldron = [petals,pollen,stalks]",
                         "You may go futher",
                         "flower = [petals,stalks,pollen]",
                         "Add"
@@ -3717,7 +3731,7 @@ class Course(pygame.sprite.Sprite):
                 course.tower_defence.console()
                 pygame.mouse.set_visible(True)
             elif courseLvl == 8:
-                course.tower_defence.clearAdminTools()
+                """ course.tower_defence.clearAdminTools()
                 sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath)) 
                 soldier =  pygame.image.load(r"{}/Images/Game/soldier.png".format(dirPath))    
                 sight = pygame.transform.scale(sight, [int(size_w/5.33),int(size_h/3)])
@@ -3733,7 +3747,119 @@ class Course(pygame.sprite.Sprite):
                     pygame.mouse.set_visible(False)
                     screen.blit(sight,[wdth,hght])  
                 else:
-                    pygame.mouse.set_visible(True)
+                    pygame.mouse.set_visible(True) """
+                global sec
+                events = [MOUSEMOTION,KEYDOWN,KEYUP,MOUSEBUTTONDOWN]
+                for item in events:
+                    if pygame.event.get_blocked(item):
+                        pygame.event.set_allowed(item)
+                hght = size_h/3.2
+                txthght = size_h/2.65
+                if language == "ENG":
+                    txts = ["If Syntax",
+                    "Elif Syntax",
+                    "Else Syntax"]
+                    descs = [
+                        ["IF dictate statements that need to be fuflfilled to perform",
+                        "given action. Remember about \":\" at the end and tab before action",
+                        "if statement:",
+                        "       action"],
+                        [
+                            "ELIF works similarly to IF, but it's checking it's own statement when",
+                            "IF before it is not fulfilled and of course it's own statement is fulfilled",
+                            "(after if)elif statement:",
+                            "               action"
+                        ],
+                        [
+                            "If we want to select group of items from end we have to",
+                            "add \"-\" to our syntax, because that sign means from end",
+                            "of list, so syntax: list[:-endIndex], where this time endIndex",
+                            "means amount of items to be skipped beggining from end of list"
+                        ]
+                    ]
+                    back = "Back"
+                else:
+                    txts = ["Składnia If",
+                    "Składnia Elif",
+                    "Składnia Else"]
+                    descs = [
+                        ["IF stawia warunki, które muszą zostać wypełnione, aby wykonać",
+                        "daną akcję. Pamiętaj o \":\" na końcu linijki oraz tabie przed akcją", 
+                        "if warunek:",
+                        "       akcja"],
+                        [
+                            "ELIF działa podobnie do IF, ale sprawdza swój warunek, gdy poprzednie",
+                            "IF nie jest spełnione i oczywiście sam jego warunek jest spełniony",
+                            "(po if)elif warunek:",
+                            "            akcja"
+                        ],
+                        [
+                            "Jeśli chcemy zacząć grupę od końca listy musimy dodać", 
+                            "\"-\" do naszej składni, gdyż ten znak znaczy \"od końca\" listy,", 
+                            "więc składnia to: lista[:-ostatniIndex], gdzie tym razem ostatniIndex", 
+                            "oznacza liczbe rzeczy do ominięcia poczynając od końca listy" 
+                        ]
+                    ]
+                    back = "Powrót"
+                rects = []
+                txtCords = []
+                if activeMain:
+                    sec = getActualSecond()
+                    if language == "ENG":
+                        course.dialogTop(6.41,"So here's what you need","to know before start")
+                    else:
+                        course.dialogTop(6.41,"Tak więc oto czego potrzebujesz","zanim pójdziemy dalej")
+                    for it in range(3):
+                        rect = pygame.draw.rect(screen, color1, [size_w/3.25,hght,size_w/2.2,size_h/8], 0,15)
+                        rects.append(rect)
+                        txt=Write(size_w//100*2,txts[it],color2,[size_w/1.85,txthght])
+                        txtCords.append([size_w/1.85,txthght])
+                        hght += size_h/6
+                        txthght += size_h/6
+                else:
+                    storedTime = getActualSecond()-sec
+                    timeToWait = 5
+                    pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                    backBtn = course.centeredBtn(12.8,dark_red,back)
+                    bckgr = pygame.draw.rect(screen, color1, [size_w/4.37,size_h/3.46,size_w/1.65,size_h/2], 0,10)
+                    descHght = size_h/2.59
+                    for desc in descs[iterator]:
+                        pygame.draw.rect(screen, color2, [size_w/4.01,size_h/3.16,size_w/1.8,size_h/2.3], size_w//450,15)
+                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/2.3], [size_w/1.248,size_h/2.3], size_w//450)
+                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/1.86], [size_w/1.248,size_h/1.86], size_w//450)
+                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/1.57], [size_w/1.248,size_h/1.57], size_w//450)
+                        if getTheme().lower() == "light":
+                            WriteItalic(round(size_w//100*1.5),desc,color3,[size_w/1.91,descHght])
+                        else:
+                            WriteItalic(round(size_w//100*1.5),desc,dark_gray,[size_w/1.91,descHght])
+                        descHght += size_h/10
+                if event.type == MOUSEMOTION:
+                    for rect in rects:
+                        index = rects.index(rect)
+                        if rect.collidepoint(mouse_pos):
+                            pygame.draw.rect(screen, color3, [rect[0],rect[1],rect[2],rect[3]], size_w//450,15)
+                            Write(size_w//100*2,txts[index],color3,txtCords[index])
+                    if not activeMain:
+                        try:
+                            if backBtn.collidepoint(mouse_pos):
+                                course.centeredBtn(12.8,red,back)
+                        except:
+                            pass
+                elif event.type == MOUSEBUTTONDOWN:
+                    for rect in rects:
+                        index = rects.index(rect)
+                        if rect.collidepoint(mouse_pos):
+                            activeMain = False
+                            iterator = index
+                    if not activeMain:
+                        try:
+                            if backBtn.collidepoint(mouse_pos):
+                                activeMain = True
+                        except:
+                            pass
+                elif event.type == KEYDOWN:
+                    if not activeMain and event.key == K_ESCAPE:
+                        activeMain = True
             elif courseLvl == 9:
                 pygame.mouse.set_visible(True)
     def lesson5():
