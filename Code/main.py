@@ -15,6 +15,8 @@ print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]))
 print("Init_Start_Time: ",str(datetime.now())[10:])
 print("Witaj {}!".format(os.getlogin()))# - RETURNS NAME OF CURRENT USER
 
+#01.09.2021
+
 #COLORS
 darkThemeMainCol = (30,30,30)
 darkThemeSubCol = (45,45,45)
@@ -589,7 +591,8 @@ class Start(pygame.sprite.Sprite):
                     if lvlBtn.collidepoint(mouse_pos):
                         lvlBtn = pygame.draw.rect(screen, color1, [size_w/1.12,size_h/2.58,size_w/12,size_h/14], 0,15)
                         lvlTxt = Write(size_w//100,"Next Level",color3,[size_w/1.07,size_h/2.37]) 
-                        courseLvl += 1   
+                        courseLvl += 1  
+                        course.tower_defence.clearAdminTools() 
                 elif event.type == MOUSEMOTION:
                     if itBtn.collidepoint(mouse_pos):
                         pygame.draw.rect(screen, motionColor, [size_w/1.12,size_h/1.65,size_w/12,size_h/14], 0,15)
@@ -1070,7 +1073,13 @@ class Course(pygame.sprite.Sprite):
                     inRectW = mouse_pos[0]>size_w/5 and mouse_pos[0]<size_w/1.17
                     inRectH = mouse_pos[1]>size_h/16 and mouse_pos[1]<size_h/1.03
                     inRect = inRectW and inRectH
-                    if onMenu or onConsole or not inRect:
+                    leftArrowW = mouse_pos[0]>size_w/3.84 and mouse_pos[0]<size_w/3.38
+                    leftArrowH = mouse_pos[1]>size_h/1.18 and mouse_pos[1]<size_h/1.14
+                    onLeftArrow = leftArrowH and leftArrowH
+                    rightArrowW = mouse_pos[0]>size_w/1.36 and mouse_pos[0]<size_w/1.3
+                    rightArrowH = mouse_pos[1]>size_h/1.18 and mouse_pos[1]<size_h/1.14
+                    onRightArrow = rightArrowH and rightArrowH
+                    if onMenu or onLeftArrow or onRightArrow or onConsole or not inRect:
                         pygame.event.set_allowed(MOUSEBUTTONDOWN)
                     if "ENEMY" in TD_consoleTxts[0].upper() and TD_consoleOK:
                         first = "enemy"
@@ -3821,18 +3830,19 @@ class Course(pygame.sprite.Sprite):
                     timeToWait = 5
                     pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
                     backBtn = course.centeredBtn(12.8,dark_red,back)
-                    bckgr = pygame.draw.rect(screen, color1, [size_w/4.37,size_h/3.46,size_w/1.65,size_h/2], 0,10)
-                    descHght = size_h/2.59
+                    bckgr = pygame.draw.rect(screen, color1, [size_w/4.36,size_h/4.68,size_w/1.65,size_h/1.44], 0,10)
+                    descHght = size_h/3.31
                     for desc in descs[iterator]:
-                        pygame.draw.rect(screen, color2, [size_w/4.01,size_h/3.16,size_w/1.8,size_h/2.3], size_w//450,15)
-                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/2.3], [size_w/1.248,size_h/2.3], size_w//450)
-                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/1.86], [size_w/1.248,size_h/1.86], size_w//450)
-                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/1.57], [size_w/1.248,size_h/1.57], size_w//450)
                         if getTheme().lower() == "light":
                             WriteItalic(round(size_w//100*1.5),desc,color3,[size_w/1.91,descHght])
                         else:
                             WriteItalic(round(size_w//100*1.5),desc,dark_gray,[size_w/1.91,descHght])
                         descHght += size_h/10
+                    pygame.draw.rect(screen, color2, [size_w/4.01,size_h/3.96,size_w/1.8,size_h/1.65], size_w//450,15)
+                    lineHght = size_h/2.89
+                    for it in range(5):
+                        pygame.draw.line(screen, color2, [size_w/4.01,lineHght], [size_w/1.248,lineHght], size_w//450)
+                        lineHght += size_h/10
                 if event.type == MOUSEMOTION:
                     for rect in rects:
                         index = rects.index(rect)
