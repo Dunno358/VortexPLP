@@ -121,7 +121,9 @@ TD_guards = []
 TD_guardRects = []
 TD_guardSubRects = []
 TD_consoleRects = []
+TD_queue = []
 TD_time = ""
+TD_lvlType = ""
 TD_wdthStart = size_w/4.9
 TD_hghtStart = size_h/1.63
 TD_wdthStart2 = size_w/4.9
@@ -659,7 +661,7 @@ class Course(pygame.sprite.Sprite):
             txtHght = size_h/2.5
             hghtToAdd = size_h/25
             for cord in cords:
-                rect = pygame.draw.rect(screen, color2, cord, 1)
+                rect = pygame.draw.rect(screen, color3, cord, 1) #HITBOX COLOR2 BY DEFAULT
                 rects.append(rect)
             if not inFight:
                 if dialogTop:
@@ -937,24 +939,64 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_consoleShown,TD_friends,TD_enemies
             global TD_actualEnemy,TD_actualEnemy2,TD_wdthStart2,TD_hghtStart2,TD_enemy2,TD_firstDone2
-            global TD_hp2
+            global TD_hp2,TD_queue,TD_lvlType
             courseLvls = [7]
             lessonOk = str(activeLesson)[17:-23]=="lesson4"
             lvlOk = courseLvl in courseLvls
             if activities[0] and not activeMenu and lessonOk and lvlOk and not TD_consoleShown:
                 eventsBlocked = True
-                #enemyGhost to be replaced as function input object
-                enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
-                enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/19.51),int(size_h/10.97)])
-                enemyGhost = pygame.transform.flip(enemyGhost, True, False)
-                friendJav = pygame.image.load(r"{}/Images/Game/2dmap/jav.png".format(dirPath))
-                friendJav = pygame.transform.scale(friendJav, [int(size_w/21.34),int(size_h/12)])
-                TD_enemies = [enemyGhost]
-                TD_friends = [friendJav]
-                queue = [enemyGhost,friendJav]
+                if len(TD_queue)<2:
+                    enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
+                    enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/19.51),int(size_h/10.97)])
+                    enemyGhost = pygame.transform.flip(enemyGhost, True, False)
+                    friendJav = pygame.image.load(r"{}/Images/Game/2dmap/jav.png".format(dirPath))
+                    friendJav = pygame.transform.scale(friendJav, [int(size_w/21.34),int(size_h/12)])
+                    werewolf = pygame.image.load(r"{}/Images/Game/2dmap/werewolf.png".format(dirPath))
+                    werewolf = pygame.transform.scale(werewolf, [int(size_w/21.34),int(size_h/12)])
+                    dwarf = pygame.image.load(r"{}/Images/Game/2dmap/dwarf.png".format(dirPath))
+                    dwarf = pygame.transform.scale(dwarf, [int(size_w/19.51),int(size_h/10.97)])
+                    dwarf = pygame.transform.flip(dwarf, True, False)
+                    reptill = pygame.image.load(r"{}/Images/Game/2dmap/reptill.png".format(dirPath))
+                    reptill = pygame.transform.scale(reptill, [int(size_w/19.51),int(size_h/10.97)])
+                    reptill = pygame.transform.flip(reptill, True, False)
+                    fairyFriend = pygame.image.load(r"{}/Images/Game/2dmap/fairy2.png".format(dirPath))
+                    fairyFriend = pygame.transform.scale(fairyFriend, [int(size_w/19.51),int(size_h/10.97)])
+                    fairyFriend = pygame.transform.flip(fairyFriend, True, False)   
+                    demon = pygame.image.load(r"{}/Images/Game/2dmap/demon.png".format(dirPath))
+                    demon = pygame.transform.scale(demon, [int(size_w/21.34),int(size_h/12)])    
+                    fairyFriend2 = pygame.image.load(r"{}/Images/Game/2dmap/fairy.png".format(dirPath))
+                    fairyFriend2 = pygame.transform.scale(fairyFriend2, [int(size_w/21.34),int(size_h/12)])
+                    fairyFriend2 = pygame.transform.flip(fairyFriend2, True, False)   
+                    evilFairy = pygame.image.load(r"{}/Images/Game/2dmap/evilFairy.png".format(dirPath))
+                    evilFairy = pygame.transform.scale(evilFairy, [int(size_w/19.51),int(size_h/10.97)])
+                    evilFairy = pygame.transform.flip(evilFairy, True, False)  
+                    armored = pygame.image.load(r"{}/Images/Game/2dmap/armoredFriend.png".format(dirPath))
+                    armored = pygame.transform.scale(armored, [int(size_w/19.51),int(size_h/10.97)])
+                    armored = pygame.transform.flip(armored, True, False)          
+                    TD_enemies = [enemyGhost,werewolf,reptill,demon,evilFairy]
+                    TD_friends = [friendJav,dwarf,fairyFriend,fairyFriend2,armored]
+                    TD_queue = [
+                        enemyGhost,
+                        friendJav,
+                        werewolf,
+                        dwarf,
+                        reptill,
+                        fairyFriend,
+                        demon,
+                        fairyFriend2,
+                        evilFairy,
+                        armored
+                        ]
                 try:
-                    TD_actualEnemy = queue[iterator]
-                    TD_actualEnemy2 = queue[iterator-1]
+                    if TD_lvlType.lower() == "mixed":
+                        TD_actualEnemy = TD_queue[iterator]
+                        TD_actualEnemy2 = TD_queue[iterator-1]
+                    elif TD_lvlType.lower() == "onlyfriend":
+                        TD_actualEnemy = TD_queue[iterator]
+                        TD_actualEnemy2 = TD_queue[iterator]
+                    elif TD_lvlType.lower() == "onlyenemy":
+                        TD_actualEnemy = TD_queue[iterator-1]
+                        TD_actualEnemy2 = TD_queue[iterator-1]
                 except:
                     TD_actualEnemy = None
                     TD_actualEnemy2 = None
@@ -1029,7 +1071,7 @@ class Course(pygame.sprite.Sprite):
                             holdIterator = iterator
                             course.tower_defence.reset()
                             course.tower_defence.drawMap()
-                            iterator = holdIterator + 1
+                            iterator = holdIterator + 2
 
                 try:
                     if not TD_done:
@@ -1209,8 +1251,9 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
             global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
-            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2
+            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType
             TD_circs = []
+            TD_queue = []
             TD_pathCords = []
             TD_guards = []
             TD_guardRects = []
@@ -1220,6 +1263,7 @@ class Course(pygame.sprite.Sprite):
             TD_enemies = []
             TD_friends = []
             TD_consoleActiveRect = ""
+            TD_lvlType = ""
             TD_time = ""
             TD_wdthStart = size_w/4.9
             TD_hghtStart = size_h/1.63
@@ -1233,7 +1277,7 @@ class Course(pygame.sprite.Sprite):
             TD_actualEnemy2 = None
             TD_active = []  
             TD_iterator = 1   
-            iterator = 1   
+            #iterator = 1   
             TD_round = 1
             TD_hp = size_w/19 
             TD_hp2 = size_w/19 
@@ -2592,8 +2636,8 @@ class Course(pygame.sprite.Sprite):
                         kh = knight.get_height()
                         rects = []
                         cords = [
-                            [wdth+kw/2.7,hght+kh/2.7,kw/6,kh/2],
-                            [wdth+kw/2.5,hght+kh/3.5,kw/12,kh/12]
+                            [size_w/2.04,size_h/2.37,kw/6,kh/2],
+                            [size_w/1.98,size_h/2.67,kw/12,kh/12]
                         ]
                         if language == "ENG":
                             course.dungeon.singleUnitDraw(cords,6.41,[],"That's him! The Cursed Knight!")
@@ -3594,7 +3638,7 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1 
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
-        global storedCords,done,language,chosen,loadingBar,storedTime
+        global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
             mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
@@ -3735,6 +3779,7 @@ class Course(pygame.sprite.Sprite):
                 course.consoleExample(f"{action}",hght=1.6)
                 course.tower_defence.clearAdminTools()
             elif courseLvl == 7:
+                TD_lvlType = "onlyenemy"
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()
@@ -3770,20 +3815,27 @@ class Course(pygame.sprite.Sprite):
                     "Else Syntax"]
                     descs = [
                         ["IF dictate statements that need to be fuflfilled to perform",
-                        "given action. Remember about \":\" at the end and tab before action",
+                        "given action. Remember about \":\" at the end of statement", 
+                        "line and tabulation line below, just before action",
+                        "to be made if statement is correct",
                         "if statement:",
-                        "       action"],
+                        "           action"
+                        ],
                         [
                             "ELIF works similarly to IF, but it's checking it's own statement when",
                             "IF before it is not fulfilled and of course it's own statement is fulfilled",
-                            "(after if)elif statement:",
-                            "               action"
+                            "if statement1:",
+                            "           action",
+                            "elif statement2:",
+                            "           action"
                         ],
                         [
-                            "If we want to select group of items from end we have to",
-                            "add \"-\" to our syntax, because that sign means from end",
-                            "of list, so syntax: list[:-endIndex], where this time endIndex",
-                            "means amount of items to be skipped beggining from end of list"
+                            "ELSE on the other hand is kind of opposite to IF keyword, but it's used",
+                            "along with it. ELSE works when statement of related if is not fulfilled.",
+                            "if statement1:",
+                            "           action",
+                            "else:",
+                            "           action"
                         ]
                     ]
                     back = "Back"
@@ -3793,20 +3845,27 @@ class Course(pygame.sprite.Sprite):
                     "Składnia Else"]
                     descs = [
                         ["IF stawia warunki, które muszą zostać wypełnione, aby wykonać",
-                        "daną akcję. Pamiętaj o \":\" na końcu linijki oraz tabie przed akcją", 
+                        "daną akcję. Pamiętaj o \":\" na końcu linijki sprawdzającej", 
+                        "warunek oraz o tabie linijkę niżej, zaraz przed zdefiniowaniem",
+                        "akcji do wykonania, jeśli warunek zostanie spełniony", 
                         "if warunek:",
-                        "       akcja"],
+                        "           akcja"
+                        ],
                         [
                             "ELIF działa podobnie do IF, ale sprawdza swój warunek, gdy poprzednie",
                             "IF nie jest spełnione i oczywiście sam jego warunek jest spełniony",
-                            "(po if)elif warunek:",
-                            "            akcja"
+                            "if warunek:",
+                            "           akcja",
+                            "elif warunek:",
+                            "           akcja"
                         ],
                         [
-                            "Jeśli chcemy zacząć grupę od końca listy musimy dodać", 
-                            "\"-\" do naszej składni, gdyż ten znak znaczy \"od końca\" listy,", 
-                            "więc składnia to: lista[:-ostatniIndex], gdzie tym razem ostatniIndex", 
-                            "oznacza liczbe rzeczy do ominięcia poczynając od końca listy" 
+                            "ELSE z drugiej strony działa inaczej niż IF oraz ELIF, choć jest używane",
+                            "z nimi. ELSE wykona się, gdy warunek IF przed ELSE nie jest spełniony.",
+                            "if statement1:",
+                            "           action",
+                            "else:",
+                            "           action"
                         ]
                     ]
                     back = "Powrót"
