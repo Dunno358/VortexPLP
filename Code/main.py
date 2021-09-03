@@ -3952,7 +3952,8 @@ class LookFor(pygame.sprite.Sprite):
                 pygame.event.set_allowed(MOUSEMOTION)
             bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
             inputBox = pygame.draw.rect(screen, color1, [size_w/3.1,size_h/4,size_w/2.5,size_h/8],0,10)
-            if getLang() == "ENG":
+            language = getLang()
+            if language == "ENG":
                 Write(round(size_w//100*2.1),"What are you looking for {}?".format(getName().lower()),color3,[size_w/1.9,size_h/6])
             else:
                 Write(round(size_w//100*2.1),"Poszukujesz czegoś {}?".format(getName().lower()),color3,[size_w/1.9,size_h/6]) 
@@ -3969,21 +3970,21 @@ class LookFor(pygame.sprite.Sprite):
             else:
                 inputBoxBord = pygame.draw.rect(screen, color1, [size_w/3.1,size_h/4,size_w/2.5,size_h/8],1,10) 
                 if len(lookForPhrase) < 1:       
-                    if getLang() == "ENG":            
+                    if language == "ENG":            
                         inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Enter text here...",color2,[size_w/1.9,size_h/3.2])
                     else:
                         inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Wpisz tekst tutaj...",color2,[size_w/1.9,size_h/3.2])
                 else:
                     inputBoxTxt = Write(round(size_w//100*3),lookForPhrase,color3,[size_w/1.9,size_h/3.2])
             if searching and len(lookForPhrase)>0:
-                if getLang() == "ENG":
+                if language == "ENG":
                     WriteItalic(round(size_w//100*5),"None results found",color3,[size_w/1.9,size_h/1.6])
                 else:
                     WriteItalic(round(size_w//100*5),"Nie znaleziono wyników",color3,[size_w/1.9,size_h/1.6])
             if event.type == MOUSEBUTTONDOWN and activities[1]:
                 if activities[1]:   
                     inputBox = pygame.draw.rect(screen, color1, [size_w/3.1,size_h/4,size_w/2.5,size_h/8],0,10)
-                    if getLang() == "ENG":            
+                    if language == "ENG":            
                         inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Enter text here...",color2,[size_w/1.9,size_h/3.2])
                     else:
                         inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Wpisz tekst tutaj...",color2,[size_w/1.9,size_h/3.2])
@@ -3998,7 +3999,7 @@ class LookFor(pygame.sprite.Sprite):
                         inputBox = pygame.draw.rect(screen, color1, [size_w/3.1,size_h/4,size_w/2.5,size_h/8],0,10)
                         inputBoxBord = pygame.draw.rect(screen, color1, [size_w/3.1,size_h/4,size_w/2.5,size_h/8],1,10)                    
                         if len(lookForPhrase) < 1:                   
-                            if getLang() == "ENG":            
+                            if language == "ENG":            
                                 inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Enter text here...",color2,[size_w/1.9,size_h/3.2])
                             else:
                                 inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Wpisz tekst tutaj...",color2,[size_w/1.9,size_h/3.2])
@@ -4039,7 +4040,7 @@ class LookFor(pygame.sprite.Sprite):
                 elif event.key == pygame.K_RETURN:
                     searching = True
                     activeWriting = False
-                elif event.key!=K_BACKSPACE and keys[K_LSHIFT]:
+                elif event.key!=K_BACKSPACE and keys[K_LSHIFT] or keys[K_RSHIFT]:
                     if event.key==K_9:
                         lookForPhrase += "("
                     elif event.key==K_0:
@@ -4066,10 +4067,11 @@ class Settings(pygame.sprite.Sprite):
         global activeAny,activeMain
         global size_w,size_h
         if activities[2]:
+            language = getLang()
             if pygame.event.get_blocked(MOUSEMOTION):
                 pygame.event.set_allowed(MOUSEMOTION)
             bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
-            if getLang() == "ENG":
+            if language == "ENG":
                 Write(size_w//100*2,"Want to change anything {}?".format(getName()),color3,[size_w/1.8,size_h/8])
             else:
                 Write(size_w//100*2,"Chcesz coś zmienić {}?".format(getName()),color3,[size_w/1.8,size_h/8])
@@ -4078,7 +4080,8 @@ class Settings(pygame.sprite.Sprite):
         global size,size_w,size_h,activeAny,TD_circs
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart
         if activities[2]:
-            if getLang() == "ENG":
+            language = getLang()
+            if language == "ENG":
                 resTxt = Write(size_w//100*2,"Resolution: {}:{}".format(size_w,size_h),color3,[size_w/1.8,size_h/2])
             else:
                 resTxt = Write(size_w//100*2,"Rozdzielczość: {}:{}".format(size_w,size_h),color3,[size_w/1.8,size_h/2])
@@ -4100,7 +4103,7 @@ class Settings(pygame.sprite.Sprite):
                     Write(size_w//100*2,"X:Y",color3,[size_w/1.8,size_h/1.5])
                 elif resCirc4.collidepoint(mouse_pos):
                     pygame.draw.circle(screen, dark_blue, [size_w/1.4,size_h/1.7], size_w//60, 0)
-                    if getLang() == "ENG":
+                    if language == "ENG":
                         Write(size_w//100*2,"Default",color3,[size_w/1.8,size_h/1.5]) 
                     else:
                         Write(size_w//100*2,"Domyślne",color3,[size_w/1.8,size_h/1.5]) 
@@ -4127,13 +4130,14 @@ class Settings(pygame.sprite.Sprite):
         if activities[2]:
             choosing = False
             themeRect = pygame.draw.rect(screen, color1, [size_w/3.8,size_h/4.8,size_w/6,size_h/7], size_w//270,5)
-            if getLang() == "ENG":
+            language = getLang()
+            if language == "ENG":
                 ThemeTxt = Write(size_w//100*3,"Theme",color1,[size_w/2.9,size_h/3.47])
             else:
                 ThemeTxt = Write(size_w//100*3,"Motyw",color1,[size_w/2.9,size_h/3.47])
 
             activeThemeRect = pygame.draw.rect(screen, color1, [size_w/3.7,size_h/2.88,size_w/6.5,size_h/12], size_w//270,2)
-            if getLang() == "ENG":
+            if language == "ENG":
                 activeThemeTxt = Write(size_w//100*3,getTheme().upper(),color1,[size_w/2.9,size_h/2.55]) 
             else:
                 if getTheme().upper() == "DARK":
@@ -4147,7 +4151,7 @@ class Settings(pygame.sprite.Sprite):
                     choosing = True
                     themeChooseBckgr = pygame.draw.rect(screen, color1, [size_w/2.34,size_h/4.8,size_w/3,size_h/7], size_w//270,5)
                     opt1 = pygame.draw.rect(screen, color1, [size_w/2.24,size_h/4.6,size_w/8,size_h/8], size_w//270,15)
-                    if getLang() == "ENG":
+                    if language == "ENG":
                         opt1txt = Write(size_w//100*2,"Light",color1,[size_w/1.97,size_h/3.5])
                         opt2 = pygame.draw.rect(screen, color1, [size_w/1.65,size_h/4.6,size_w/8,size_h/8], size_w//270,15)
                         opt2txt = Write(size_w//100*2,"Dark",color1,[size_w/1.50,size_h/3.5])
@@ -4190,7 +4194,8 @@ class Settings(pygame.sprite.Sprite):
         global activeMain,activeAny
         if activities[2]:
             nameResetRect = pygame.draw.rect(screen, color1, [size_w/3.8,size_h/1.3,size_w/6,size_h/7], size_w//270,5)
-            if getLang() == "ENG":
+            language = getLang()
+            if language == "ENG":
                 nameResetTxt = Write(round(size_w//100*3),"Name",color1,[size_w/3.15,size_h/1.18])
             else:
                 nameResetTxt = Write(round(size_w//100*3),"Nick",color1,[size_w/3.15,size_h/1.18])
@@ -4202,7 +4207,7 @@ class Settings(pygame.sprite.Sprite):
             nameResetArrow2_2 = pygame.draw.line(screen, color1, [size_w/2.46,size_h/1.16], [size_w/2.52,size_h/1.17], size_w//225)
             if event.type == MOUSEMOTION and activeMain:
                 if nameResetRect.collidepoint(mouse_pos):
-                    if getLang() == "ENG":
+                    if language == "ENG":
                         nameResetTxt = Write(round(size_w//100*3),"Name",color3,[size_w/3.15,size_h/1.18])
                     else:
                         nameResetTxt = Write(round(size_w//100*3),"Nick",color3,[size_w/3.15,size_h/1.18])
@@ -4245,11 +4250,12 @@ class Settings(pygame.sprite.Sprite):
         if activities[2]:
             plBtn = pygame.draw.rect(screen, color2, [size_w/4.63,size_h/11.29,size_w/20,size_h/12], 0,20)
             engBtn = pygame.draw.rect(screen, color2, [size_w/3.76,size_h/11.29,size_w/20,size_h/12], 0,20)
-            if getLang() == "ENG":
+            language = getLand()
+            if language == "ENG":
                 Write(round(size_w//100*1.8),"ENG",lt_blue,[size_w/3.46,size_h/7.5])
             else:
                 Write(round(size_w//100*1.8),"ENG",color1,[size_w/3.46,size_h/7.5])
-            if getLang() == "PL":
+            if language == "PL":
                 Write(round(size_w//100*1.8),"PL",lt_blue,[size_w/4.14,size_h/7.5])
             else:
                 Write(round(size_w//100*1.8),"PL",color1,[size_w/4.14,size_h/7.5])
