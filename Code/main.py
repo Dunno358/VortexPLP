@@ -2432,7 +2432,10 @@ class Course(pygame.sprite.Sprite):
                 bools = [True,True,False]
                 for rect in range(3):
                     pygame.draw.rect(screen, color1, [wdth,size_h/1.7,size_w/7,size_h/10], 0,15)
-                    Write(round(size_w//100*0.9),"Odporność(ogień): {}".format(bools[rect]),color3,[txtWdth,size_h/1.55])
+                    if language == "ENG":
+                        Write(round(size_w//100*0.9),"Fire resistance: {}".format(bools[rect]),color3,[txtWdth,size_h/1.55])
+                    else:
+                        Write(round(size_w//100*0.9),"Odporność(ogień): {}".format(bools[rect]),color3,[txtWdth,size_h/1.55])
                     wdth += size_w/5
                     txtWdth += size_w/5
             elif courseLvl == 7:
