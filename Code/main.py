@@ -1451,8 +1451,6 @@ class Course(pygame.sprite.Sprite):
                                 TD_consoleTxts[TD_consoleActiveRect] += "]"
                             elif event.key == K_QUOTE:
                                 TD_consoleTxts[TD_consoleActiveRect] += "\""
-                            elif event.key == K_3:
-                                TD_consoleTxts[TD_consoleActiveRect] += "#"
                             elif event.key == K_SEMICOLON:
                                 TD_consoleTxts[TD_consoleActiveRect] += ":"
                             elif event.key == K_SLASH:
@@ -4043,6 +4041,20 @@ class LookFor(pygame.sprite.Sprite):
                 elif event.key!=K_BACKSPACE and keys[K_LSHIFT] or keys[K_RSHIFT]:
                     if event.key==K_9:
                         lookForPhrase += "("
+                    elif event.key==K_8:
+                        lookForPhrase += "*"
+                    elif event.key==K_7:
+                        lookForPhrase += "&"
+                    elif event.key==K_6:
+                        lookForPhrase += "^"
+                    elif event.key==K_5:
+                        lookForPhrase += "%"
+                    elif event.key==K_4:
+                        lookForPhrase += "$"
+                    elif event.key==K_2:
+                        lookForPhrase += "@"
+                    elif event.key==K_1:
+                        lookForPhrase += "!"
                     elif event.key==K_0:
                         lookForPhrase += ")"
                     elif event.key==K_LEFTBRACKET:
@@ -4055,8 +4067,17 @@ class LookFor(pygame.sprite.Sprite):
                         lookForPhrase += "#"
                     elif event.key == K_SEMICOLON:
                         lookForPhrase += ":"
+                    elif event.key == K_SLASH:
+                        lookForPhrase += "?"
+                    elif event.key == K_MINUS:
+                        lookForPhrase += "_"
                     else:
                         lookForPhrase += chr(event.key)
+                elif event.key!=K_BACKSPACE and keys[K_LSHIFT] or keys[K_RSHIFT]:
+                    if event.key == K_z:
+                        lookForPhrase += "ż"
+                    elif event.key == K_l:
+                        lookForPhrase += "ł"
                 elif len(lookForPhrase)<14 and event.key!=pygame.K_BACKSPACE:
                     try:
                         lookForPhrase += chr(event.key)
@@ -4250,7 +4271,7 @@ class Settings(pygame.sprite.Sprite):
         if activities[2]:
             plBtn = pygame.draw.rect(screen, color2, [size_w/4.63,size_h/11.29,size_w/20,size_h/12], 0,20)
             engBtn = pygame.draw.rect(screen, color2, [size_w/3.76,size_h/11.29,size_w/20,size_h/12], 0,20)
-            language = getLand()
+            language = getLang()
             if language == "ENG":
                 Write(round(size_w//100*1.8),"ENG",lt_blue,[size_w/3.46,size_h/7.5])
             else:
