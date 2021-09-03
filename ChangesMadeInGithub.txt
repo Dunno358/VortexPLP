@@ -1,18 +1,2 @@
--Added line translation [line 2435]
-
-var language instead of getLand():
-[lines]
-4248
-4193
-4130
-4081
-4069
-3955
-
-
-added K_RSHIFT along to K_LSHIFT:
-[lines]
-4043
-
 todo:
 extend chars use with vsc replace using line 1427 [4043]
