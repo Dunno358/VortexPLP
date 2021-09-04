@@ -147,6 +147,7 @@ TD_enemies = []
 TD_friends = []
 TD_iterator = 1
 TD_round = 1
+TD_count = ""
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
         pygame.sprite.Sprite.__init__(self)
@@ -1000,6 +1001,7 @@ class Course(pygame.sprite.Sprite):
                 except:
                     TD_actualEnemy = None
                     TD_actualEnemy2 = None
+                    print("TD_lvlType does not follow any of this: 'mixed','onlyfriend','onlyenemy'")
                 secondGo = True
                 if getActualSecond()%100>=1 and not TD_done:
                     if TD_wdthStart<size_w/2.36 and not TD_firstDone:
@@ -1036,7 +1038,7 @@ class Course(pygame.sprite.Sprite):
                         holdIterator = iterator
                         course.tower_defence.reset()
                         course.tower_defence.drawMap()
-                        iterator = holdIterator + 1
+                        iterator = holdIterator + 2
                     if secondGo:
                         if TD_wdthStart2<size_w/2.36 and not TD_firstDone2:
                             course.tower_defence.drawPath()
@@ -1094,8 +1096,10 @@ class Course(pygame.sprite.Sprite):
                 except:
                     enemy = [0,0]
                     enemy2 = [0,0]
+                    print(TD_actualEnemy2)
+                    print(TD_lvlType)
         def targeting():
-            global TD_consoleShown
+            global TD_consoleShown,TD_count
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and courseLvl == 7 and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
@@ -1140,10 +1144,22 @@ class Course(pygame.sprite.Sprite):
                     ]
                     guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
                     guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
+
+                    cords = [
+                        [size_w/5,size_h/5.57,size_w/1.5,size_h/1.5],
+                        [size_w/3.29,size_h/15.67,size_w/1.78,size_h/8],
+                        [size_w/5,size_h/1.18,size_w/16,size_h/8],
+                        [size_w/3.36,size_h/1.18,size_w/1.76,size_h/8],
+                        [size_w/3.82,size_h/1.13,size_w/16,size_h/11]
+                    ]
+
+                    if len(TD_circs)<1:
+                        course.tower_defence.drawMap()
+
                     for circ in TD_circs:
                         try:
                             index = TD_circs.index(circ)
-                            if circ.collidepoint(TD_enemy) and TD_hp>0:
+                            if circ.collidepoint(TD_enemy) and TD_hp>0 and circ not in TD_active:
                                 if index not in TD_active:
                                     TD_active.append(index)
                                 try:
@@ -1169,10 +1185,11 @@ class Course(pygame.sprite.Sprite):
                                             #course.tower_defence.reset()
                                             course.tower_defence.drawMap()
                                             TD_round +=1
+                                            pygame.event.post(KEYUP)
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
                                     pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy, 3) 
-                            if circ.collidepoint(TD_enemy2) and TD_hp2>0:
+                            if circ.collidepoint(TD_enemy2) and TD_hp2>0 and circ not in TD_active:
                                 if index not in TD_active:
                                     TD_active.append(index)
                                 try:
@@ -1195,9 +1212,10 @@ class Course(pygame.sprite.Sprite):
                                             TD_hp2 -= size_w/800*TD_round*len(TD_active)
                                             lineColor = lt_blue
                                         else:
-                                            course.tower_defence.reset()
                                             course.tower_defence.drawMap()
+                                            course.tower_defence.reset()
                                             TD_round +=1
+                                            pygame.event.post(KEYUP)
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
                                     pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy2, 3) 
@@ -1251,19 +1269,18 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
             global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
-            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType
+            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType,TD_count
             TD_circs = []
             TD_queue = []
             TD_pathCords = []
             TD_guards = []
             TD_guardRects = []
             TD_guardSubRects = []
-            #TD_consoleTxts = ["","","",""]
             TD_consoleRects = []
             TD_enemies = []
             TD_friends = []
             TD_consoleActiveRect = ""
-            TD_lvlType = ""
+            TD_count = ""
             TD_time = ""
             TD_wdthStart = size_w/4.9
             TD_hghtStart = size_h/1.63
@@ -1277,7 +1294,6 @@ class Course(pygame.sprite.Sprite):
             TD_actualEnemy2 = None
             TD_active = []  
             TD_iterator = 1   
-            #iterator = 1   
             TD_round = 1
             TD_hp = size_w/19 
             TD_hp2 = size_w/19 
