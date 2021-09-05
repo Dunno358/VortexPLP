@@ -140,6 +140,7 @@ TD_actualEnemy2 = None
 TD_consoleShown = False
 TD_consoleOK = True
 TD_active = []
+TD_active2 = []
 TD_consoleActiveRect = ""
 TD_eventRects = []
 TD_consoleTxts = ["","","",""]
@@ -1180,17 +1181,16 @@ class Course(pygame.sprite.Sprite):
                                             TD_hp -= size_w/1000*TD_round*len(TD_active)/1.5
                                             lineColor = lt_blue
                                         else:
-                                            #course.tower_defence.reset()
-                                            course.tower_defence.drawMap()
+                                            #course.tower_defence.drawMap()
                                             TD_round +=1
                                             print(TD_round)
                                             pygame.event.post(KEYUP)
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
                                     pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy, 3) 
-                            if circ.collidepoint(TD_enemy2) and TD_hp2>0 and circ not in TD_active:
-                                if index not in TD_active:
-                                    TD_active.append(index)
+                            elif circ.collidepoint(TD_enemy2) and TD_hp2>0 and circ not in TD_active2:
+                                if index not in TD_active2:
+                                    TD_active2.append(index)
                                 try:
                                     pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[index], width=0)
                                     guardW = TD_guardRects[index][0]
@@ -1208,7 +1208,7 @@ class Course(pygame.sprite.Sprite):
                                 else:
                                     if getActualSecond()%3==0:
                                         if TD_hp2 > 0:
-                                            TD_hp2 -= size_w/800*TD_round*len(TD_active)/1.5
+                                            TD_hp2 -= size_w/800*TD_round*len(TD_active2)/1.5
                                             lineColor = lt_blue
                                         else:
                                             course.tower_defence.drawMap()
@@ -1219,10 +1219,10 @@ class Course(pygame.sprite.Sprite):
                                     hghtStart = circ[1] + circ[3]/2
                                     pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy2, 3) 
                             else:
-                                if index in TD_active:
-                                    TD_active.remove(index)
+                                if index in TD_active2:
+                                    TD_active2.remove(index)
                                 try:
-                                    if index<TD_active[0]:
+                                    if index<TD_active2[0]:
                                         pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[index], width=0)
                                         guardW = TD_guardRects[index][0]
                                         guardH = TD_guardRects[index][1]
@@ -1268,7 +1268,7 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
             global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
-            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType,TD_count
+            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType,TD_count,TD_active2
             TD_circs = []
             TD_queue = []
             TD_pathCords = []
@@ -1292,6 +1292,7 @@ class Course(pygame.sprite.Sprite):
             TD_enemy2 = None
             TD_actualEnemy2 = None
             TD_active = []  
+            TD_active2 = []
             TD_iterator = 1   
             TD_round = 1
             TD_hp = size_w/19 
