@@ -1,7 +1,7 @@
 from typing import Type
 import pygame
 from pygame import Surface, rect
-from pygame.event import get_blocked
+from pygame.event import get_blocked, post
 from pygame.locals import *
 import os
 from datetime import datetime
@@ -149,6 +149,8 @@ TD_friends = []
 TD_iterator = 1
 TD_round = 1
 TD_count = ""
+TD_Lvls = [3,4,9]
+TD_excludeLvls = 3
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
         pygame.sprite.Sprite.__init__(self)
@@ -941,10 +943,9 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_consoleShown,TD_friends,TD_enemies
             global TD_actualEnemy,TD_actualEnemy2,TD_wdthStart2,TD_hghtStart2,TD_enemy2,TD_firstDone2
-            global TD_hp2,TD_queue,TD_lvlType
-            courseLvls = [7]
+            global TD_hp2,TD_queue,TD_lvlType,TD_Lvls,TD_excludeLvls
             lessonOk = str(activeLesson)[17:-23]=="lesson4"
-            lvlOk = courseLvl in courseLvls
+            lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:]
             if activities[0] and not activeMenu and lessonOk and lvlOk and not TD_consoleShown:
                 eventsBlocked = True
                 if len(TD_queue)<2:
@@ -1098,8 +1099,9 @@ class Course(pygame.sprite.Sprite):
                     enemy = [0,0]
                     enemy2 = [0,0]
         def targeting():
-            global TD_consoleShown,TD_count
-            if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and courseLvl == 7 and not TD_consoleShown:
+            global TD_consoleShown,TD_count,TD_Lvls,TD_excludeLvls
+            lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:]
+            if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
                 if not TD_done:
@@ -1365,7 +1367,6 @@ class Course(pygame.sprite.Sprite):
                     TD_consoleOK = False
                 else:
                     TD_consoleOK = True
-                print(f"wrongAnswers:{wrongAnswers}",f"TD_consoleOK:{TD_consoleOK}")
                 
                 try:
                     for it in range(len(TD_consoleTxts)):
@@ -1486,6 +1487,15 @@ class Course(pygame.sprite.Sprite):
                                 TD_consoleTxts[TD_consoleActiveRect] += chr(event.key)
                 except:
                     pass
+        def showUnit(unit,name,txtUnderName):
+            pygame.draw.circle(screen, lt_blue, [size_w/1.89,size_h/2.18], size_w/6, 0)
+            pygame.draw.circle(screen, logoBlue, [size_w/1.89,size_h/2.18], size_w/6, size_w//100)
+            screen.blit(unit,[size_w/2.23,size_h/3.46])
+            pygame.draw.rect(screen, logoBlue, [size_w/2.63,size_h/1.55,size_w/3.3,size_h/8], 0,size_w//100)
+            WriteItalic(size_w//100*2,name,lt_gray,[size_w/1.89,size_h/1.41])
+            if len(txtUnderName) > 0:
+                pygame.draw.rect(screen, logoBlue, [size_w/2.77,size_h/1.35,size_w/3,size_h/8], 0,size_w//100)
+                WriteItalic(round(size_w//100*3.5),txtUnderName,lt_gray,[size_w/1.91,size_h/1.24])
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -1936,9 +1946,9 @@ class Course(pygame.sprite.Sprite):
                             text += chr(event.key)
                     except:
                         pass
-    def centeredBtn(hStart,color,text):
-        showBtn = pygame.draw.rect(screen, color, [size_w/2.16,size_h/hStart,size_w/8,size_h/10], 0,15)
-        Write(size_w//100*2,text,color1,[size_w/1.9,size_h/hStart+size_h/19])
+    def centeredBtn(hStart,color,text,border=0,fontSize=2):
+        showBtn = pygame.draw.rect(screen, color, [size_w/2.16,size_h/hStart,size_w/8,size_h/10], border,15)
+        Write(round(size_w//100*fontSize),text,color1,[size_w/1.9,size_h/hStart+size_h/19])
         return showBtn
     def eventsReset():
         events = [MOUSEMOTION,MOUSEBUTTONUP,MOUSEBUTTONDOWN,MOUSEWHEEL,KEYDOWN,KEYUP]
@@ -3656,14 +3666,13 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1 
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
-        global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType
+        global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
             mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
             mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
-            towerDefenceLvls = [3,4,7]
             if activeMain:
-                if courseLvl in towerDefenceLvls:
+                if courseLvl in TD_Lvls:
                     course.standardLessonEvents("lesson4",99,condition=notBlocked,standard=False,customCol=TD_darkGreen) 
                 else:
                     course.standardLessonEvents("lesson4",99,condition=notBlocked) 
@@ -3797,29 +3806,6 @@ class Course(pygame.sprite.Sprite):
                 course.consoleExample(f"{action}",hght=1.6)
                 course.tower_defence.clearAdminTools()
             elif courseLvl == 7:
-                TD_lvlType = "onlyenemy"
-                course.tower_defence.drawMap()
-                course.tower_defence.adminTools()
-                course.tower_defence.console()
-                pygame.mouse.set_visible(True)
-            elif courseLvl == 8:
-                """ course.tower_defence.clearAdminTools()
-                sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath)) 
-                soldier =  pygame.image.load(r"{}/Images/Game/soldier.png".format(dirPath))    
-                sight = pygame.transform.scale(sight, [int(size_w/5.33),int(size_h/3)])
-                soldier = pygame.transform.scale(soldier, [int(size_w/10.6),int(size_h/6)])  
-                wdth = mouse_pos[0] - sight.get_width()/2
-                hght = mouse_pos[1] - sight.get_height()/8
-                screen.blit(soldier,[size_w/2.87,size_h/4.44])
-                screen.blit(soldier,[size_w/1.65,size_h/2.92])
-
-                wdthOK = mouse_pos[0]>size_w/3.36 and mouse_pos[0]<size_w/1.31
-                hghtOK = mouse_pos[1]>size_h/9.6 and mouse_pos[1]<size_h/1.51
-                if wdthOK and hghtOK:
-                    pygame.mouse.set_visible(False)
-                    screen.blit(sight,[wdth,hght])  
-                else:
-                    pygame.mouse.set_visible(True) """
                 global sec
                 events = [MOUSEMOTION,KEYDOWN,KEYUP,MOUSEBUTTONDOWN]
                 for item in events:
@@ -3947,7 +3933,52 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if not activeMain and event.key == K_ESCAPE:
                         activeMain = True
+            elif courseLvl == 8:
+                notBlocked = False
+                storedTime = ""
+                course.dialogTop(6.41,"So that's all I wanted to teach","you before fight, ready?")  
+                startBtn = course.centeredBtn(2.19,dark_green,"Ready")      
+                
+                if event.type == MOUSEMOTION:
+                    if startBtn.collidepoint(mouse_pos):
+                            course.centeredBtn(2.19,green,"")  
+                            course.centeredBtn(2.19,dark_green,"Ready",size_w//450) 
+                elif event.type == MOUSEBUTTONDOWN:
+                    if startBtn.collidepoint(mouse_pos):
+                            courseLvl += 1
             elif courseLvl == 9:
+                unitBeingShowed = False
+                course.tower_defence.drawMap()
+                startBtn = course.centeredBtn(2.98,purple,"First wave",fontSize=1.6)
+                if isinstance(storedTime,float):
+                    if storedTime > 56:
+                        storedTime -= 3
+                    if getActualSecond()-storedTime<1:
+                        enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
+                        enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/5.33),int(size_h/3)])
+                        enemyGhost = pygame.transform.flip(enemyGhost, True, False)
+                        course.tower_defence.showUnit(enemyGhost,"Phantom","First Wave")
+                        WriteItalic(round(size_w//100*4),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
+                        unitBeingShowed = True
+                    else:
+                        courseLvl += 1
+                if not unitBeingShowed:
+                    course.dialogTop(6.41,"My beautiful archespors are ready,","time to face evil forces",bckgr=True)
+
+                if event.type == MOUSEMOTION and not unitBeingShowed:
+                    if startBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(2.98,logoBlue,"",fontSize=1.6)
+                        course.centeredBtn(2.98,dark_blue,"First wave",fontSize=1.6,border=size_w//150)
+                elif event.type == MOUSEBUTTONDOWN and not unitBeingShowed:
+                    if startBtn.collidepoint(mouse_pos):
+                        storedTime = getActualSecond()
+            elif courseLvl == 10:
+                storedTime = ""
+            elif courseLvl == "undefinedNow":
+                TD_lvlType = "onlyenemy"
+                course.tower_defence.drawMap()
+                course.tower_defence.adminTools()
+                course.tower_defence.console()
                 pygame.mouse.set_visible(True)
     def lesson5():
         course.standardLessonEvents("lesson5",99)
