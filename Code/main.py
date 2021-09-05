@@ -149,8 +149,9 @@ TD_friends = []
 TD_iterator = 1
 TD_round = 1
 TD_count = ""
-TD_Lvls = [3,4,9]
+TD_Lvls = [3,4,9,10]
 TD_excludeLvls = 3
+TD_subDone = False
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
         pygame.sprite.Sprite.__init__(self)
@@ -353,6 +354,11 @@ def changeLang(lang):
     langFile = open(r"{}/Metadata/userInfo/Lang.txt".format(dirPath),"w")
     langFile.write(cipher(text+lang))
     langFile.close()     
+def resetEvents():
+    events = [MOUSEBUTTONDOWN,MOUSEBUTTONUP,MOUSEMOTION,KEYUP,KEYDOWN]
+    for event in events:
+        if pygame.event.get_blocked(event):
+            pygame.event.set_allowed(event)
 
 class Start(pygame.sprite.Sprite):
     global language
@@ -1239,8 +1245,9 @@ class Course(pygame.sprite.Sprite):
         def adminTools():
             global iterator,TD_wdthStart,TD_hghtStart,TD_firstDone,TD_guardRects,eventsBlocked
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
-            global TD_time,TD_active,TD_iterator  
-            if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and courseLvl == 7:          
+            global TD_time,TD_active,TD_iterator,TD_Lvls,TD_excludeLvls
+            lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:]
+            if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk:          
                 if admin:
                     rstBtn = pygame.draw.rect(screen, color2, [size_w/1.14,size_h/7.92,size_w/10,size_h/16], 0,15)
                     rstTxt = Write(round(size_w/100*1.5),"Reset",color3,[size_w/1.08,size_h/6.4])
@@ -1271,6 +1278,7 @@ class Course(pygame.sprite.Sprite):
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
             global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
             global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType,TD_count,TD_active2
+            global TD_subDone
             TD_circs = []
             TD_queue = []
             TD_pathCords = []
@@ -1290,6 +1298,7 @@ class Course(pygame.sprite.Sprite):
             TD_firstDone = False
             TD_firstDone2 = False
             TD_done = False
+            TD_subDone = False
             TD_enemy = None
             TD_enemy2 = None
             TD_actualEnemy2 = None
@@ -3667,6 +3676,7 @@ class Course(pygame.sprite.Sprite):
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
         global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls
+        global TD_count,TD_subDone
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
             mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
@@ -3948,23 +3958,33 @@ class Course(pygame.sprite.Sprite):
                             courseLvl += 1
             elif courseLvl == 9:
                 unitBeingShowed = False
+                TD_count = 0
+                course.eventsReset()
                 course.tower_defence.drawMap()
+                course.tower_defence.clearAdminTools()
                 startBtn = course.centeredBtn(2.98,purple,"First wave",fontSize=1.6)
                 if isinstance(storedTime,float):
                     if storedTime > 56:
                         storedTime -= 3
-                    if getActualSecond()-storedTime<1:
+                    correctEvent = event.type == KEYDOWN or event.type==KEYUP
+                    if getActualSecond()-storedTime>=1 and TD_subDone and correctEvent:
+                        #course.tower_defence.reset()
+                        course.tower_defence.drawMap()
+                        course.tower_defence.adminTools()
+                        course.tower_defence.console()
+                        courseLvl += 1
+                    else:
                         enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
                         enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/5.33),int(size_h/3)])
                         enemyGhost = pygame.transform.flip(enemyGhost, True, False)
                         course.tower_defence.showUnit(enemyGhost,"Phantom","First Wave")
-                        WriteItalic(round(size_w//100*4),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
+                        WriteItalic(round(size_w//100*3),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
                         unitBeingShowed = True
-                    else:
-                        courseLvl += 1
-                if not unitBeingShowed:
+                if not unitBeingShowed and not TD_subDone:
                     course.dialogTop(6.41,"My beautiful archespors are ready,","time to face evil forces",bckgr=True)
 
+                if event.type == KEYDOWN and TD_subDone:
+                    course.tower_defence.reset()
                 if event.type == MOUSEMOTION and not unitBeingShowed:
                     if startBtn.collidepoint(mouse_pos):
                         course.centeredBtn(2.98,logoBlue,"",fontSize=1.6)
@@ -3972,9 +3992,9 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == MOUSEBUTTONDOWN and not unitBeingShowed:
                     if startBtn.collidepoint(mouse_pos):
                         storedTime = getActualSecond()
+                        TD_subDone = True
             elif courseLvl == 10:
                 storedTime = ""
-            elif courseLvl == "undefinedNow":
                 TD_lvlType = "onlyenemy"
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
