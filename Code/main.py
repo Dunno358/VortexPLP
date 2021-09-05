@@ -1025,7 +1025,7 @@ class Course(pygame.sprite.Sprite):
                         guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
                         guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
                         course.tower_defence.drawPath()
-                        pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[3], width=0)
+                        #pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[3], width=0)
                         try:
                             guardW = TD_guardRects[3][0]
                             guardH = TD_guardRects[3][1]
@@ -1096,8 +1096,6 @@ class Course(pygame.sprite.Sprite):
                 except:
                     enemy = [0,0]
                     enemy2 = [0,0]
-                    print(TD_actualEnemy2)
-                    print(TD_lvlType)
         def targeting():
             global TD_consoleShown,TD_count
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and courseLvl == 7 and not TD_consoleShown:
@@ -1179,12 +1177,13 @@ class Course(pygame.sprite.Sprite):
                                 else:
                                     if getActualSecond()%3==0:
                                         if TD_hp > 0:
-                                            TD_hp -= size_w/1000*TD_round*len(TD_active) #TD_hp -= size_w/800*TD_round*len(TD_active)
+                                            TD_hp -= size_w/1000*TD_round*len(TD_active)/1.5
                                             lineColor = lt_blue
                                         else:
                                             #course.tower_defence.reset()
                                             course.tower_defence.drawMap()
                                             TD_round +=1
+                                            print(TD_round)
                                             pygame.event.post(KEYUP)
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
@@ -1209,7 +1208,7 @@ class Course(pygame.sprite.Sprite):
                                 else:
                                     if getActualSecond()%3==0:
                                         if TD_hp2 > 0:
-                                            TD_hp2 -= size_w/800*TD_round*len(TD_active)
+                                            TD_hp2 -= size_w/800*TD_round*len(TD_active)/1.5
                                             lineColor = lt_blue
                                         else:
                                             course.tower_defence.drawMap()
@@ -1298,6 +1297,7 @@ class Course(pygame.sprite.Sprite):
             TD_hp = size_w/19 
             TD_hp2 = size_w/19 
             TD_consoleShown = False
+            course.tower_defence.drawMap()
         def console():
             global TD_consoleShown
 
