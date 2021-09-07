@@ -15,7 +15,7 @@ print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]))
 print("Init_Start_Time: ",str(datetime.now())[10:])
 print("Witaj {}!".format(os.getlogin()))# - RETURNS NAME OF CURRENT USER
 
-#05.09.2021
+#01.09.2021
 
 #COLORS
 darkThemeMainCol = (30,30,30)
@@ -148,7 +148,9 @@ TD_enemies = []
 TD_friends = []
 TD_iterator = 1
 TD_round = 1
-TD_count = ""
+TD_count = 0
+TD_added = False
+TD_added2 = False
 TD_Lvls = [3,4,9,10]
 TD_excludeLvls = 3
 TD_subDone = False
@@ -1061,7 +1063,7 @@ class Course(pygame.sprite.Sprite):
                         elif TD_hghtStart2<size_h/1.63:
                             course.tower_defence.drawPath()
                             TD_hghtStart2 += size_h/700*TD_iterator
-                        elif TD_wdthStart2<size_w/1.23:
+                        elif TD_wdthStart2<size_w/1.01: #1.23
                             course.tower_defence.drawPath()
                             TD_wdthStart2 += size_w/1000*TD_iterator
                         else:
@@ -1110,6 +1112,7 @@ class Course(pygame.sprite.Sprite):
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
+                global TD_added,TD_added2
                 if not TD_done:
                     if TD_hp2<=0:
                         course.tower_defence.reset()
@@ -1239,6 +1242,14 @@ class Course(pygame.sprite.Sprite):
                                     pass      
                         except:
                             pass
+                    if TD_hp<=0 and not TD_added:
+                        TD_count += 1
+                        TD_added = True
+                        course.tower_defence.drawMap()
+                    if TD_hp2<=0 and not TD_added2:
+                        TD_count += 1
+                        TD_added2 = True
+                        course.tower_defence.drawMap()
                 else:
                     if pygame.event.get_blocked(MOUSEMOTION):
                         pygame.event.set_allowed(MOUSEMOTION)
@@ -1277,8 +1288,8 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
             global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
-            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType,TD_count,TD_active2
-            global TD_subDone
+            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType,TD_active2
+            global TD_subDone,TD_added,TD_added2
             TD_circs = []
             TD_queue = []
             TD_pathCords = []
@@ -1289,7 +1300,8 @@ class Course(pygame.sprite.Sprite):
             TD_enemies = []
             TD_friends = []
             TD_consoleActiveRect = ""
-            TD_count = ""
+            TD_added = False
+            TD_added2 = False
             TD_time = ""
             TD_wdthStart = size_w/4.9
             TD_hghtStart = size_h/1.63
@@ -3967,7 +3979,7 @@ class Course(pygame.sprite.Sprite):
                     if storedTime > 56:
                         storedTime -= 3
                     correctEvent = event.type == KEYDOWN or event.type==KEYUP
-                    if getActualSecond()-storedTime>=1 and TD_subDone and correctEvent:
+                    if getActualSecond()-storedTime>=0.5 and TD_subDone and correctEvent:
                         #course.tower_defence.reset()
                         course.tower_defence.drawMap()
                         course.tower_defence.adminTools()
