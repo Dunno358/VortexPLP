@@ -149,6 +149,7 @@ TD_friends = []
 TD_iterator = 1
 TD_round = 1
 TD_count = 0
+TD_toDefeat = 0
 TD_added = False
 TD_added2 = False
 TD_Lvls = [3,4,9,10]
@@ -1112,7 +1113,7 @@ class Course(pygame.sprite.Sprite):
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
-                global TD_added,TD_added2
+                global TD_added,TD_added2,TD_toDefeat
                 if not TD_done:
                     if TD_hp2<=0:
                         course.tower_defence.reset()
@@ -1187,14 +1188,12 @@ class Course(pygame.sprite.Sprite):
                                 if letEnemy and TD_actualEnemy in TD_enemies or letFriend and TD_actualEnemy in TD_friends:
                                     pass
                                 else:
-                                    if getActualSecond()%3==0:
+                                    if getActualSecond()%2==0:
                                         if TD_hp > 0:
-                                            TD_hp -= size_w/1000*TD_round*len(TD_active)/1.5
+                                            TD_hp -= size_w/1000*len(TD_active)/1.5
                                             lineColor = lt_blue
                                         else:
                                             #course.tower_defence.drawMap()
-                                            TD_round +=1
-                                            print(TD_round)
                                             pygame.event.post(KEYUP)
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
@@ -1217,14 +1216,13 @@ class Course(pygame.sprite.Sprite):
                                 if letEnemy and TD_actualEnemy2 in TD_enemies or letFriend and TD_actualEnemy2 in TD_friends:
                                     pass
                                 else:
-                                    if getActualSecond()%3==0:
+                                    if getActualSecond()%2==0:
                                         if TD_hp2 > 0:
-                                            TD_hp2 -= size_w/800*TD_round*len(TD_active2)/1.5
+                                            TD_hp2 -= size_w/700*len(TD_active2)
                                             lineColor = lt_blue
                                         else:
                                             course.tower_defence.drawMap()
                                             course.tower_defence.reset()
-                                            TD_round +=1
                                             pygame.event.post(KEYUP)
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
@@ -1250,6 +1248,8 @@ class Course(pygame.sprite.Sprite):
                         TD_count += 1
                         TD_added2 = True
                         course.tower_defence.drawMap()
+                    pygame.draw.rect(screen, TD_darkGreen, [size_w/1.94,size_h/1.13,size_w/12,size_h/12], width=0)
+                    Write(round(size_w//100*1.7),f"{TD_count}/{TD_toDefeat}",color3,[size_w/1.87,size_h/1.11])
                 else:
                     if pygame.event.get_blocked(MOUSEMOTION):
                         pygame.event.set_allowed(MOUSEMOTION)
@@ -3688,7 +3688,7 @@ class Course(pygame.sprite.Sprite):
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
         global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls
-        global TD_count,TD_subDone
+        global TD_count,TD_subDone,TD_toDefeat
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
             mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
@@ -4008,6 +4008,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 10:
                 storedTime = ""
                 TD_lvlType = "onlyenemy"
+                TD_toDefeat = 6
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()
