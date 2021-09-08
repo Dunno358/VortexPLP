@@ -152,7 +152,7 @@ TD_count = 0
 TD_toDefeat = 0
 TD_added = False
 TD_added2 = False
-TD_Lvls = [3,4,9,10]
+TD_Lvls = [3,4,9,10,11]
 TD_excludeLvls = 3
 TD_subDone = False
 class Write(pygame.sprite.Sprite):
@@ -1108,7 +1108,7 @@ class Course(pygame.sprite.Sprite):
                     enemy = [0,0]
                     enemy2 = [0,0]
         def targeting():
-            global TD_consoleShown,TD_count,TD_Lvls,TD_excludeLvls
+            global TD_consoleShown,TD_count,TD_Lvls,TD_excludeLvls,courseLvl
             lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:]
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
@@ -1250,6 +1250,11 @@ class Course(pygame.sprite.Sprite):
                         course.tower_defence.drawMap()
                     pygame.draw.rect(screen, TD_darkGreen, [size_w/1.94,size_h/1.13,size_w/12,size_h/12], width=0)
                     Write(round(size_w//100*1.7),f"{TD_count}/{TD_toDefeat}",color3,[size_w/1.87,size_h/1.11])
+                    if TD_count == TD_toDefeat and TD_lvlType!="onlyfriend":
+                        course.dialogTop(6.41,"Great job! Click anywhere","to go to the next level",bckgr=True)
+                        courseLvl += 1 
+                        TD_count = 0
+                        TD_done = True
                 else:
                     if pygame.event.get_blocked(MOUSEMOTION):
                         pygame.event.set_allowed(MOUSEMOTION)
@@ -1967,9 +1972,13 @@ class Course(pygame.sprite.Sprite):
                             text += chr(event.key)
                     except:
                         pass
-    def centeredBtn(hStart,color,text,border=0,fontSize=2):
-        showBtn = pygame.draw.rect(screen, color, [size_w/2.16,size_h/hStart,size_w/8,size_h/10], border,15)
-        Write(round(size_w//100*fontSize),text,color1,[size_w/1.9,size_h/hStart+size_h/19])
+    def centeredBtn(hStart,color,text,border=0,fontSize=2,adjustToDialog=False):
+        if adjustToDialog:
+            showBtn = pygame.draw.rect(screen, color, [size_w/2.02,size_h/hStart,size_w/8,size_h/10], border,15)
+            Write(round(size_w//100*fontSize),text,color1,[size_w/1.79,size_h/hStart+size_h/19])
+        else:
+            showBtn = pygame.draw.rect(screen, color, [size_w/2.16,size_h/hStart,size_w/8,size_h/10], border,15)
+            Write(round(size_w//100*fontSize),text,color1,[size_w/1.9,size_h/hStart+size_h/19])
         return showBtn
     def eventsReset():
         events = [MOUSEMOTION,MOUSEBUTTONUP,MOUSEBUTTONDOWN,MOUSEWHEEL,KEYDOWN,KEYUP]
@@ -3688,7 +3697,7 @@ class Course(pygame.sprite.Sprite):
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
         global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls
-        global TD_count,TD_subDone,TD_toDefeat
+        global TD_count,TD_subDone,TD_toDefeat,TD_done
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
             mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
@@ -4008,11 +4017,52 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 10:
                 storedTime = ""
                 TD_lvlType = "onlyenemy"
-                TD_toDefeat = 6
+                TD_toDefeat = 1
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()
-                pygame.mouse.set_visible(True)
+            elif courseLvl == 11:
+                unitBeingShowed = False
+                course.eventsReset()
+                course.tower_defence.drawMap()
+                course.tower_defence.adminTools()
+                course.tower_defence.console()
+                continueBtn = course.centeredBtn(2.53,green,"Continue",fontSize=1.7,adjustToDialog=True)
+
+                if isinstance(storedTime,float):
+                    if storedTime > 56:
+                        storedTime -= 3
+                    correctEvent = event.type == KEYDOWN or event.type==KEYUP
+                    if getActualSecond()-storedTime>=0.5 and TD_subDone and correctEvent:
+                        #course.tower_defence.reset()
+                        course.tower_defence.drawMap()
+                        course.tower_defence.adminTools()
+                        course.tower_defence.console()
+                        courseLvl += 1
+                    else:
+                        friendJav = pygame.image.load(r"{}/Images/Game/2dmap/jav.png".format(dirPath))
+                        friendJav = pygame.transform.scale(friendJav, [int(size_w/5.33),int(size_h/3)])
+                        course.tower_defence.showUnit(friendJav,"Jav","Second Wave")
+                        WriteItalic(round(size_w//100*3),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
+                        unitBeingShowed = True
+                if not unitBeingShowed and not TD_subDone:
+                    course.dialogTop(6.41,"Ready for more? I bet you are!","But wait, are those Javs?","Javs! Our friends!",bckgr=True)
+                if event.type == KEYDOWN or event.type == KEYUP and TD_subDone:
+                    course.tower_defence.reset()
+                elif event.type == MOUSEMOTION and not unitBeingShowed:
+                    if continueBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(2.53,dark_green,"Continue",fontSize=1.7,adjustToDialog=True,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and not unitBeingShowed:
+                    if continueBtn.collidepoint(mouse_pos):
+                        storedTime = getActualSecond()
+                        TD_subDone = True      
+            elif courseLvl == 12:
+                storedTime = ""
+                TD_lvlType = "onlyfriend"
+                TD_toDefeat = 4
+                course.tower_defence.drawMap()
+                course.tower_defence.adminTools()
+                course.tower_defence.console()                         
     def lesson5():
         course.standardLessonEvents("lesson5",99)
     def lesson6():
