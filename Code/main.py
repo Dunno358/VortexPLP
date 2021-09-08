@@ -674,7 +674,7 @@ class Course(pygame.sprite.Sprite):
             txtHght = size_h/2.5
             hghtToAdd = size_h/25
             for cord in cords:
-                rect = pygame.draw.rect(screen, color3, cord, 1) #HITBOX COLOR2 BY DEFAULT
+                rect = pygame.draw.rect(screen, color2, cord, 1) #HITBOX COLOR2 BY DEFAULT
                 rects.append(rect)
             if not inFight:
                 if dialogTop:
@@ -2006,7 +2006,7 @@ class Course(pygame.sprite.Sprite):
                 else:
                     course.dialogStandard(2.6,"Zacznijmy od tego","czym jest Python","i gdzie jest stosowany")
             elif courseLvl==3:
-                if getLang == "ENG":
+                if language == "ENG":
                     pythonList = [
                         "High-level programming language",
                         "Object oriented",
@@ -2126,7 +2126,7 @@ class Course(pygame.sprite.Sprite):
                 link = pygame.draw.rect(screen, color1, [size_w/2.57,size_h/9,size_w/3,size_h/6], size_w//200,30)   
                 WriteItalic(round(size_w//100*1.5),strs[0],color3,[size_w/1.82,size_h/6.41]) 
                 WriteItalic(round(size_w//100*1.5),strs[1],color3,[size_w/1.82,size_h/4.41]) 
-                Write(round(size_w/100*1.5),strs[2],color1,[size_w/1.26,size_h/5.41])
+                Write(round(size_w/100*1.5),strs[2],color3,[size_w/1.26,size_h/5.41])
                 if event.type == MOUSEBUTTONDOWN:
                     if link.collidepoint(mouse_pos):
                         os.system(r"start https://python.org/downloads")
@@ -2202,9 +2202,9 @@ class Course(pygame.sprite.Sprite):
                             WriteItalic(round(size_w//100*3),IDEs[index],colors[index],[size_w/1.8,size_h/3])
                             WriteItalic(round(size_w//100*2.5),links[index],colors[index],[size_w/1.8,size_h/2.2])
                             if language == "ENG":
-                                Write(round(size_w//100*1.5),"Click to open",color1,[size_w/1.25,size_h/6.23])
+                                Write(round(size_w//100*1.5),"Click to open",color3,[size_w/1.25,size_h/6.23])
                             else:
-                                Write(round(size_w//100*1),"Kliknij by otworzyć",color1,[size_w/1.25,size_h/6.23])
+                                Write(round(size_w//100*1),"Kliknij by otworzyć",color3,[size_w/1.25,size_h/6.23])
                         widthCirc += size_w/14
                 elif event.type == MOUSEBUTTONDOWN:
                     for rect in rects:
