@@ -1,2 +1,3 @@
-todo:
-extend chars use with vsc replace using line 1427 [4043]
+[2009] getLang -> language
+[Lekcja1:lvl6:lvl9] "Click to open" color1 - > color3
+[677] color3->color2 (hitboxes default was color2, changed to color3 for tests)
