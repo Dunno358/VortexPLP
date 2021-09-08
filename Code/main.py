@@ -2849,7 +2849,7 @@ class Course(pygame.sprite.Sprite):
                     ]                    
                 try:
                     if language == "ENG":
-                        course.consoleGame(commandsList[iterator-2],"",multipleAnswers=True,answersList=goodVars[iterator-2],btnText="Atack") 
+                        course.consoleGame(commandsList[iterator-2],"",multipleAnswers=True,answersList=goodVars[iterator-2],btnText="Attack") 
                     else:
                         course.consoleGame(commandsList[iterator-2],"",multipleAnswers=True,answersList=goodVars[iterator-2],btnText="Atak")   
                 except:
