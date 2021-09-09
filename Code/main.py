@@ -3967,13 +3967,18 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 8:
                 notBlocked = False
                 storedTime = ""
-                course.dialogTop(6.41,"So that's all I wanted to teach","you before fight, ready?")  
-                startBtn = course.centeredBtn(2.19,dark_green,"Ready")      
+                if language == "ENG":
+                    course.dialogTop(6.41,"So that's all I wanted to teach","you before fight, ready?")  
+                    ready = "Ready"
+                else:
+                    course.dialogTop(6.41,"To wszystko czego chciałem cię","nauczyć przed walką, gotowy?") 
+                    ready = "Gotów"
+                startBtn = course.centeredBtn(2.19,dark_green,ready)      
                 
                 if event.type == MOUSEMOTION:
                     if startBtn.collidepoint(mouse_pos):
                             course.centeredBtn(2.19,green,"")  
-                            course.centeredBtn(2.19,dark_green,"Ready",size_w//450) 
+                            course.centeredBtn(2.19,dark_green,ready,size_w//450) 
                 elif event.type == MOUSEBUTTONDOWN:
                     if startBtn.collidepoint(mouse_pos):
                             courseLvl += 1
