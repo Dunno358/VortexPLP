@@ -1765,9 +1765,13 @@ class Course(pygame.sprite.Sprite):
                 for arg in args:  
                     WriteItalic(round(size_w//100*fontSize),arg,color3,[size_w/1.82,height]) 
                     height += hMinus
-    def coursorMarked():
-        mw = mouse_pos[0]
-        mh = mouse_pos[1]
+    def coursorMarked(cords=None):
+        if isinstance(cords,None):
+            mw = mouse_pos[0]
+            mh = mouse_pos[1]
+        else:
+            mw = cords[0]
+            mh = cords[1]            
         pygame.draw.line(screen, red, [mw+size_w/200,mh+size_h/200], [mw+size_w/100,mh+size_h/100], size_w//500)    
         pygame.draw.line(screen, red, [mw-size_w/200,mh+size_h/200], [mw-size_w/100,mh+size_h/100], size_w//500) 
         pygame.draw.line(screen, red, [mw+size_w/200,mh-size_h/200], [mw+size_w/100,mh-size_h/100], size_w//500) 
@@ -3145,7 +3149,7 @@ class Course(pygame.sprite.Sprite):
                 if size_w<1300:
                     course.dialogStandard(2.6,strs[0],strs[1],strs[2],strs[3],strs[4],strs[5],fontSize=1.7)
                 else:
-                    course.dialogStandard(2.9,strs[0],strs[1],strs[2],strs[3],strs[4],strs[5],rectH=3.7,iconH=2.6)
+                    course.dialogStandard(2.9,strs[0],strs[1],strs[2],strs[3],strs[4],strs[5],rectH=3.7,iconH=2.6,fontSize=1.7)
             elif courseLvl == 13:
                 iterator = 1
                 if language == "ENG":
@@ -4022,7 +4026,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 10:
                 storedTime = ""
                 TD_lvlType = "onlyenemy"
-                TD_toDefeat = 1
+                TD_toDefeat = 6
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()
