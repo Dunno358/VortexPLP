@@ -6,6 +6,7 @@ from pygame.locals import *
 import os
 from datetime import datetime
 from random import randint
+from random import uniform
 import sys
 import os
 import time
@@ -2069,6 +2070,10 @@ class Course(pygame.sprite.Sprite):
                 if event.type == MOUSEMOTION:
                     if obj.collidepoint(mouse_pos):
                         iterator += 1
+                elif event.type == MOUSEBUTTONDOWN:
+                    randW = uniform(1.21,4.00)
+                    randH = uniform(1.07,11.1)
+                    WriteItalic(round(size_w//100*0.7),"*Click*",color3,[size_w/randW,size_h/randH])
             elif courseLvl == 4:
                 if language == "ENG":
                     pythonList = [
