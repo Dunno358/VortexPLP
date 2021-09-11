@@ -172,7 +172,9 @@ class WriteItalic(pygame.sprite.Sprite):
         self.writeText = self.textObject.render(str(text),True,color)
         self.textRect = self.writeText.get_rect()
         self.textRect.center = center
-        screen.blit(self.writeText,self.textRect)
+        self.surface = screen.blit(self.writeText,self.textRect)
+    def get_rect(self):
+        return self.surface
 
 def cipher(textin):
     ciphered = ""
@@ -1997,7 +1999,7 @@ class Course(pygame.sprite.Sprite):
         else:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
     def lesson1():
-        global activeMenu,courseLvl,mentorIcon,activeLesson,theme,langugage
+        global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator
         course.standardLessonEvents("lesson1",11)   
         if getTheme().lower() == "light":
             mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
