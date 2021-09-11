@@ -2019,6 +2019,7 @@ class Course(pygame.sprite.Sprite):
                 else:
                     course.dialogStandard(2.6,"Zacznijmy od tego","czym jest Python","i gdzie jest stosowany")
             elif courseLvl==3:
+                notBlocked = False
                 if language == "ENG":
                     pythonList = [
                         "High-level programming language",
@@ -2031,36 +2032,41 @@ class Course(pygame.sprite.Sprite):
                         "Zorientowany obiektowo",
                         "Łatwy do nauki dzięki mocno angielskiej składni"
                     ]
-                pygame.draw.rect(screen, color1, [size_w/2.17,size_h/8.5,size_w/5.3,size_h/8], size_w//200,30)
-                if language == "ENG":
-                    WriteItalic(round(size_w//100*2.5),"Python is:",color3,[size_w/1.8,size_h/5.5]) 
-                else:
-                    WriteItalic(round(size_w//100*2.5),"Python jest:",color3,[size_w/1.8,size_h/5.5])
-
-                rects = []
-                colors = [dark_red,dark_green,dark_blue]
-                width_Start = size_w/2.53
-                if language == "ENG":
-                    check = "Check"
-                else:
-                    check = "Sprawdź"
-                for x in range(3):
-                    rect = pygame.draw.rect(screen, color1, [width_Start,size_h/3.26,size_w/10,size_h/10], size_w//150,10)
-                    Write(round(size_w//100*1.5),check,color1,[width_Start+size_w/20,size_h/2.76])
-                    rects.append(rect)
-                    width_Start += size_w/9
-
+                colors = [red,dark_blue,dark_green]
+                course.dialogTop(6.41,"So, Python is:","(Move mouse over question mark)")
+                obj = pygame.draw.rect(screen, color1, [1,1,1,1], width=0)
+                if iterator == 1:
+                    txt = WriteItalic(round(size_w//100*4),"?",red,[size_w/1.82,size_h/2.47])
+                    obj = txt.get_rect()
+                elif iterator == 2:
+                    WriteItalic(round(size_w//100*2),pythonList[0],red,[size_w/1.82,size_h/2.47])
+                    pygame.draw.line(screen, red, [size_w/4.78,size_h/3.05], [size_w/4.78,size_h/2.17], size_w//250)
+                    pygame.draw.line(screen, red, [size_w/1.17,size_h/3.05], [size_w/1.17,size_h/2.17], size_w//250)
+                    txt = WriteItalic(round(size_w//100*4),"?",dark_blue,[size_w/1.82,size_h/1.79])
+                    obj = txt.get_rect()
+                elif iterator == 3:
+                    pygame.draw.line(screen, red, [size_w/4.78,size_h/3.05], [size_w/4.78,size_h/2.17], size_w//250)
+                    pygame.draw.line(screen, red, [size_w/1.17,size_h/3.05], [size_w/1.17,size_h/2.17], size_w//250)
+                    WriteItalic(round(size_w//100*2),pythonList[0],red,[size_w/1.82,size_h/2.47])
+                    pygame.draw.line(screen, dark_blue, [size_w/4.78,size_h/2.16], [size_w/4.78,size_h/1.55], size_w//250)
+                    pygame.draw.line(screen, dark_blue, [size_w/1.17,size_h/2.16], [size_w/1.17,size_h/1.55], size_w//250)
+                    WriteItalic(round(size_w//100*2),pythonList[1],dark_blue,[size_w/1.82,size_h/1.79])
+                    txt = WriteItalic(round(size_w//100*4),"?",dark_green,[size_w/1.82,size_h/1.38])
+                    obj = txt.get_rect()
+                elif iterator == 4:
+                    pygame.draw.line(screen, red, [size_w/4.78,size_h/3.05], [size_w/4.78,size_h/2.17], size_w//250)
+                    pygame.draw.line(screen, red, [size_w/1.17,size_h/3.05], [size_w/1.17,size_h/2.17], size_w//250)
+                    WriteItalic(round(size_w//100*2),pythonList[0],red,[size_w/1.82,size_h/2.47])
+                    pygame.draw.line(screen, dark_blue, [size_w/4.78,size_h/2.16], [size_w/4.78,size_h/1.55], size_w//250)
+                    pygame.draw.line(screen, dark_blue, [size_w/1.17,size_h/2.16], [size_w/1.17,size_h/1.55], size_w//250)
+                    WriteItalic(round(size_w//100*2),pythonList[1],dark_blue,[size_w/1.82,size_h/1.79]) 
+                    pygame.draw.line(screen, dark_green, [size_w/4.78,size_h/1.55], [size_w/4.78,size_h/1.25], size_w//250)
+                    pygame.draw.line(screen, dark_green, [size_w/1.17,size_h/1.55], [size_w/1.17,size_h/1.25], size_w//250) 
+                    WriteItalic(round(size_w//100*2),pythonList[2],dark_green,[size_w/1.82,size_h/1.38]) 
+                    notBlocked = True
                 if event.type == MOUSEMOTION:
-                    width_Start = size_w/2.53
-                    for rect in rects:
-                        index = rects.index(rect)
-                        if rect.collidepoint(mouse_pos):
-                            WriteItalic(round(size_w//100*2.5),pythonList[index],colors[index],[size_w/1.83,size_h/1.74])
-                            Write(round(size_w//100*1.5),check,color3,[width_Start+size_w/20,size_h/2.76])
-                            width_Start += size_w/9
-                        else:
-                            Write(round(size_w//100*1.5),check,color1,[width_Start+size_w/20,size_h/2.76])
-                            width_Start += size_w/9
+                    if obj.collidepoint(mouse_pos):
+                        iterator += 1
             elif courseLvl == 4:
                 if language == "ENG":
                     pythonList = [
