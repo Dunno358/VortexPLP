@@ -1,2 +1,1 @@
 [todo] entering settings while on Tower Defense Lvls need to adjust allowing events(KEYDOWN) to queue
-[3971] Added a few of text translation
