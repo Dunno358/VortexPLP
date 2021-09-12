@@ -2000,7 +2000,7 @@ class Course(pygame.sprite.Sprite):
         else:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
     def lesson1():
-        global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator
+        global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked
         course.standardLessonEvents("lesson1",11)   
         if getTheme().lower() == "light":
             mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
@@ -2096,37 +2096,24 @@ class Course(pygame.sprite.Sprite):
                     "TensorFlow, Theano"
                 ]
 
-                pygame.draw.rect(screen, color1, [size_w/2.31,size_h/8.5,size_w/4,size_h/8], size_w//200,30)
-                if language == "ENG":
-                    WriteItalic(round(size_w//100*2.5),"Python is used for:",color3,[size_w/1.8,size_h/5.5]) 
-                else:
-                    WriteItalic(round(size_w//100*2.2),"Zastosowania Python:",color3,[size_w/1.8,size_h/5.5])
-
+                course.dialogTop(6.41,"Are you wondering for what is it used?","Then open the chests!")
+                wdth = size_w/4.31
+                hght = size_h/1.79
                 rects = []
-                colors = [dark_red,dark_green,dark_blue,orange]
-                width_Start = size_w/2.82
-                if language == "ENG":
-                    check = "Check"
-                else:
-                    check = "Sprawdź"
                 for x in range(4):
-                    rect = pygame.draw.rect(screen, color1, [width_Start,size_h/3.26,size_w/10,size_h/10], size_w//150,10)
-                    Write(round(size_w//100*1.5),check,color1,[width_Start+size_w/20,size_h/2.76])
+                    rect = pygame.draw.rect(screen, dark_brown, [wdth,hght,size_w/12,size_h/8], 0,size_w//250)
                     rects.append(rect)
-                    width_Start += size_w/9
+                    pygame.draw.rect(screen, darkThemeMainCol, [wdth,hght,size_w/12,size_h/8], size_w//450,size_w//250)
+                    pygame.draw.line(screen, darkThemeMainCol, [wdth,hght+size_h/16], [wdth+size_w/12.2,hght+size_h/16], size_w//450)
+                    pygame.draw.rect(screen, gold, [wdth+size_w/30,hght+size_h/25,size_w/55,size_h/55], 0)
+                    wdth += size_w/6
 
                 if event.type == MOUSEMOTION:
-                    width_Start = size_w/2.82
                     for rect in rects:
-                        index = rects.index(rect)
                         if rect.collidepoint(mouse_pos):
-                            WriteItalic(round(size_w//100*2.5),pythonList[index],colors[index],[size_w/1.83,size_h/1.74])
-                            WriteItalic(round(size_w//100*2.5),"({})".format(lang[index]),colors[index],[size_w/1.83,size_h/1.42])
-                            Write(round(size_w//100*1.5),check,color3,[width_Start+size_w/20,size_h/2.76])
-                            width_Start += size_w/9
-                        else:
-                            Write(round(size_w//100*1.5),check,color1,[width_Start+size_w/20,size_h/2.76])
-                            width_Start += size_w/9
+                            index = rects.index(rect)
+                            pygame.draw.rect(screen, lt_brown, [rect[0],rect[1],rect[2],rect[3]], size_w//450,size_w//250)
+                            pygame.draw.line(screen, lt_brown, [rect[0],rect[1]+size_h/16], [rect[0]+size_w/12.2,rect[1]+size_h/16], size_w//450)
             elif courseLvl==5:
                 if language == "ENG":
                     course.dialogStandard(2.6,"Now we will install Python,","just follow my lead!")   
