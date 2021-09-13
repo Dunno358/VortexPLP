@@ -1,2 +1,1 @@
 [todo] entering settings while on Tower Defense Lvls need to adjust allowing events(KEYDOWN) to queue
-[todo] delete Images\Install\1.png as it's not being used anymore
