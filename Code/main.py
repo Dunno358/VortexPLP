@@ -2146,27 +2146,24 @@ class Course(pygame.sprite.Sprite):
                 else:
                     course.dialogStandard(2.7,"Teraz zainstalujemy Pythona,","pokażę ci jak!")    
             elif courseLvl == 6:
-                #installPng = pygame.image.load(r"{}/Images/Install/1.png".format(dirPath)) 
-                #installPng = pygame.transform.scale(installPng, [int(size_w/1.95),int(size_h/2.29)])
-                #screen.blit(installPng,[size_w/3.5,size_h/3.3])  
                 if language == "ENG":  
                     strs = [
-                        "Go to python.org/downloads",
-                        "and click the marked button",
+                        "Now when we know a little bit about it,",
+                        "why not to install it?",
                         "Download Python for Windows",
                         "Or visit Python webpage and do it yourself"
-                        download="Download"
-                        go="Go"
                     ] 
+                    download="Download"
+                    go="Go"
                 else:
                     strs = [
-                        "Idź do python.org/downloads, a",
-                        "następnie kliknij zaznaczony przycisk",
+                        "Teraz, gdy coś już o nim wiemy,",
+                        "czemu go nie zainstalować?",
                         "Zainstaluj Python dla Windows",
                         "Lub odwiedź stronę Python i zrób to sam"
-                        download="Pobierz"
-                        go="Idź"
-                    ]       
+                    ]  
+                    download="Pobierz"
+                    go="Idź"     
                 WriteItalic(round(size_w//100*3),strs[2],color3,[size_w/1.79,size_h/2.88])              
                 link = course.centeredBtn(2.38,dark_green,download,adjustToDialog=True,fontSize=1.7)
                 WriteItalic(round(size_w//100*2.2),strs[3],color3,[size_w/1.79,size_h/1.73])
@@ -2186,10 +2183,28 @@ class Course(pygame.sprite.Sprite):
                         course.centeredBtn(1.49,dark_green,"",adjustToDialog=True,fontSize=1.7,border=size_w//350)
             elif courseLvl == 7:
                 if language == "ENG":
-                    course.dialogStandard(2.6,"Don't worry about installation,","it's pretty user friendly!","Just remeber to mark","ADD TO PATH checkbox",big=True)
+                    strs = [
+                        "Installation is pretty user friendly,",
+                        "just remember to mark following:",
+                        "Add Python [version] to PATH",
+                        "Now you can safely choose \"Install now\"",
+                        "Or \"Customize installation\" if you want to choose what will be installed"
+                    ]
                 else:
-                    course.dialogStandard(2.6,"Nie martw się instalacją,","jest bardzo przyjazna dla","użytkownika! Tylko zaznacz","ADD TO PATH opcję",big=True)
-                pygame.draw.line(screen, dark_red, [size_w/1.9,size_h/1.75], [size_w/1.5,size_h/1.75], 3)
+                    strs = [
+                        "Instalacja jest całkiem intuicyjna,",
+                        "ale pamiętaj by zaznaczyć następujące:",
+                        "Add Python [version] to PATH",
+                        "Teraz możesz bezpiecznie wybrać \"Install now\"",
+                        "Lub \"Customize installation\" jeśli chcesz mieć kontrole co zostanie zainstalowane"
+                    ]            
+                course.dialogTop(6.41,strs[0],strs[1])
+                pygame.draw.rect(screen, color3, [size_w/2.56,size_h/2.99,size_w/50,size_h/30], size_w//450)
+                txt = Write(round(size_w//100*1.5),strs[2],color3,[size_w/1.78,size_h/2.86])
+                pygame.draw.line(screen, green, [size_w/2.42,size_h/3.07], [size_w/2.49,size_h/2.81], size_w//450)
+                pygame.draw.line(screen, green, [size_w/2.49,size_h/2.81], [size_w/2.58,size_h/2.99], size_w//450)
+                WriteItalic(round(size_w//100*2),strs[3],color3,[size_w/1.83,size_h/2.02])
+                WriteItalic(round(size_w//100*1.6),strs[4],color3,[size_w/1.83,size_h/1.62])
             elif courseLvl == 8:
                 if language == "ENG":
                     course.dialogStandard(2.6,"Now it's time to install IDE","(Integrated Developer","Enviroment), Of course there's","no need for that, but it will","make it a lot easier for you",big=True)
@@ -2256,9 +2271,9 @@ class Course(pygame.sprite.Sprite):
                             WriteItalic(round(size_w//100*3),IDEs[index],colors[index],[size_w/1.8,size_h/3])
                             WriteItalic(round(size_w//100*2.5),links[index],colors[index],[size_w/1.8,size_h/2.2])
                             if language == "ENG":
-                                Write(round(size_w//100*1.5),"Click to open",color3,[size_w/1.25,size_h/6.23])
+                                Write(round(size_w//100*1.5),"Click to open",colors[index],[size_w/1.8,size_h/4.06])
                             else:
-                                Write(round(size_w//100*1),"Kliknij by otworzyć",color3,[size_w/1.25,size_h/6.23])
+                                Write(round(size_w//100*1),"Kliknij by otworzyć",colors[index],[size_w/1.8,size_h/4.06])
                         widthCirc += size_w/14
                 elif event.type == MOUSEBUTTONDOWN:
                     for rect in rects:
