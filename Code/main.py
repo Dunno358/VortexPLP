@@ -87,6 +87,9 @@ name=""
 lookForPhrase=""
 text = ""
 
+#HOLDER
+storedItems = []
+
 #TIME
 wait = False
 storedTime = ""
@@ -2000,7 +2003,7 @@ class Course(pygame.sprite.Sprite):
         else:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
     def lesson1():
-        global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked
+        global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
         course.standardLessonEvents("lesson1",11)   
         if getTheme().lower() == "light":
             mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
@@ -2036,7 +2039,10 @@ class Course(pygame.sprite.Sprite):
                         "Łatwy do nauki dzięki mocno angielskiej składni"
                     ]
                 colors = [red,dark_blue,dark_green]
-                course.dialogTop(6.41,"So, Python is:","(Move mouse over question mark)")
+                if language == "ENG":
+                    course.dialogTop(6.41,"So, Python is:","(Move mouse over question mark)")
+                else:
+                    course.dialogTop(6.41,"Tak więc, Python jest:","(Najedź myszką na znak zapytania)")
                 obj = pygame.draw.rect(screen, color1, [1,1,1,1], width=0)
                 if iterator == 1:
                     txt = WriteItalic(round(size_w//100*4),"?",red,[size_w/1.82,size_h/2.47])
@@ -2075,6 +2081,10 @@ class Course(pygame.sprite.Sprite):
                     randH = uniform(1.07,11.1)
                     WriteItalic(round(size_w//100*0.7),"*Click*",color3,[size_w/randW,size_h/randH])
             elif courseLvl == 4:
+                if len(storedItems)<4:
+                    notBlocked = False
+                else:
+                    notBlocked = True
                 if language == "ENG":
                     pythonList = [
                         "Web development",
@@ -2095,54 +2105,85 @@ class Course(pygame.sprite.Sprite):
                     "matplotlib, scipy",
                     "TensorFlow, Theano"
                 ]
+                colors=[red,dark_blue,dark_green,orange]
 
-                course.dialogTop(6.41,"Are you wondering for what is it used?","Then open the chests!")
-                wdth = size_w/4.31
+                if language == "ENG":
+                    course.dialogTop(6.41,"Are you wondering for what is it used?","Then open the chests!")
+                else:
+                    course.dialogTop(6.41,"Zastanawiasz się do czego z kolei","takiego języka się używa?","Zatem otwórz skrzynki!")
+                wdth = size_w/4.17
                 hght = size_h/1.79
                 rects = []
                 for x in range(4):
-                    rect = pygame.draw.rect(screen, dark_brown, [wdth,hght,size_w/12,size_h/8], 0,size_w//250)
-                    rects.append(rect)
-                    pygame.draw.rect(screen, darkThemeMainCol, [wdth,hght,size_w/12,size_h/8], size_w//450,size_w//250)
-                    pygame.draw.line(screen, darkThemeMainCol, [wdth,hght+size_h/16], [wdth+size_w/12.2,hght+size_h/16], size_w//450)
-                    pygame.draw.rect(screen, gold, [wdth+size_w/30,hght+size_h/25,size_w/55,size_h/55], 0)
+                    if x not in storedItems:
+                        rect = pygame.draw.rect(screen, dark_brown, [wdth,hght,size_w/12,size_h/8], 0,size_w//250)
+                        rects.append(rect)
+                        pygame.draw.rect(screen, darkThemeMainCol, [wdth,hght,size_w/12,size_h/8], size_w//450,size_w//250)
+                        pygame.draw.line(screen, darkThemeMainCol, [wdth,hght+size_h/16], [wdth+size_w/12.2,hght+size_h/16], size_w//450)
+                        pygame.draw.rect(screen, gold, [wdth+size_w/30,hght+size_h/25,size_w/55,size_h/55], 0)
+                    else:
+                        rect = pygame.draw.rect(screen, color2, [wdth,hght,size_w/12,size_h/8], 0,size_w//250)
+                        rects.append(rect)  
+                        WriteItalic(round(size_w//100*1.7),pythonList[x],colors[x],[wdth+size_w/25,hght])
+                        WriteItalic(round(size_w//100*1.4),lang[x],colors[x],[wdth+size_w/25,hght+size_h/25])                      
                     wdth += size_w/6
 
                 if event.type == MOUSEMOTION:
                     for rect in rects:
-                        if rect.collidepoint(mouse_pos):
-                            index = rects.index(rect)
+                        index = rects.index(rect)
+                        if rect.collidepoint(mouse_pos) and index not in storedItems:
                             pygame.draw.rect(screen, lt_brown, [rect[0],rect[1],rect[2],rect[3]], size_w//450,size_w//250)
                             pygame.draw.line(screen, lt_brown, [rect[0],rect[1]+size_h/16], [rect[0]+size_w/12.2,rect[1]+size_h/16], size_w//450)
+                elif event.type == MOUSEBUTTONDOWN:
+                    for rect in rects:
+                        if rect.collidepoint(mouse_pos):
+                            index = rects.index(rect)
+                            storedItems.append(index)
+                            print(index,storedItems)
             elif courseLvl==5:
                 if language == "ENG":
-                    course.dialogStandard(2.6,"Now we will install Python,","just follow my lead!")   
+                    course.dialogStandard(2.7,"Now we will install Python,","just follow my lead!")   
                 else:
-                    course.dialogStandard(2.6,"Teraz zainstalujemy Pythona,","pokażę ci jak!")    
+                    course.dialogStandard(2.7,"Teraz zainstalujemy Pythona,","pokażę ci jak!")    
             elif courseLvl == 6:
-                installPng = pygame.image.load(r"{}/Images/Install/1.png".format(dirPath)) 
-                installPng = pygame.transform.scale(installPng, [int(size_w/1.95),int(size_h/2.29)])
-                screen.blit(installPng,[size_w/3.5,size_h/3.3])  
-                screen.blit(mentorIcon,[size_w/3.5,size_h/10])
+                #installPng = pygame.image.load(r"{}/Images/Install/1.png".format(dirPath)) 
+                #installPng = pygame.transform.scale(installPng, [int(size_w/1.95),int(size_h/2.29)])
+                #screen.blit(installPng,[size_w/3.5,size_h/3.3])  
                 if language == "ENG":  
                     strs = [
                         "Go to python.org/downloads",
                         "and click the marked button",
-                        "<- Click there"
+                        "Download Python for Windows",
+                        "Or visit Python webpage and do it yourself"
+                        download="Download"
+                        go="Go"
                     ] 
                 else:
                     strs = [
                         "Idź do python.org/downloads, a",
                         "następnie kliknij zaznaczony przycisk",
-                        "<- Kliknij tam"
-                    ]                     
-                link = pygame.draw.rect(screen, color1, [size_w/2.57,size_h/9,size_w/3,size_h/6], size_w//200,30)   
-                WriteItalic(round(size_w//100*1.5),strs[0],color3,[size_w/1.82,size_h/6.41]) 
-                WriteItalic(round(size_w//100*1.5),strs[1],color3,[size_w/1.82,size_h/4.41]) 
-                Write(round(size_w/100*1.5),strs[2],color3,[size_w/1.26,size_h/5.41])
+                        "Zainstaluj Python dla Windows",
+                        "Lub odwiedź stronę Python i zrób to sam"
+                        download="Pobierz"
+                        go="Idź"
+                    ]       
+                WriteItalic(round(size_w//100*3),strs[2],color3,[size_w/1.79,size_h/2.88])              
+                link = course.centeredBtn(2.38,dark_green,download,adjustToDialog=True,fontSize=1.7)
+                WriteItalic(round(size_w//100*2.2),strs[3],color3,[size_w/1.79,size_h/1.73])
+                link2 = course.centeredBtn(1.49,dark_green,go,adjustToDialog=True,fontSize=2.4)
+                course.dialogTop(6.41,strs[0],strs[1]) 
                 if event.type == MOUSEBUTTONDOWN:
                     if link.collidepoint(mouse_pos):
-                        os.system(r"start https://python.org/downloads")
+                        os.system(r"start https://www.python.org/ftp/python/3.9.7/python-3.9.7-amd64.exe")
+                    elif link2.collidepoint(mouse_pos):
+                        os.system(r"start https://www.python.org/downloads/")
+                elif event.type == MOUSEMOTION:
+                    if link.collidepoint(mouse_pos):
+                        course.centeredBtn(2.38,green,download,adjustToDialog=True,fontSize=1.7)
+                        course.centeredBtn(2.38,dark_green,"",adjustToDialog=True,fontSize=1.7,border=size_w//350)
+                    elif link2.collidepoint(mouse_pos):
+                        course.centeredBtn(1.49,green,go,adjustToDialog=True,fontSize=1.7)
+                        course.centeredBtn(1.49,dark_green,"",adjustToDialog=True,fontSize=1.7,border=size_w//350)
             elif courseLvl == 7:
                 if language == "ENG":
                     course.dialogStandard(2.6,"Don't worry about installation,","it's pretty user friendly!","Just remeber to mark","ADD TO PATH checkbox",big=True)
