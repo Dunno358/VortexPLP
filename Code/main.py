@@ -16,7 +16,7 @@ print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]))
 print("Init_Start_Time: ",str(datetime.now())[10:])
 print("Witaj {}!".format(os.getlogin()))# - RETURNS NAME OF CURRENT USER
 
-#01.09.2021
+#14.09.2021
 
 #COLORS
 darkThemeMainCol = (30,30,30)
@@ -574,11 +574,13 @@ class Start(pygame.sprite.Sprite):
 
             #Circle
             pygame.draw.circle(screen, color2, [size_w/1.80,size_h/2.3], size_w//19, 10)
-            Write(size_w//35*3,logoName,color2,[size_w/1.85,size_h/2.2])
+            logoTxt = Write(size_w//35*3,logoName,color2,[size_w/1.85,size_h/2.2])
+            print(logoTxt.get_rect())
            
             logoSize = size_w//50*3
             logoTxt1 = WriteItalic(logoSize,logoName,logoBlue,[size_w/2,size_h/2.3])
-            logoTxt1 = WriteItalic(logoSize-logoSize//3,"PLP",red,[size_w/2+(size_w//50*3*len(logoName)/2.65),size_h/2.5])#size_w/1.5
+            logoTxt1 = WriteItalic(logoSize-logoSize//3,"PLP",red,[size_w/1.63,size_h/2.5])
+            #logoTxt1 = WriteItalic(logoSize-logoSize//3,"PLP",red,[size_w/2+(size_w//50*3*len(logoName)/2.65),size_h/2.5])
             if event.type == MOUSEMOTION:
                 if guideBtn.collidepoint(mouse_pos):
                     guideBtn = pygame.draw.rect(screen, green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],0,10)
