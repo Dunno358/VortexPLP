@@ -4133,14 +4133,26 @@ class Course(pygame.sprite.Sprite):
                 course.eventsReset()
                 if TD_count == 0:
                     course.dialogTop(6.41,"But as friends are approaching","we have to adjust our defenses",bckgr=True)
-                nextBtn = course.centeredBtn(2.82,dark_green,"Next",adjustToDialog=True)
+                elif TD_count == 1:
+                    if not TD_consoleShown:
+                        course.dialogTop(6.41,"Click marked button",bckgr=True)
+                        pygame.draw.rect(screen, red, [size_w/4.99,size_h/3.8,size_w/30,size_h/5.8], size_w//250,size_w//150)
+                        pygame.draw.line(screen, red, [size_w/4.14,size_h/3.59], [size_w/3.83,size_h/3.92], size_w//250)
+                        pygame.draw.line(screen, red, [size_w/4.14,size_h/3.06], [size_w/3.83,size_h/3.27], size_w//250)
+                        pygame.draw.line(screen, red, [size_w/4.14,size_h/2.41], [size_w/3.83,size_h/2.27], size_w//250)
+                        pygame.draw.line(screen, red, [size_w/4.14,size_h/2.63], [size_w/3.83,size_h/2.5], size_w//250)
+                if not TD_consoleShown:
+                    nextBtn = course.centeredBtn(2.82,dark_green,"Next",adjustToDialog=True)
                 if event.type == MOUSEMOTION:
                     if nextBtn.collidepoint(mouse_pos):
                         course.centeredBtn(2.82,green,"Next",adjustToDialog=True)
                         course.centeredBtn(2.82,dark_green,"",adjustToDialog=True,border=size_w//250)
                 elif event.type == MOUSEBUTTONDOWN:
-                    if nextBtn.collidepoint(mouse_pos):
-                        TD_count += 1
+                    try:
+                        if nextBtn.collidepoint(mouse_pos):
+                            TD_count += 1
+                    except:
+                        pass
             elif courseLvl == 13:
                 storedTime = ""
                 TD_lvlType = "onlyfriend"
