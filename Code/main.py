@@ -118,6 +118,9 @@ loadingBar = False
 rectCenter = (size_w/1.5)/2 + size_w/5
 storedCords = []
 
+#Dungeon
+DG_icons = []
+
 #Tower Defense
 TD_circs = []
 TD_pathCords = []
@@ -126,6 +129,7 @@ TD_guardRects = []
 TD_guardSubRects = []
 TD_consoleRects = []
 TD_queue = []
+TD_icon = ""
 TD_time = ""
 TD_lvlType = ""
 TD_wdthStart = size_w/4.9
@@ -156,8 +160,9 @@ TD_count = 0
 TD_toDefeat = 0
 TD_added = False
 TD_added2 = False
-TD_Lvls = [3,4,9,10,11]
+TD_Lvls = [3,4,9,10,11,12,13]
 TD_excludeLvls = 3
+TD_excludedLvls = [12]
 TD_subDone = False
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
@@ -757,7 +762,7 @@ class Course(pygame.sprite.Sprite):
                         Write(size_w//100*2,"Walka",color3,[size_w/1.97,size_h/1.13]) 
         def singleUnitClickEvent(isBoss):
             global hp1,hp2,courseLvl
-            global iterator,inFight,notBlocked,chosen
+            global iterator,inFight,notBlocked,chosen,DG_icons
             if event.type == MOUSEBUTTONDOWN:
                 for rect in rects:
                     if rect.collidepoint(mouse_pos) and inFight and activeMain and not hpBarEmpty:
@@ -783,6 +788,7 @@ class Course(pygame.sprite.Sprite):
                         hp1 = size_w/2.66
                         hp2 = size_w/6
                         iterator = 1
+                    DG_icons = []
     class tower_defence():
         def drawPath():
             global TD_pathCords
@@ -865,9 +871,10 @@ class Course(pygame.sprite.Sprite):
             Write(size_w//100*2,text,color1,[size_w/1.82,size_h/2.29+size_h/19])
             return okBtn
         def makingGuards():
-            global selected,storedTime,chosen,storedCords,done,circles,loadingBar
-            potion = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
-            potion = pygame.transform.scale(potion,[int(size_w/42.68),int(size_h/12)])
+            global selected,storedTime,chosen,storedCords,done,circles,loadingBar,TD_icon
+            if isinstance(TD_icon,str):
+                TD_icon = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
+                TD_icon = pygame.transform.scale(TD_icon,[int(size_w/42.68),int(size_h/12)])
             cords=[[size_w/2.72,size_h/1.92],
                     [size_w/1.91,size_h/1.94],
                     [size_w/1.67,size_h/1.94],
@@ -911,12 +918,12 @@ class Course(pygame.sprite.Sprite):
             correctHight = mouse_pos[1] > size_h/3.41 and mouse_pos[1] < size_h/1.17
             if not loadingBar:
                 if correctWidth and correctHight:
-                    screen.blit(potion,[mouse_pos[0]+size_w//400,mouse_pos[1]])
+                    screen.blit(TD_icon,[mouse_pos[0]+size_w//400,mouse_pos[1]])
             else:
                 try:
                     blitWdth = circles[selected][0] + circles[selected][2]/2
                     blitHght = circles[selected][1] + circles[selected][3]/2
-                    screen.blit(potion,[blitWdth,blitHght])
+                    screen.blit(TD_icon,[blitWdth,blitHght])
                 except:
                     pass
         def loadingBar(time):
@@ -960,9 +967,9 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_consoleShown,TD_friends,TD_enemies
             global TD_actualEnemy,TD_actualEnemy2,TD_wdthStart2,TD_hghtStart2,TD_enemy2,TD_firstDone2
-            global TD_hp2,TD_queue,TD_lvlType,TD_Lvls,TD_excludeLvls
+            global TD_hp2,TD_queue,TD_lvlType,TD_Lvls,TD_excludeLvls,TD_excludedLvls
             lessonOk = str(activeLesson)[17:-23]=="lesson4"
-            lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:]
+            lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:] and courseLvl not in TD_excludedLvls
             if activities[0] and not activeMenu and lessonOk and lvlOk and not TD_consoleShown:
                 eventsBlocked = True
                 if len(TD_queue)<2:
@@ -1116,8 +1123,8 @@ class Course(pygame.sprite.Sprite):
                     enemy = [0,0]
                     enemy2 = [0,0]
         def targeting():
-            global TD_consoleShown,TD_count,TD_Lvls,TD_excludeLvls,courseLvl
-            lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:]
+            global TD_consoleShown,TD_count,TD_Lvls,TD_excludeLvls,courseLvl,TD_excludedLvls
+            lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:] and courseLvl not in TD_excludedLvls
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
@@ -1773,13 +1780,9 @@ class Course(pygame.sprite.Sprite):
                 for arg in args:  
                     WriteItalic(round(size_w//100*fontSize),arg,color3,[size_w/1.82,height]) 
                     height += hMinus
-    def coursorMarked(cords=None):
-        if isinstance(cords,None):
-            mw = mouse_pos[0]
-            mh = mouse_pos[1]
-        else:
-            mw = cords[0]
-            mh = cords[1]            
+    def coursorMarked():
+        mw = mouse_pos[0]
+        mh = mouse_pos[1]          
         pygame.draw.line(screen, red, [mw+size_w/200,mh+size_h/200], [mw+size_w/100,mh+size_h/100], size_w//500)    
         pygame.draw.line(screen, red, [mw-size_w/200,mh+size_h/200], [mw-size_w/100,mh+size_h/100], size_w//500) 
         pygame.draw.line(screen, red, [mw+size_w/200,mh-size_h/200], [mw+size_w/100,mh-size_h/100], size_w//500) 
@@ -2295,7 +2298,7 @@ class Course(pygame.sprite.Sprite):
                     screen.blit(mentorIcon,[size_w/3.1,size_h/6.1])
                 cup = pygame.image.load(r"{}/Images/Install/cup.png".format(dirPath))
                 cup = pygame.transform.scale(cup, [int(size_w/5.33),int(size_h/3)])
-                screen.blit(cup,[size_w/2.33,size_h/2.4])  
+                screen.blit(cup,[size_w/2.13,size_h/2.4])  
 
                 pygame.draw.rect(screen, color1, [size_w/2.24,size_h/7.14,size_w/4,size_h/8], size_w//150,15)
                 if language == "ENG":
@@ -2305,15 +2308,12 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*1.5),"Romo jest dumny",color3,[size_w/1.77,size_h/4.9])
                     finish = "Zakończ"
 
-                finishBtn = pygame.draw.rect(screen, dark_green, [size_w/2.3,size_h/1.26,size_w/6,size_h/8], 0,20)
-                Write(round(size_w//100*2),finish,color3,[size_w/1.94,size_h/1.17])        
+                finishBtn = pygame.draw.rect(screen, dark_green, [size_w/2.12,size_h/1.26,size_w/6,size_h/8], 0,20)
+                Write(round(size_w//100*2),finish,color3,[size_w/1.81,size_h/1.17])        
 
                 if event.type == MOUSEMOTION:
                     if finishBtn.collidepoint(mouse_pos):
-                        pygame.draw.rect(screen, color1, [size_w/2.3,size_h/1.26,size_w/6,size_h/8], size_w//200,20) 
-                    else:
-                        pygame.draw.rect(screen, dark_green, [size_w/2.3,size_h/1.26,size_w/6,size_h/8], 0,20) 
-                        Write(round(size_w//100*2),finish,color3,[size_w/1.94,size_h/1.17])  
+                        pygame.draw.rect(screen, color1, [size_w/2.12,size_h/1.26,size_w/6,size_h/8], size_w//200,size_w//68) 
                 elif event.type == MOUSEBUTTONDOWN:
                     if finishBtn.collidepoint(mouse_pos):
                         if getCourseLvl() < 2:
@@ -2562,7 +2562,7 @@ class Course(pygame.sprite.Sprite):
                     course.dialogStandard(2.6,"Brawo! Jesteśmy gotowi!","Podążaj za mną w ciemność","pokonamy potężnego wroga:","Przeklętego Rycerza",big=True)
                 notBlocked = True
             elif courseLvl == 8:
-                global selected,goBtn
+                global selected,goBtn,DG_icons
                 notBlocked = False
                 if not isinstance(chosen,int):
                     cave1 = pygame.image.load(r"{}/Images/Game/cave.jpg".format(dirPath))
@@ -2628,16 +2628,17 @@ class Course(pygame.sprite.Sprite):
                             pass
                 else:
                     if chosen == 0:
-                        troll = pygame.image.load(r"{}/Images/Game/troll.png".format(dirPath)) 
-                        trollDialog =  pygame.image.load(r"{}/Images/Game/trollDialog.png".format(dirPath))
-                        trollM = pygame.image.load(r"{}/Images/Game/trollMarked.png".format(dirPath))  
-                        troll = pygame.transform.scale(troll, [int(size_w/4.55),int(size_h/1.64)])  
-                        trollM = pygame.transform.scale(trollM, [int(size_w/4.55),int(size_h/1.64)])
-                        trollDialog = pygame.transform.scale(trollDialog, [int(size_w/4.55),int(size_h/2.71)]) 
-                        icons = [troll,trollM,trollDialog]
-                        course.dungeon.singleUnitInit(icons,size_w/2.52,size_h/4.86)
-                        tw = troll.get_width()
-                        th = troll.get_height()
+                        if len(DG_icons)<1:
+                            troll = pygame.image.load(r"{}/Images/Game/troll.png".format(dirPath)) 
+                            trollDialog =  pygame.image.load(r"{}/Images/Game/trollDialog.png".format(dirPath))
+                            trollM = pygame.image.load(r"{}/Images/Game/trollMarked.png".format(dirPath))  
+                            troll = pygame.transform.scale(troll, [int(size_w/4.55),int(size_h/1.64)])  
+                            trollM = pygame.transform.scale(trollM, [int(size_w/4.55),int(size_h/1.64)])
+                            trollDialog = pygame.transform.scale(trollDialog, [int(size_w/4.55),int(size_h/2.71)]) 
+                            DG_icons = [troll,trollM,trollDialog]
+                        course.dungeon.singleUnitInit(DG_icons,size_w/2.52,size_h/4.86)
+                        tw = DG_icons[0].get_width()
+                        th = DG_icons[0].get_height()
                         cords = [
                             [size_w/2.07,size_h/2.27,tw/4,th/2.6],
                             [size_w/2.24,size_h/1.91,tw/6.2,th/2.5],
@@ -2685,16 +2686,17 @@ class Course(pygame.sprite.Sprite):
                         course.dungeon.singleUnitMotionEvent(cave)
                         course.dungeon.singleUnitClickEvent(False)
                     elif chosen == 1:
-                        hunter = pygame.image.load(r"{}/Images/Game/knight2.png".format(dirPath))
-                        hunter = pygame.transform.scale(hunter, [int(size_w/5.26),int(size_h/1.92)])
-                        hunterMarked = pygame.image.load(r"{}/Images/Game/knight2M.png".format(dirPath))
-                        hunterMarked = pygame.transform.scale(hunterMarked, [int(size_w/5.26),int(size_h/1.92)])
-                        hunterDialog = pygame.image.load(r"{}/Images/Game/knight3.png".format(dirPath))
-                        hunterDialog = pygame.transform.scale(hunterDialog, [int(size_w/4.55),int(size_h/2.71)])
-                        icons = [hunter,hunterMarked,hunterDialog]
-                        course.dungeon.singleUnitInit(icons,size_w/2.42,size_h/4.5)
-                        hw = hunter.get_width()
-                        hh = hunter.get_height()
+                        if len(DG_icons)<1:
+                            hunter = pygame.image.load(r"{}/Images/Game/knight2.png".format(dirPath))
+                            hunter = pygame.transform.scale(hunter, [int(size_w/5.26),int(size_h/1.92)])
+                            hunterMarked = pygame.image.load(r"{}/Images/Game/knight2M.png".format(dirPath))
+                            hunterMarked = pygame.transform.scale(hunterMarked, [int(size_w/5.26),int(size_h/1.92)])
+                            hunterDialog = pygame.image.load(r"{}/Images/Game/knight3.png".format(dirPath))
+                            hunterDialog = pygame.transform.scale(hunterDialog, [int(size_w/4.55),int(size_h/2.71)])
+                            DG_icons = [hunter,hunterMarked,hunterDialog]
+                        course.dungeon.singleUnitInit(DG_icons,size_w/2.42,size_h/4.5)
+                        hw = DG_icons[0].get_width()
+                        hh = DG_icons[0].get_height()
                         wdth = size_w/2.23
                         cords = [
                             [wdth,size_h/4.38+hh/2,hw/1.8,hh/2],
@@ -2742,18 +2744,19 @@ class Course(pygame.sprite.Sprite):
                         course.dungeon.singleUnitClickEvent(False)
                     elif chosen == 2:
                         global winBtn
-                        knight = pygame.image.load(r"{}/Images/Game/knight1.png".format(dirPath))
-                        knightMarked = pygame.image.load(r"{}/Images/Game/knight1M.png".format(dirPath))
-                        icons = [knight,knightMarked]
-                        for icon in icons:
-                            index = icons.index(icon)
+                        if len(DG_icons) < 1:
+                            knight = pygame.image.load(r"{}/Images/Game/knight1.png".format(dirPath))
+                            knightMarked = pygame.image.load(r"{}/Images/Game/knight1M.png".format(dirPath))
+                            DG_icons = [knight,knightMarked]
+                        for icon in DG_icons:
+                            index = DG_icons.index(icon)
                             icon = pygame.transform.scale(icon, [int(size_w/2.985),int(size_h/1.92)])
-                            icons[index] = icon
-                        course.dungeon.singleUnitInit(icons,size_w/2.69,size_h/4.38)
+                            DG_icons[index] = icon
+                        course.dungeon.singleUnitInit(DG_icons,size_w/2.69,size_h/4.38)
                         wdth = size_w/2.69
                         hght = size_h/4.38
-                        kw = knight.get_width()
-                        kh = knight.get_height()
+                        kw = DG_icons[0].get_width()
+                        kh = DG_icons[0].get_height()
                         rects = []
                         cords = [
                             [size_w/2.04,size_h/2.37,kw/6,kh/2],
@@ -4029,6 +4032,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 8:
                 notBlocked = False
                 storedTime = ""
+                iterator = 1
                 if language == "ENG":
                     course.dialogTop(6.41,"So that's all I wanted to teach","you before fight, ready?")  
                     ready = "Ready"
@@ -4084,7 +4088,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 10:
                 storedTime = ""
                 TD_lvlType = "onlyenemy"
-                TD_toDefeat = 6
+                TD_toDefeat = 4
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()
@@ -4122,8 +4126,22 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == MOUSEBUTTONDOWN and not unitBeingShowed:
                     if continueBtn.collidepoint(mouse_pos):
                         storedTime = getActualSecond()
-                        TD_subDone = True      
+                        TD_subDone = True  
             elif courseLvl == 12:
+                course.tower_defence.drawMap()
+                course.tower_defence.console()
+                course.eventsReset()
+                if TD_count == 0:
+                    course.dialogTop(6.41,"But as friends are approaching","we have to adjust our defenses",bckgr=True)
+                nextBtn = course.centeredBtn(2.82,dark_green,"Next",adjustToDialog=True)
+                if event.type == MOUSEMOTION:
+                    if nextBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(2.82,green,"Next",adjustToDialog=True)
+                        course.centeredBtn(2.82,dark_green,"",adjustToDialog=True,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN:
+                    if nextBtn.collidepoint(mouse_pos):
+                        TD_count += 1
+            elif courseLvl == 13:
                 storedTime = ""
                 TD_lvlType = "onlyfriend"
                 TD_toDefeat = 4
@@ -4297,7 +4315,7 @@ class Settings(pygame.sprite.Sprite):
             isCorrectActivity()                   
     def resizing():
         global size,size_w,size_h,activeAny,TD_circs
-        global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart
+        global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons
         if activities[2]:
             language = getLang()
             if language == "ENG":
@@ -4338,6 +4356,8 @@ class Settings(pygame.sprite.Sprite):
                         activeAny = False
                         activities[2] = False
                         TD_circs = []
+                        DG_icons = []
+                        TD_icon = ""
                         hp1 = size_w/2.66
                         hp2 = size_w/6
                         course.tower_defence.reset()
