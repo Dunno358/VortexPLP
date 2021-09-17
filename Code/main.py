@@ -4141,12 +4141,23 @@ class Course(pygame.sprite.Sprite):
                         pygame.draw.line(screen, red, [size_w/4.14,size_h/3.06], [size_w/3.83,size_h/3.27], size_w//250)
                         pygame.draw.line(screen, red, [size_w/4.14,size_h/2.41], [size_w/3.83,size_h/2.27], size_w//250)
                         pygame.draw.line(screen, red, [size_w/4.14,size_h/2.63], [size_w/3.83,size_h/2.5], size_w//250)
+                    else:
+                        consoleTxts = [
+                            "We will use if/else that you learnt earlier.",
+                            "To statement you can give either friend or",
+                            "enemy keyword and wait() or attack() as",
+                            "action. Remeber we can't harm Javs!"
+                        ]
+                        course.dialogTop(6.41,consoleTxts[0],consoleTxts[1],consoleTxts[2],consoleTxts[3],bckgr=True)
                 if not TD_consoleShown:
                     nextBtn = course.centeredBtn(2.82,dark_green,"Next",adjustToDialog=True)
                 if event.type == MOUSEMOTION:
-                    if nextBtn.collidepoint(mouse_pos):
-                        course.centeredBtn(2.82,green,"Next",adjustToDialog=True)
-                        course.centeredBtn(2.82,dark_green,"",adjustToDialog=True,border=size_w//250)
+                    try:
+                        if nextBtn.collidepoint(mouse_pos):
+                            course.centeredBtn(2.82,green,"Next",adjustToDialog=True)
+                            course.centeredBtn(2.82,dark_green,"",adjustToDialog=True,border=size_w//250)
+                    except:
+                        pass
                 elif event.type == MOUSEBUTTONDOWN:
                     try:
                         if nextBtn.collidepoint(mouse_pos):
