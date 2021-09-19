@@ -48,13 +48,37 @@ dirPath = os.path.dirname(os.path.realpath(__file__))
 dirPath = dirPath[:-5] #-15 for .exe, -5 for .py
 print("Dir Path: ",dirPath)
 
+def cipher(textin):
+    ciphered = ""
+    for char in textin:
+        char = ord(char) + 1
+        ciphered += chr(char)
+    return ciphered 
+def decipher(textin):
+    deciphered = ""
+    for char in textin:
+        char = ord(char) - 1
+        deciphered += chr(char)
+    return deciphered
+def getDisplayStyle():
+    file = open(r"{}/metaData/settings/display.txt".format(dirPath),"r")
+    readFile = file.read()
+    file.close() 
+    display = decipher(readFile)
+    return display 
+
 #DISPLAY
 displaySize = pygame.display.Info()
-#size_w_minus = displaySize.current_w//91
-#size_h_minus = displaySize.current_h//10
-size_w=displaySize.current_w#-size_w_minus
-size_h=displaySize.current_h#-size_h_minus
-size=[size_w,size_h]
+size_w_minus = displaySize.current_w//91
+size_h_minus = displaySize.current_h//10
+if getDisplayStyle() == "window":
+    size_w=displaySize.current_w-size_w_minus
+    size_h=displaySize.current_h-size_h_minus
+    size=[size_w,size_h]
+else:
+    size_w=displaySize.current_w
+    size_h=displaySize.current_h
+    size=[size_w,size_h]
 windowLogo = pygame.image.load(r"{}/Images/python-logo.png".format(dirPath))
 clock = pygame.time.Clock()
 
@@ -77,6 +101,8 @@ activities = [activeCourse,activeLooking,activeSettings,activeBook,activeContact
 activeLesson = ""
 eventsBlocked = False
 searching = False
+selectingDisplay = False
+exiting = False
 
 #LEVELS
 courseLvl = 1
@@ -185,18 +211,6 @@ class WriteItalic(pygame.sprite.Sprite):
     def get_rect(self):
         return self.surface
 
-def cipher(textin):
-    ciphered = ""
-    for char in textin:
-        char = ord(char) + 1
-        ciphered += chr(char)
-    return ciphered 
-def decipher(textin):
-    deciphered = ""
-    for char in textin:
-        char = ord(char) - 1
-        deciphered += chr(char)
-    return deciphered
 def isCorrectActivity():
     it = 0 
     for x in activities:
@@ -368,11 +382,17 @@ def changeLang(lang):
     langFile = open(r"{}/Metadata/userInfo/Lang.txt".format(dirPath),"w")
     langFile.write(cipher(text+lang))
     langFile.close()     
+def changeDisplayStyle(displayStyle):
+    langFile = open(r"{}/Metadata/settings/display.txt".format(dirPath),"w")
+    langFile.write(cipher(displayStyle))
+    langFile.close()  
 def resetEvents():
     events = [MOUSEBUTTONDOWN,MOUSEBUTTONUP,MOUSEMOTION,KEYUP,KEYDOWN]
     for event in events:
         if pygame.event.get_blocked(event):
             pygame.event.set_allowed(event)
+
+
 
 class Start(pygame.sprite.Sprite):
     global language
@@ -580,7 +600,6 @@ class Start(pygame.sprite.Sprite):
             #Circle
             pygame.draw.circle(screen, color2, [size_w/1.80,size_h/2.3], size_w//19, 10)
             logoTxt = Write(size_w//35*3,logoName,color2,[size_w/1.85,size_h/2.2])
-            print(logoTxt.get_rect())
            
             logoSize = size_w//50*3
             logoTxt1 = WriteItalic(logoSize,logoName,logoBlue,[size_w/2,size_h/2.3])
@@ -4416,8 +4435,8 @@ class Settings(pygame.sprite.Sprite):
                 Write(size_w//100*2,"Chcesz coś zmienić {}?".format(getName()),color3,[size_w/1.8,size_h/8])
             isCorrectActivity()                   
     def resizing():
-        global size,size_w,size_h,activeAny,TD_circs
-        global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons
+        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay
+        global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon
         if activities[2]:
             language = getLang()
             if language == "ENG":
@@ -4430,42 +4449,43 @@ class Settings(pygame.sprite.Sprite):
             resCirc3 = pygame.draw.circle(screen, logoBlue, [size_w/1.65,size_h/1.7], size_w//50, 0)
             resCirc4 = pygame.draw.circle(screen, logoBlue, [size_w/1.4,size_h/1.7], size_w//50, 0)    
 
-            if event.type == MOUSEMOTION and activeMain:
-                if resCirc1.collidepoint(mouse_pos):
-                    pygame.draw.circle(screen, dark_blue, [size_w/2.5,size_h/1.7], size_w//60, 0)
-                    Write(size_w//100*2,"1200:700",color3,[size_w/1.8,size_h/1.5])
-                elif resCirc2.collidepoint(mouse_pos):
-                    pygame.draw.circle(screen, dark_blue, [size_w/2,size_h/1.7], size_w//60, 0)
-                    Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
-                elif resCirc3.collidepoint(mouse_pos):
-                    pygame.draw.circle(screen, dark_blue, [size_w/1.65,size_h/1.7], size_w//60, 0)
-                    Write(size_w//100*2,"X:Y",color3,[size_w/1.8,size_h/1.5])
-                elif resCirc4.collidepoint(mouse_pos):
-                    pygame.draw.circle(screen, dark_blue, [size_w/1.4,size_h/1.7], size_w//60, 0)
-                    if language == "ENG":
-                        Write(size_w//100*2,"Default",color3,[size_w/1.8,size_h/1.5]) 
-                    else:
-                        Write(size_w//100*2,"Domyślne",color3,[size_w/1.8,size_h/1.5]) 
-            elif event.type==MOUSEBUTTONDOWN and activeMain:
-                resCircs = [resCirc1,resCirc2,resCirc4]
-                res = [[1200,700],[1600,900],[displaySize.current_w,displaySize.current_h]]
-                for resCirc in resCircs:
-                    if resCirc.collidepoint(mouse_pos):
-                        index = resCircs.index(resCirc)
-                        size_w = res[index][0]
-                        size_h = res[index][1]
-                        size = (size_w,size_h)
-                        activeAny = False
-                        activities[2] = False
-                        TD_circs = []
-                        DG_icons = []
-                        TD_icon = ""
-                        hp1 = size_w/2.66
-                        hp2 = size_w/6
-                        course.tower_defence.reset()
-                        rectCenter = (size_w/1.5)/2 + size_w/5
-                        start.useScreenDef()
-                        start.welcomeScreen()             
+            if not selectingDisplay:
+                if event.type == MOUSEMOTION and activeMain:
+                    if resCirc1.collidepoint(mouse_pos):
+                        pygame.draw.circle(screen, dark_blue, [size_w/2.5,size_h/1.7], size_w//60, 0)
+                        Write(size_w//100*2,"1200:700",color3,[size_w/1.8,size_h/1.5])
+                    elif resCirc2.collidepoint(mouse_pos):
+                        pygame.draw.circle(screen, dark_blue, [size_w/2,size_h/1.7], size_w//60, 0)
+                        Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
+                    elif resCirc3.collidepoint(mouse_pos):
+                        pygame.draw.circle(screen, dark_blue, [size_w/1.65,size_h/1.7], size_w//60, 0)
+                        Write(size_w//100*2,"X:Y",color3,[size_w/1.8,size_h/1.5])
+                    elif resCirc4.collidepoint(mouse_pos):
+                        pygame.draw.circle(screen, dark_blue, [size_w/1.4,size_h/1.7], size_w//60, 0)
+                        if language == "ENG":
+                            Write(size_w//100*2,"Default",color3,[size_w/1.8,size_h/1.5]) 
+                        else:
+                            Write(size_w//100*2,"Domyślne",color3,[size_w/1.8,size_h/1.5]) 
+                elif event.type==MOUSEBUTTONDOWN and activeMain:
+                    resCircs = [resCirc1,resCirc2,resCirc4]
+                    res = [[1200,700],[1600,900],[displaySize.current_w,displaySize.current_h]]
+                    for resCirc in resCircs:
+                        if resCirc.collidepoint(mouse_pos):
+                            index = resCircs.index(resCirc)
+                            size_w = res[index][0]
+                            size_h = res[index][1]
+                            size = (size_w,size_h)
+                            activeAny = False
+                            activities[2] = False
+                            TD_circs = []
+                            DG_icons = []
+                            TD_icon = ""
+                            hp1 = size_w/2.66
+                            hp2 = size_w/6
+                            course.tower_defence.reset()
+                            rectCenter = (size_w/1.5)/2 + size_w/5
+                            start.useScreenDef()
+                            start.welcomeScreen()             
     def theme():
         global size_w,size_h,activeMain,activeAny
         if activities[2]:
@@ -4612,6 +4632,83 @@ class Settings(pygame.sprite.Sprite):
                     changeLang("ENG")                
             pygame.draw.rect(screen, color1, [size_w/4.63,size_h/11.29,size_w/10,size_h/12], size_w//450,20)
             pygame.draw.line(screen, color1, [size_w/3.78,size_h/11.13],[size_w/3.78,size_h/5.97], size_w//450)
+    def displayStyle(): #NOT WORKING CORRECTLY YET
+        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,running
+        global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon,exiting
+        if activities[2]:
+            if selectingDisplay:
+                pygame.draw.rect(screen, color1, [size_w/1.59,size_h/1.86,size_w/6,size_h/4.2], 0,size_w//450)
+                pygame.draw.line(screen, color3, [size_w/1.58,size_h/1.53], [size_w/1.27,size_h/1.53], size_w//650)
+                
+                fullScreenBtn = pygame.draw.rect(screen, color1, [size_w/1.57,size_h/1.79,size_w/6.7,size_h/12], width=0)
+                if getDisplayStyle() == "fullscreen":
+                    Write(round(size_w//100*2),"Fullscreen",lt_blue,[size_w/1.41,size_h/1.67])
+                else:
+                    Write(round(size_w//100*2),"Fullscreen",color3,[size_w/1.41,size_h/1.67])
+                
+                windowBtn = pygame.draw.rect(screen, color1, [size_w/1.57,size_h/1.5,size_w/6.7,size_h/12], width=0)
+                if getDisplayStyle() == "window":
+                    Write(round(size_w//100*2),"Window",lt_blue,[size_w/1.41,size_h/1.41])
+                else:
+                    Write(round(size_w//100*2),"Window",color3,[size_w/1.41,size_h/1.41])
+
+                displayBtn = pygame.draw.rect(screen, color3, [size_w/1.59,size_h/1.3,size_w/6,size_h/7], size_w//270,5)
+            else:
+                displayBtn = pygame.draw.rect(screen, color1, [size_w/1.59,size_h/1.3,size_w/6,size_h/7], size_w//270,5)
+            Write(round(size_w//100*3),"Display",color1,[size_w/1.4,size_h/1.18])
+
+            if event.type == MOUSEMOTION:
+                if displayBtn.collidepoint(mouse_pos):
+                    Write(round(size_w//100*3),"Display",color3,[size_w/1.4,size_h/1.18])
+                try:
+                    if fullScreenBtn.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, color1, [size_w/1.57,size_h/1.79,size_w/6.7,size_h/12], width=0)
+                        Write(round(size_w//100*2),"Fullscreen",logoBlue,[size_w/1.41,size_h/1.67])
+                    elif windowBtn.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, color1, [size_w/1.57,size_h/1.5,size_w/6.7,size_h/12], width=0)
+                        Write(round(size_w//100*2),"Window",logoBlue,[size_w/1.41,size_h/1.41])
+                except:
+                    pass  
+            elif event.type == MOUSEBUTTONDOWN:
+                if displayBtn.collidepoint(mouse_pos):
+                    if selectingDisplay:
+                        selectingDisplay = False
+                    else:
+                        selectingDisplay = True    
+                try:
+                    if fullScreenBtn.collidepoint(mouse_pos):
+                        changeDisplayStyle("fullscreen")   
+                        selectingDisplay = False
+                        if len(dirPath) == 50: 
+                            os.system(f"start {dirPath}/Code/main.py")
+                            pygame.quit()
+                            sys.exit()
+                        try:
+                            if len(dirPath) == 40:
+                                os.system(f"start {dirPath}/Code/dist/main/main.exe")
+                                pygame.quit()
+                                sys.exit()
+                        except:
+                            print(len(dirPath))     
+                            print(f"start {dirPath}/Code/dist/main/main.exe") 
+                    elif windowBtn.collidepoint(mouse_pos):
+                        changeDisplayStyle("window")
+                        selectingDisplay = False
+                        print(len(dirPath))
+                        if len(dirPath) == 50:
+                            os.system(f"start {dirPath}/Code/main.py")
+                            pygame.quit()
+                            sys.exit()
+                        try:
+                            if len(dirPath) == 40:
+                                os.system(f"start {dirPath}/Code/dist/main/main.exe")
+                                pygame.quit()
+                                sys.exit()
+                        except:
+                            print(len(dirPath))     
+                            print(f"start {dirPath}/Code/dist/main/main.exe") 
+                except:
+                    pass       
 class Prize(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,name
@@ -4719,8 +4816,11 @@ prize = Prize
 start.useScreenDef()
 print("Init_End_Time: ",str(datetime.now())[10:])
 while running:
-    keys = pygame.key.get_pressed()
-    mouse_pos = pygame.mouse.get_pos() 
+    try:
+        keys = pygame.key.get_pressed()
+        mouse_pos = pygame.mouse.get_pos() 
+    except:
+        pass
     start.adminTools.counterCords()
     start.adminTools.counterFPS()
     course.tower_defence.loadingBar(storedTime)
@@ -4749,6 +4849,7 @@ while running:
             settings.resetName()
             settings.isAdmin()
             settings.language()
+            #settings.displayStyle()
             prize.startScreen()
         if event.type == QUIT:
             pygame.quit()
@@ -4756,4 +4857,5 @@ while running:
     #EVENTS THAT NEED TO BE REFRESHED FASTER THAN EVENT LOOP
     course.tower_defence.enemiesPath(storedTime)
     course.tower_defence.targeting()
-    pygame.display.update()
+    if pygame.display.get_init():
+        pygame.display.update()
