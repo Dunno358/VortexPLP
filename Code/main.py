@@ -1349,7 +1349,7 @@ class Course(pygame.sprite.Sprite):
             txtColor = lt_gray
             if TD_consoleShown:
                 global TD_consoleRects,TD_consoleActiveRect,activeWriting,text,TD_consoleTxts,TD_consoleOK
-                global iterator
+                global iterator,TD_count
                 pygame.event.set_allowed(MOUSEMOTION)
                 pygame.event.set_allowed(KEYDOWN)
                 pygame.event.set_allowed(KEYUP)
@@ -1453,15 +1453,17 @@ class Course(pygame.sprite.Sprite):
                 if btnL.collidepoint(mouse_pos) or btnR.collidepoint(mouse_pos):
                     TD_consoleShown = True
                 try:
-                    if backBtn.collidepoint(mouse_pos) or applyBtn.collidepoint(mouse_pos):
-                        pygame.draw.rect(screen, TD_darkGreen, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
-                        TD_consoleActiveRect = ""
-                        TD_consoleShown = False
-                        activeWriting = False
-                        text = ""
-                        holdIterator = iterator
-                        course.tower_defence.reset()
-                        iterator = holdIterator
+                    print(TD_count not in [1,2])
+                    if TD_count not in [1,2]:
+                        if backBtn.collidepoint(mouse_pos) or applyBtn.collidepoint(mouse_pos):
+                            pygame.draw.rect(screen, TD_darkGreen, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                            TD_consoleActiveRect = ""
+                            TD_consoleShown = False
+                            activeWriting = False
+                            text = ""
+                            holdIterator = iterator
+                            course.tower_defence.reset()
+                            iterator = holdIterator
                 except:
                     pass
                 try:
@@ -3762,7 +3764,7 @@ class Course(pygame.sprite.Sprite):
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
         global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls
-        global TD_count,TD_subDone,TD_toDefeat,TD_done
+        global TD_count,TD_subDone,TD_toDefeat,TD_done,TD_consoleTxts,wrong,TD_consoleShown
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
             mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
@@ -4128,9 +4130,11 @@ class Course(pygame.sprite.Sprite):
                         storedTime = getActualSecond()
                         TD_subDone = True  
             elif courseLvl == 12:
+                notBlocked = False
                 course.tower_defence.drawMap()
                 course.tower_defence.console()
                 course.eventsReset()
+
                 if TD_count == 0:
                     course.dialogTop(6.41,"But as friends are approaching","we have to adjust our defenses",bckgr=True)
                 elif TD_count == 1:
@@ -4144,12 +4148,66 @@ class Course(pygame.sprite.Sprite):
                     else:
                         consoleTxts = [
                             "We will use if/else that you learnt earlier.",
-                            "To statement you can give either friend or",
+                            "As statement you can give either friend or",
                             "enemy keyword and wait() or attack() as",
-                            "action. Remeber we can't harm Javs!"
+                            "action. Remeber we can't harm Javs!",
+                            "Here's an example:",
+                            "if enemy:",
+                            "        attack()",
+                            "Try doing it with friend keyword and wait() function!"
                         ]
                         course.dialogTop(6.41,consoleTxts[0],consoleTxts[1],consoleTxts[2],consoleTxts[3],bckgr=True)
-                if not TD_consoleShown:
+                        consoleNextBtn = course.centeredBtn(2.13,dark_green,"Next",adjustToDialog=True)
+                        if event.type == MOUSEMOTION:
+                            try:
+                                if consoleNextBtn.collidepoint(mouse_pos):
+                                    course.centeredBtn(2.13,green,"Next",adjustToDialog=True)
+                                    course.centeredBtn(2.13,dark_green,"",adjustToDialog=True,border=size_w//250)
+                            except:
+                                pass
+                elif TD_count == 2:
+                    consoleTxts = [
+                        "Here's an example:",
+                        "if enemy:",
+                        "        attack()",
+                        "Try doing it with keyword 'friend'",
+                        "and wait() function!"
+                    ]
+                    if TD_consoleShown:
+                        course.dialogTop(6.41,consoleTxts[0],consoleTxts[1],consoleTxts[2],consoleTxts[3],consoleTxts[4],bckgr=True)
+                        consoleNextBtn = course.centeredBtn(1.83,dark_green,"Ok",adjustToDialog=True)
+                        if event.type == MOUSEMOTION:
+                            try:
+                                if consoleNextBtn.collidepoint(mouse_pos):
+                                    course.centeredBtn(1.83,green,"Ok",adjustToDialog=True)
+                                    course.centeredBtn(1.83,dark_green,"",adjustToDialog=True,border=size_w//250)
+                            except:
+                                pass
+                elif TD_count == 3 and not TD_consoleShown:
+                    course.dialogTop(6.41,"Are you ready to go further?",bckgr=True)
+                    readyBtn = course.centeredBtn(4.11,dark_green,"Ready",adjustToDialog=True)
+                    correctCommands = TD_consoleTxts[0] == "if friend:" and TD_consoleTxts[1] == "wait()"
+                    if event.type == MOUSEMOTION:
+                        if readyBtn.collidepoint(mouse_pos):
+                            course.centeredBtn(4.11,green,"Ready",adjustToDialog=True)
+                            course.centeredBtn(4.11,dark_green,"",adjustToDialog=True,border=size_w//250)
+                    elif event.type == MOUSEBUTTONDOWN:
+                        if readyBtn.collidepoint(mouse_pos):
+                            if correctCommands:
+                                courseLvl += 1
+                                wrong = False
+                            else:
+                                wrong = True
+                    if not correctCommands and wrong:
+                        pygame.draw.rect(screen, color2, [size_w/2.49,size_h/2.64,size_w/3,size_h/3], 0,size_w//150)
+                        pygame.draw.rect(screen, color1, [size_w/2.49,size_h/2.64,size_w/3,size_h/3], size_w//250,size_w//150)
+                        Write(round(size_w//100*1.5),"Commands are not correct!",red,[size_w/1.75,size_h/2.33])
+                        Write(round(size_w//100*1.5),"Continue anyway?",red,[size_w/1.75,size_h/1.99])
+                        consoleBtn = pygame.draw.rect(screen, dark_green, [size_w/2.31,size_h/1.8,size_w/8,size_h/10], 0,size_w//250)
+                        Write(round(size_w//100*1.7),"Console",color1,[size_w/2.03,size_h/1.66])
+                        continueBtn = pygame.draw.rect(screen, dark_green, [size_w/1.73,size_h/1.8,size_w/8,size_h/10], 0,size_w//250)
+                        Write(round(size_w//100*1.7),"Continue",color1,[size_w/1.56,size_h/1.66])
+                if not TD_consoleShown and TD_count == 0:
                     nextBtn = course.centeredBtn(2.82,dark_green,"Next",adjustToDialog=True)
                 if event.type == MOUSEMOTION:
                     try:
@@ -4158,10 +4216,31 @@ class Course(pygame.sprite.Sprite):
                             course.centeredBtn(2.82,dark_green,"",adjustToDialog=True,border=size_w//250)
                     except:
                         pass
+                    try:
+                        if consoleBtn.collidepoint(mouse_pos):
+                            pygame.draw.rect(screen, green, [size_w/2.31,size_h/1.8,size_w/8,size_h/10], 0,size_w//250)
+                            Write(round(size_w//100*1.7),"Console",color1,[size_w/2.03,size_h/1.66])
+                        if continueBtn.collidepoint(mouse_pos):
+                            pygame.draw.rect(screen, green, [size_w/1.73,size_h/1.8,size_w/8,size_h/10], 0,size_w//250)
+                            Write(round(size_w//100*1.7),"Continue",color1,[size_w/1.56,size_h/1.66])
+                    except:
+                        pass
                 elif event.type == MOUSEBUTTONDOWN:
                     try:
-                        if nextBtn.collidepoint(mouse_pos):
+                        if nextBtn.collidepoint(mouse_pos) and TD_count !=1:
                             TD_count += 1
+                    except:
+                        pass
+                    try:
+                        if consoleNextBtn.collidepoint(mouse_pos):
+                            TD_count += 1
+                    except:
+                        pass
+                    try:
+                        if consoleBtn.collidepoint(mouse_pos):
+                            TD_consoleShown = True
+                        if continueBtn.collidepoint(mouse_pos):
+                            courseLvl += 1
                     except:
                         pass
             elif courseLvl == 13:
