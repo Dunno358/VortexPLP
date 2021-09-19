@@ -184,11 +184,13 @@ TD_iterator = 1
 TD_round = 1
 TD_count = 0
 TD_toDefeat = 0
+TD_unitsPassed = 0
 TD_added = False
 TD_added2 = False
 TD_Lvls = [3,4,9,10,11,12,13]
 TD_excludeLvls = 3
 TD_excludedLvls = [12]
+TD_friendsLvl = [13]
 TD_subDone = False
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
@@ -983,10 +985,10 @@ class Course(pygame.sprite.Sprite):
                         pygame.draw.rect(screen, color1, [wdth,size_h/2.55,size_w/10,size_h/20], size_w//450)
         def enemiesPath(second):
             global iterator,TD_wdthStart,TD_hghtStart,TD_firstDone,TD_guardRects,eventsBlocked
-            global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
+            global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards,TD_unitsPassed
             global TD_time,TD_active,TD_iterator,TD_hp,TD_consoleShown,TD_friends,TD_enemies
             global TD_actualEnemy,TD_actualEnemy2,TD_wdthStart2,TD_hghtStart2,TD_enemy2,TD_firstDone2
-            global TD_hp2,TD_queue,TD_lvlType,TD_Lvls,TD_excludeLvls,TD_excludedLvls
+            global TD_hp2,TD_queue,TD_lvlType,TD_Lvls,TD_excludeLvls,TD_excludedLvls,TD_friendsLvl
             lessonOk = str(activeLesson)[17:-23]=="lesson4"
             lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:] and courseLvl not in TD_excludedLvls
             if activities[0] and not activeMenu and lessonOk and lvlOk and not TD_consoleShown:
@@ -1083,7 +1085,11 @@ class Course(pygame.sprite.Sprite):
                         holdIterator = iterator
                         course.tower_defence.reset()
                         course.tower_defence.drawMap()
-                        iterator = holdIterator + 2
+                        if courseLvl not in TD_friendsLvl:
+                            iterator = holdIterator + 2
+                        else:
+                            TD_unitsPassed += 1
+                            TD_iterator = 2
                     if secondGo:
                         if TD_wdthStart2<size_w/2.36 and not TD_firstDone2:
                             course.tower_defence.drawPath()
@@ -1118,7 +1124,11 @@ class Course(pygame.sprite.Sprite):
                             holdIterator = iterator
                             course.tower_defence.reset()
                             course.tower_defence.drawMap()
-                            iterator = holdIterator + 2
+                            if courseLvl not in TD_friendsLvl:
+                                iterator = holdIterator + 2
+                            else:
+                                TD_unitsPassed += 1
+                                TD_iterator = 2
 
                 try:
                     if not TD_done:
@@ -1147,7 +1157,7 @@ class Course(pygame.sprite.Sprite):
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
-                global TD_added,TD_added2,TD_toDefeat
+                global TD_added,TD_added2,TD_toDefeat,TD_unitsPassed,TD_friendsLvl
                 if not TD_done:
                     if TD_hp2<=0:
                         course.tower_defence.reset()
@@ -1283,8 +1293,11 @@ class Course(pygame.sprite.Sprite):
                         TD_added2 = True
                         course.tower_defence.drawMap()
                     pygame.draw.rect(screen, TD_darkGreen, [size_w/1.94,size_h/1.13,size_w/12,size_h/12], width=0)
-                    Write(round(size_w//100*1.7),f"{TD_count}/{TD_toDefeat}",color3,[size_w/1.87,size_h/1.11])
-                    if TD_count == TD_toDefeat and TD_lvlType!="onlyfriend":
+                    if courseLvl in TD_friendsLvl:
+                        Write(round(size_w//100*1.7),f"{TD_unitsPassed}/{TD_toDefeat}",color3,[size_w/1.87,size_h/1.11])
+                    else:
+                        Write(round(size_w//100*1.7),f"{TD_count}/{TD_toDefeat}",color3,[size_w/1.87,size_h/1.11])
+                    if (TD_count == TD_toDefeat and TD_lvlType!="onlyfriend") or TD_unitsPassed==TD_toDefeat:
                         course.dialogTop(6.41,"Great job! Click anywhere","to go to the next level",bckgr=True)
                         courseLvl += 1 
                         TD_count = 0
@@ -3782,7 +3795,7 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1 
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
-        global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls
+        global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls,TD_iterator
         global TD_count,TD_subDone,TD_toDefeat,TD_done,TD_consoleTxts,wrong,TD_consoleShown
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
@@ -4214,7 +4227,9 @@ class Course(pygame.sprite.Sprite):
                         if readyBtn.collidepoint(mouse_pos):
                             if correctCommands:
                                 courseLvl += 1
+                                TD_count = 0
                                 wrong = False
+                                course.tower_defence.reset()
                             else:
                                 wrong = True
                     if not correctCommands and wrong:
@@ -4260,12 +4275,15 @@ class Course(pygame.sprite.Sprite):
                             TD_consoleShown = True
                         if continueBtn.collidepoint(mouse_pos):
                             courseLvl += 1
+                            TD_count = 0
+                            course.tower_defence.reset()
                     except:
                         pass
             elif courseLvl == 13:
                 storedTime = ""
                 TD_lvlType = "onlyfriend"
-                TD_toDefeat = 4
+                TD_toDefeat = 3
+                TD_iterator = 2
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()                         
