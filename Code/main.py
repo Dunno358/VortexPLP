@@ -792,7 +792,7 @@ class Course(pygame.sprite.Sprite):
                     else:
                         Write(size_w//100*2,"Walka",color3,[size_w/1.97,size_h/1.13]) 
         def singleUnitClickEvent(isBoss):
-            global hp1,hp2,courseLvl
+            global hp1,hp2,courseLvl,soundEnabled
             global iterator,inFight,notBlocked,chosen,DG_icons
             if event.type == MOUSEBUTTONDOWN:
                 for rect in rects:
@@ -801,6 +801,12 @@ class Course(pygame.sprite.Sprite):
                         index = rects.index(rect)
                         screen.blit(icons[1],[wdth,hght])
                         course.coursorMarked()
+                        if soundEnabled:
+                            if chosen == 0:
+                                pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.mp3")
+                            else:
+                                pygame.mixer.music.load(f"{dirPath}/Music/punch.mp3")
+                            pygame.mixer.music.play(1)
                         iterator += 1  
                 if fightBtn.collidepoint(mouse_pos) and not inFight:
                     inFight = True
@@ -1904,7 +1910,7 @@ class Course(pygame.sprite.Sprite):
                 except:
                     pass
     def gameQuestion(question,answers,goodAnswerIndex,fontSize=2):
-        global activeMain,hp2,iterator,storedTime
+        global activeMain,hp2,iterator,storedTime,soundEnabled
         pygame.draw.rect(screen, color1, [size_w/3.7,size_h/4.05,size_w/2,size_h/2], 0,10)
         pygame.draw.rect(screen, color2, [size_w/1.62,size_h/1.24,size_w/5.5,size_h/15], width=0)
         dmg = int((size_w/50)/hp2*100)
@@ -1942,10 +1948,16 @@ class Course(pygame.sprite.Sprite):
                     if index == goodAnswerIndex:
                         activeMain = True
                         iterator += 1
+                        if soundEnabled:
+                            pygame.mixer.music.load(f"{dirPath}/Music/shield_impact.mp3")
+                            pygame.mixer.music.play(1)
                     elif index != goodAnswerIndex:
                         hp2 -= size_w/50
                         activeMain = True
                         iterator += 1
+                        if soundEnabled:
+                            pygame.mixer.music.load(f"{dirPath}/Music/ouch.mp3")
+                            pygame.mixer.music.play(1)
             wdth += size_w/8     
     def consoleGame(textToShow,goodAnswer,btnText="Attack",fontSize=2.5,textLen=23,multipleAnswers=False,answersList=[],fontSize2=2):
         global text,activeMain,iterator,keys
@@ -2064,7 +2076,7 @@ class Course(pygame.sprite.Sprite):
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
-        global bckgrMusicPlayed
+        global bckgrMusicPlayed,soundEnabled
         course.standardLessonEvents("lesson1",11)   
         if getTheme().lower() == "light":
             mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
@@ -2198,6 +2210,9 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == MOUSEBUTTONDOWN:
                     for rect in rects:
                         if rect.collidepoint(mouse_pos):
+                            if soundEnabled:
+                                pygame.mixer.music.load(f"{dirPath}/Music/wooden_chest.mp3")
+                                pygame.mixer.music.play(1)
                             index = rects.index(rect)
                             storedItems.append(index)
                             print(index,storedItems)
@@ -2376,6 +2391,7 @@ class Course(pygame.sprite.Sprite):
                             changeCourselvl(2)
                         activeMenu = True
                         courseLvl = 1
+                        bckgrMusicPlayed = False
     def lesson2():
         global activeMenu,courseLvl,mentorIcon,wait,storedTime,activeMain,type,chosen,inFight,notBlocked,theme
         global hp1,hp2,iterator,activeMain,rectCenter,langugage,bckgrMusicPlayed
@@ -3036,9 +3052,11 @@ class Course(pygame.sprite.Sprite):
                             changeCourselvl(3)
                         activeMenu = True
                         courseLvl = 1  
-                        iterator = 1                          
+                        iterator = 1      
+                        bckgrMusicPlayed = False                    
     def lesson3():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
+        global bckgrMusicPlayed
         if activeMain:
             course.standardLessonEvents("lesson3",28,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson3":
@@ -3815,10 +3833,12 @@ class Course(pygame.sprite.Sprite):
                         activeMenu = True
                         courseLvl = 1  
                         iterator = 1 
+                        bckgrMusicPlayed = False
     def lesson4():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
         global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls,TD_iterator
         global TD_count,TD_subDone,TD_toDefeat,TD_done,TD_consoleTxts,wrong,TD_consoleShown
+        global bckgrMusicPlayed
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
             mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
