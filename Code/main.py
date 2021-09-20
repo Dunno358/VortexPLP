@@ -71,14 +71,17 @@ def getDisplayStyle():
 displaySize = pygame.display.Info()
 size_w_minus = displaySize.current_w//91
 size_h_minus = displaySize.current_h//10
-if getDisplayStyle() == "window":
+""" if getDisplayStyle() == "window":
     size_w=displaySize.current_w-size_w_minus
     size_h=displaySize.current_h-size_h_minus
     size=[size_w,size_h]
 else:
     size_w=displaySize.current_w
     size_h=displaySize.current_h
-    size=[size_w,size_h]
+    size=[size_w,size_h] """
+size_w=displaySize.current_w
+size_h=displaySize.current_h
+size=[size_w,size_h]
 windowLogo = pygame.image.load(r"{}/Images/python-logo.png".format(dirPath))
 clock = pygame.time.Clock()
 
@@ -1295,6 +1298,9 @@ class Course(pygame.sprite.Sprite):
                     pygame.draw.rect(screen, TD_darkGreen, [size_w/1.94,size_h/1.13,size_w/12,size_h/12], width=0)
                     if courseLvl in TD_friendsLvl:
                         Write(round(size_w//100*1.7),f"{TD_unitsPassed}/{TD_toDefeat}",color3,[size_w/1.87,size_h/1.11])
+                        if TD_count >= 1:
+                            course.tower_defence.levelLost("Friendly unit has been killed!")
+                            courseLvl -= 1
                     else:
                         Write(round(size_w//100*1.7),f"{TD_count}/{TD_toDefeat}",color3,[size_w/1.87,size_h/1.11])
                     if (TD_count == TD_toDefeat and TD_lvlType!="onlyfriend") or TD_unitsPassed==TD_toDefeat:
@@ -1571,6 +1577,12 @@ class Course(pygame.sprite.Sprite):
             if len(txtUnderName) > 0:
                 pygame.draw.rect(screen, logoBlue, [size_w/2.77,size_h/1.35,size_w/3,size_h/8], 0,size_w//100)
                 WriteItalic(round(size_w//100*3.5),txtUnderName,lt_gray,[size_w/1.91,size_h/1.24])
+        def levelLost(text):
+            pygame.draw.rect(screen, color2, [size_w/3.45,size_h/3.86,size_w/2,size_h/2], 0,size_w//250)
+            pygame.draw.rect(screen, color1, [size_w/3.45,size_h/3.86,size_w/2,size_h/2], size_w//250,size_w//250)
+            Write(round(size_w//100*2.5),text,red,[size_w/1.9,size_h/2.2])
+            Write(round(size_w//100*5.5),"Lost",red,[size_w/1.88,size_h/2.8])
+            Write(round(size_w//100*2),"Click anywhere to restart...",red,[size_w/1.92,size_h/1.63])
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
