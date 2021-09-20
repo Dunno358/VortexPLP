@@ -11,6 +11,7 @@ import sys
 import os
 import time
 pygInit = pygame.init()
+pygame.mixer.init()
 pygame.key.set_repeat(500, 100)
 print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]))
 print("Init_Start_Time: ",str(datetime.now())[10:])
@@ -131,6 +132,8 @@ wrong = False
 confirmed = True
 activeWriting = False
 done = False
+bckgrMusicPlayed = False
+soundEnabled = True
 
 #DRAGGING ITEMS
 held = False
@@ -457,6 +460,10 @@ class Start(pygame.sprite.Sprite):
             it+=sideBar_h/5.6        
 
         Write(size_w//100,"V0.0.0.9",color3,[size_w/1.81,10]) 
+
+        Write(size_w//100*3,"Welcome {}!".format(getName()),color3,[size_w/1.8,size_h/5])
+        WriteItalic(round(size_w//100*3.5),"Content is being loaded for you...",color3,[size_w/1.84,size_h/2.65])
+        Write(round(size_w//100*2.5),"Please be patient",color3,[size_w/1.84,size_h/1.5])
 
         pygame.display.update()
     def sideBarEvents():
@@ -1713,9 +1720,10 @@ class Course(pygame.sprite.Sprite):
                 wait = False
     def standardLessonEvents(lesson,maxLvl,condition=True,bckgr=True,standard=True,customCol=""):
         global activeMenu,courseLvl,activeLesson,selected,chosen,inFight,notBlocked,loadingBar
-        global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs
+        global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs,bckgrMusicPlayed
         actualLesson = str(activeLesson)[17:-23]
         if not activeMenu and activities[0] and actualLesson==lesson:
+            bckgrMusicPlayed = True
             if bckgr:
                 if loadingBar:
                     pass
@@ -1761,6 +1769,7 @@ class Course(pygame.sprite.Sprite):
             elif event.type == MOUSEBUTTONDOWN:
                 if menuBtn.collidepoint(mouse_pos):
                     courseLvl = 1
+                    bckgrMusicPlayed = False
                     if bckgr:
                         pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
                     course.startScreen()
@@ -2055,6 +2064,7 @@ class Course(pygame.sprite.Sprite):
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
+        global bckgrMusicPlayed
         course.standardLessonEvents("lesson1",11)   
         if getTheme().lower() == "light":
             mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
@@ -2368,7 +2378,7 @@ class Course(pygame.sprite.Sprite):
                         courseLvl = 1
     def lesson2():
         global activeMenu,courseLvl,mentorIcon,wait,storedTime,activeMain,type,chosen,inFight,notBlocked,theme
-        global hp1,hp2,iterator,activeMain,rectCenter,langugage
+        global hp1,hp2,iterator,activeMain,rectCenter,langugage,bckgrMusicPlayed
         if activeMain:
             course.standardLessonEvents("lesson2",16,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson2":
@@ -4662,6 +4672,26 @@ class Settings(pygame.sprite.Sprite):
                     changeLang("ENG")                
             pygame.draw.rect(screen, color1, [size_w/4.63,size_h/11.29,size_w/10,size_h/12], size_w//450,20)
             pygame.draw.line(screen, color1, [size_w/3.78,size_h/11.13],[size_w/3.78,size_h/5.97], size_w//450)
+    def isSoundEnabled():
+        global soundEnabled
+        if activities[2]:
+            speaker = pygame.image.load(f"{dirPath}/images/speaker.png")
+            speaker = pygame.transform.scale(speaker, [int(size_w/28.29),int(size_h/18.22)])
+            if soundEnabled:
+                soundBtn = pygame.draw.rect(screen, lt_blue, [size_w/1.3,size_h/9.6,size_w/13,size_h/13], size_w//250,size_w//200)
+                screen.blit(speaker,[size_w/1.27,size_h/8.5])
+                Write(round(size_w/100*1.4),"ON",lt_blue,[size_w/1.24,size_h/4.89])
+            else:
+                soundBtn = pygame.draw.rect(screen,color1, [size_w/1.3,size_h/9.6,size_w/13,size_h/13], size_w//250,size_w//200)
+                screen.blit(speaker,[size_w/1.27,size_h/8.5])
+                pygame.draw.line(screen, color1, [size_w/1.28,size_h/6.1], [size_w/1.21,size_h/8.35], size_w//250)
+                Write(round(size_w/100*1.4),"OFF",color1,[size_w/1.24,size_h/4.89])
+            if event.type == MOUSEBUTTONDOWN:
+                if soundBtn.collidepoint(mouse_pos):
+                    if soundEnabled:
+                        soundEnabled = False
+                    else:
+                        soundEnabled = True
     def displayStyle(): #NOT WORKING CORRECTLY YET
         global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,running
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon,exiting
@@ -4835,6 +4865,37 @@ class Contacts(pygame.sprite.Sprite):
             bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
             Write(size_w//100*3,"CONTACTS OPTION",color3,[size_w/1.8,size_h/5])
             isCorrectActivity()
+class Music():
+    def init():
+        global soundFantasy1,soundMagic1
+        global fantasyChannel,fantasyChannelSounds,magicChannel
+        soundFantasy1 = pygame.mixer.Sound(f"{dirPath}/Music/Ale-and-Anecdotes-by-Darren-Curtis.mp3")
+        soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.mp3")
+        
+        fantasyChannel = pygame.mixer.Channel(1)
+        fantasyChannel.set_volume(0.2)
+        fantasyChannelSounds = pygame.mixer.Channel(2)
+        fantasyChannelSounds.set_volume(0.4)
+
+        magicChannel = pygame.mixer.Channel(3)
+    def playBackground():
+        global soundFantasy1,bckgrMusicPlayed,soundEnabled
+        if soundEnabled and activities[0]:
+            if bckgrMusicPlayed: 
+                lessonNr = str(activeLesson)[17:-23]
+                if lessonNr in ["lesson1","lesson2"]:
+                    if not fantasyChannel.get_busy():
+                        fantasyChannel.play(soundFantasy1)
+                elif lessonNr in ["lesson3","lesson4"]:
+                    if not magicChannel.get_busy():
+                        magicChannel.play(soundMagic1)
+            else:
+                fantasyChannel.stop()
+                magicChannel.stop()
+        else:
+            fantasyChannel.stop()
+            magicChannel.stop()
+
 
 running = True
 start=Start
@@ -4843,7 +4904,9 @@ lookFor = LookFor
 settings = Settings
 contacts = Contacts
 prize = Prize
+music = Music
 start.useScreenDef()
+music.init()
 print("Init_End_Time: ",str(datetime.now())[10:])
 while running:
     try:
@@ -4854,6 +4917,7 @@ while running:
     start.adminTools.counterCords()
     start.adminTools.counterFPS()
     course.tower_defence.loadingBar(storedTime)
+    music.playBackground()
     for event in pygame.event.get():
         start.sideBarEvents()
         start.setNameScreen()
@@ -4880,6 +4944,7 @@ while running:
             settings.isAdmin()
             settings.language()
             #settings.displayStyle()
+            settings.isSoundEnabled()
             prize.startScreen()
         if event.type == QUIT:
             pygame.quit()
