@@ -803,9 +803,9 @@ class Course(pygame.sprite.Sprite):
                         course.coursorMarked()
                         if soundEnabled:
                             if chosen == 0:
-                                pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.mp3")
+                                pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.ogg")
                             else:
-                                pygame.mixer.music.load(f"{dirPath}/Music/punch.mp3")
+                                pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
                             pygame.mixer.music.play(1)
                         iterator += 1  
                 if fightBtn.collidepoint(mouse_pos) and not inFight:
@@ -949,6 +949,8 @@ class Course(pygame.sprite.Sprite):
                             chosen = index
                             storedTime = getActualSecond()
                             loadingBar = True
+                            pygame.mixer.music.load(f"{dirPath}/Music/water_pouring.ogg")
+                            pygame.mixer.music.play(1)
 
 
             correctWidth = mouse_pos[0] > size_w/4.93 and mouse_pos[0] < size_w/1.2
@@ -1949,14 +1951,14 @@ class Course(pygame.sprite.Sprite):
                         activeMain = True
                         iterator += 1
                         if soundEnabled:
-                            pygame.mixer.music.load(f"{dirPath}/Music/shield_impact.mp3")
+                            pygame.mixer.music.load(f"{dirPath}/Music/shield_impact.ogg")
                             pygame.mixer.music.play(1)
                     elif index != goodAnswerIndex:
                         hp2 -= size_w/50
                         activeMain = True
                         iterator += 1
                         if soundEnabled:
-                            pygame.mixer.music.load(f"{dirPath}/Music/ouch.mp3")
+                            pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
                             pygame.mixer.music.play(1)
             wdth += size_w/8     
     def consoleGame(textToShow,goodAnswer,btnText="Attack",fontSize=2.5,textLen=23,multipleAnswers=False,answersList=[],fontSize2=2):
@@ -2211,7 +2213,7 @@ class Course(pygame.sprite.Sprite):
                     for rect in rects:
                         if rect.collidepoint(mouse_pos):
                             if soundEnabled:
-                                pygame.mixer.music.load(f"{dirPath}/Music/wooden_chest.mp3")
+                                pygame.mixer.music.load(f"{dirPath}/Music/wooden_chest.ogg")
                                 pygame.mixer.music.play(1)
                             index = rects.index(rect)
                             storedItems.append(index)
@@ -4130,11 +4132,7 @@ class Course(pygame.sprite.Sprite):
                 course.eventsReset()
                 course.tower_defence.drawMap()
                 course.tower_defence.clearAdminTools()
-                if language == "ENG":
-                    wave = "First wave"
-                else:
-                    wave = "Pierwsza fala"
-                startBtn = course.centeredBtn(2.98,purple,wave,fontSize=1.6)
+                startBtn = course.centeredBtn(2.98,purple,"First wave",fontSize=1.6)
                 if isinstance(storedTime,float):
                     if storedTime > 56:
                         storedTime -= 3
@@ -4149,24 +4147,18 @@ class Course(pygame.sprite.Sprite):
                         enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
                         enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/5.33),int(size_h/3)])
                         enemyGhost = pygame.transform.flip(enemyGhost, True, False)
-                        course.tower_defence.showUnit(enemyGhost,"Phantom",wave)
-                        if language == "ENG":
-                            WriteItalic(round(size_w//100*3),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
-                        else:
-                            WriteItalic(round(size_w//100*3),"Wciśnij dowolny przycisk...",lt_gray,[size_w/1.88,size_h/9.6])
+                        course.tower_defence.showUnit(enemyGhost,"Phantom","First Wave")
+                        WriteItalic(round(size_w//100*3),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
                         unitBeingShowed = True
                 if not unitBeingShowed and not TD_subDone:
-                    if language == "ENG":
-                        course.dialogTop(6.41,"My beautiful archespors are ready,","time to face evil forces",bckgr=True)
-                    else:
-                        course.dialogTop(6.41,"Moje piękne archespory są gotowe,","czas stawić czoła złym mocom",bckgr=True)
+                    course.dialogTop(6.41,"My beautiful archespors are ready,","time to face evil forces",bckgr=True)
 
                 if event.type == KEYDOWN and TD_subDone:
                     course.tower_defence.reset()
                 if event.type == MOUSEMOTION and not unitBeingShowed:
                     if startBtn.collidepoint(mouse_pos):
                         course.centeredBtn(2.98,logoBlue,"",fontSize=1.6)
-                        course.centeredBtn(2.98,dark_blue,wave,fontSize=1.6,border=size_w//150)
+                        course.centeredBtn(2.98,dark_blue,"First wave",fontSize=1.6,border=size_w//150)
                 elif event.type == MOUSEBUTTONDOWN and not unitBeingShowed:
                     if startBtn.collidepoint(mouse_pos):
                         storedTime = getActualSecond()
@@ -4899,8 +4891,8 @@ class Music():
     def init():
         global soundFantasy1,soundMagic1
         global fantasyChannel,fantasyChannelSounds,magicChannel
-        soundFantasy1 = pygame.mixer.Sound(f"{dirPath}/Music/Ale-and-Anecdotes-by-Darren-Curtis.mp3")
-        soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.mp3")
+        soundFantasy1 = pygame.mixer.Sound(f"{dirPath}/Music/Ale-and-Anecdotes-by-Darren-Curtis.ogg")
+        soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.ogg")
         
         fantasyChannel = pygame.mixer.Channel(1)
         fantasyChannel.set_volume(0.2)
