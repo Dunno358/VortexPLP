@@ -4130,7 +4130,11 @@ class Course(pygame.sprite.Sprite):
                 course.eventsReset()
                 course.tower_defence.drawMap()
                 course.tower_defence.clearAdminTools()
-                startBtn = course.centeredBtn(2.98,purple,"First wave",fontSize=1.6)
+                if language == "ENG":
+                    wave = "First wave"
+                else:
+                    wave = "Pierwsza fala"
+                startBtn = course.centeredBtn(2.98,purple,wave,fontSize=1.6)
                 if isinstance(storedTime,float):
                     if storedTime > 56:
                         storedTime -= 3
@@ -4145,18 +4149,24 @@ class Course(pygame.sprite.Sprite):
                         enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
                         enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/5.33),int(size_h/3)])
                         enemyGhost = pygame.transform.flip(enemyGhost, True, False)
-                        course.tower_defence.showUnit(enemyGhost,"Phantom","First Wave")
-                        WriteItalic(round(size_w//100*3),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
+                        course.tower_defence.showUnit(enemyGhost,"Phantom",wave)
+                        if language == "ENG":
+                            WriteItalic(round(size_w//100*3),"Press any key to start...",lt_gray,[size_w/1.88,size_h/9.6])
+                        else:
+                            WriteItalic(round(size_w//100*3),"Wciśnij dowolny przycisk...",lt_gray,[size_w/1.88,size_h/9.6])
                         unitBeingShowed = True
                 if not unitBeingShowed and not TD_subDone:
-                    course.dialogTop(6.41,"My beautiful archespors are ready,","time to face evil forces",bckgr=True)
+                    if language == "ENG":
+                        course.dialogTop(6.41,"My beautiful archespors are ready,","time to face evil forces",bckgr=True)
+                    else:
+                        course.dialogTop(6.41,"Moje piękne archespory są gotowe,","czas stawić czoła złym mocom",bckgr=True)
 
                 if event.type == KEYDOWN and TD_subDone:
                     course.tower_defence.reset()
                 if event.type == MOUSEMOTION and not unitBeingShowed:
                     if startBtn.collidepoint(mouse_pos):
                         course.centeredBtn(2.98,logoBlue,"",fontSize=1.6)
-                        course.centeredBtn(2.98,dark_blue,"First wave",fontSize=1.6,border=size_w//150)
+                        course.centeredBtn(2.98,dark_blue,wave,fontSize=1.6,border=size_w//150)
                 elif event.type == MOUSEBUTTONDOWN and not unitBeingShowed:
                     if startBtn.collidepoint(mouse_pos):
                         storedTime = getActualSecond()
