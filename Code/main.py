@@ -4411,7 +4411,8 @@ class Course(pygame.sprite.Sprite):
                 notBlocked = False
                 course.tower_defence.drawMap()
                 course.tower_defence.console()
-                course.eventsReset()                                   
+                course.eventsReset()      
+                #iterator is 3, set to 5 and +=2 till 9       
     def lesson5():
         course.standardLessonEvents("lesson5",99)
     def lesson6():
