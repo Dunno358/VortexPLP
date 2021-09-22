@@ -193,9 +193,9 @@ TD_toDefeat = 0
 TD_unitsPassed = 0
 TD_added = False
 TD_added2 = False
-TD_Lvls = [3,4,9,10,11,12,13]
+TD_Lvls = [3,4,9,10,11,12,13,14,15,16]
 TD_excludeLvls = 3
-TD_excludedLvls = [12]
+TD_excludedLvls = [12,14,16]
 TD_friendsLvl = [13]
 TD_subDone = False
 class Write(pygame.sprite.Sprite):
@@ -460,10 +460,15 @@ class Start(pygame.sprite.Sprite):
             it+=sideBar_h/5.6        
 
         Write(size_w//100,"V0.0.0.9",color3,[size_w/1.81,10]) 
+        logoTxt1 = WriteItalic(round(size_w//100*6),"Vortex",logoBlue,[size_w/2,size_h/5.15])
+        logoTxt1 = WriteItalic(round(size_w//100*4),"PLP",red,[size_w/1.59,size_h/5.5])
 
-        Write(size_w//100*3,"Welcome {}!".format(getName()),color3,[size_w/1.8,size_h/5])
         WriteItalic(round(size_w//100*3.5),"Content is being loaded for you...",color3,[size_w/1.84,size_h/2.65])
-        Write(round(size_w//100*2.5),"Please be patient",color3,[size_w/1.84,size_h/1.5])
+        WriteItalic(round(size_w//100*1.5),"Loading sounds...",color3,[size_w/1.86,size_h/2.16])
+        WriteItalic(round(size_w//100*1.5),"Loading images...",color3,[size_w/1.86,size_h/1.9])
+        WriteItalic(round(size_w//100*1.5),"Loading fun...",color3,[size_w/1.86,size_h/1.7])
+        
+        Write(round(size_w//100*2.5),"Please be patient",color3,[size_w/1.84,size_h/1.2])
 
         pygame.display.update()
     def sideBarEvents():
@@ -1068,6 +1073,8 @@ class Course(pygame.sprite.Sprite):
                     TD_actualEnemy2 = None
                     print("TD_lvlType does not follow any of this: 'mixed','onlyfriend','onlyenemy'")
                 secondGo = True
+                if TD_lvlType == 'mixed':
+                    TD_iterator = 1.5
                 if getActualSecond()%100>=1 and not TD_done:
                     if TD_wdthStart<size_w/2.36 and not TD_firstDone:
                         course.tower_defence.drawPath()
@@ -1103,7 +1110,7 @@ class Course(pygame.sprite.Sprite):
                         holdIterator = iterator
                         course.tower_defence.reset()
                         course.tower_defence.drawMap()
-                        if courseLvl not in TD_friendsLvl:
+                        if courseLvl not in TD_friendsLvl or TD_lvlType == 'mixed':
                             iterator = holdIterator + 2
                         else:
                             TD_unitsPassed += 1
@@ -1142,7 +1149,7 @@ class Course(pygame.sprite.Sprite):
                             holdIterator = iterator
                             course.tower_defence.reset()
                             course.tower_defence.drawMap()
-                            if courseLvl not in TD_friendsLvl:
+                            if courseLvl not in TD_friendsLvl or TD_lvlType == 'mixed':
                                 iterator = holdIterator + 2
                             else:
                                 TD_unitsPassed += 1
@@ -1229,11 +1236,18 @@ class Course(pygame.sprite.Sprite):
                     if len(TD_circs)<1:
                         course.tower_defence.drawMap()
 
+                    attackEnemy = first == "enemy" and TD_consoleTxts[1].lower() == "attack()" or second == "enemy" and TD_consoleTxts[3].lower() == "attack()"
+                    attackFriend = first == "friend" and TD_consoleTxts[1].lower() == "attack()" or second == "friend" and TD_consoleTxts[3].lower() == "attack()"
+                    letEnemy = first == "enemy" and TD_consoleTxts[1].lower() == "wait()" or second == "enemy" and TD_consoleTxts[3].lower() == "wait()"
+                    letFriend = first == "friend" and TD_consoleTxts[1].lower() == "wait()" or second == "friend" and TD_consoleTxts[3].lower() == "wait()"
+                    
+                    attackingAllowed = TD_enemy not in TD_friends and not letFriend
+
                     for circ in TD_circs:
                         try:
                             index = TD_circs.index(circ)
-                            if circ.collidepoint(TD_enemy) and TD_hp>0 and circ not in TD_active:
-                                if index not in TD_active:
+                            if circ.collidepoint(TD_enemy) and TD_hp>0 and circ not in TD_active and attackingAllowed:
+                                if index not in TD_active and attackingAllowed:
                                     TD_active.append(index)
                                 try:
                                     pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[index], width=0)
@@ -1243,10 +1257,6 @@ class Course(pygame.sprite.Sprite):
                                 except:
                                     pass
                                 lineColor = red
-                                attackEnemy = first == "enemy" and TD_consoleTxts[1].lower() == "attack()" or second == "enemy" and TD_consoleTxts[3].lower() == "attack()"
-                                attackFriend = first == "friend" and TD_consoleTxts[1].lower() == "attack()" or second == "friend" and TD_consoleTxts[3].lower() == "attack()"
-                                letEnemy = first == "enemy" and TD_consoleTxts[1].lower() == "wait()" or second == "enemy" and TD_consoleTxts[3].lower() == "wait()"
-                                letFriend = first == "friend" and TD_consoleTxts[1].lower() == "wait()" or second == "friend" and TD_consoleTxts[3].lower() == "wait()"
                                 if letEnemy and TD_actualEnemy in TD_enemies or letFriend and TD_actualEnemy in TD_friends:
                                     pass
                                 else:
@@ -1254,6 +1264,8 @@ class Course(pygame.sprite.Sprite):
                                         if TD_hp > 0:
                                             TD_hp -= size_w/1000*len(TD_active)/1.5
                                             lineColor = lt_blue
+                                            pygame.mixer.music.load(f"{dirPath}/Music/punch.wav")
+                                            pygame.mixer.music.play(1)
                                         else:
                                             #course.tower_defence.drawMap()
                                             pygame.event.post(KEYUP)
@@ -1282,6 +1294,8 @@ class Course(pygame.sprite.Sprite):
                                         if TD_hp2 > 0:
                                             TD_hp2 -= size_w/700*len(TD_active2)
                                             lineColor = lt_blue
+                                            pygame.mixer.music.load(f"{dirPath}/Music/punch.wav")
+                                            pygame.mixer.music.play(1)
                                         else:
                                             course.tower_defence.drawMap()
                                             course.tower_defence.reset()
@@ -1506,7 +1520,6 @@ class Course(pygame.sprite.Sprite):
                 if btnL.collidepoint(mouse_pos) or btnR.collidepoint(mouse_pos):
                     TD_consoleShown = True
                 try:
-                    print(TD_count not in [1,2])
                     if TD_count not in [1,2]:
                         if backBtn.collidepoint(mouse_pos) or applyBtn.collidepoint(mouse_pos):
                             pygame.draw.rect(screen, TD_darkGreen, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
@@ -4330,7 +4343,75 @@ class Course(pygame.sprite.Sprite):
                 TD_iterator = 2
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
-                course.tower_defence.console()                         
+                course.tower_defence.console()      
+            elif courseLvl == 14:
+                notBlocked = False
+                course.tower_defence.drawMap()
+                course.tower_defence.console()
+                course.eventsReset()  
+                strs = [
+                    "Now when we already told our",
+                    "archespors to not attack friends,",
+                    "let's ensure ourselves that enemies", 
+                    "will be attacked as they should",
+                    "Add 'else' or 'elif enemy' after",
+                    "existing 'if' controlling friends",
+                    "and use attack() function",
+                    "That's the spirit! I heard of some",
+                    "dwarfs trying to escape werewolfs",
+                    "hordes attacking, get ready!"
+                ]
+
+                commandsCorrect = TD_consoleTxts[2] in ['else:','elif enemy:'] and TD_consoleTxts[3] == 'attack()'
+
+                if not TD_consoleShown:
+                    if TD_count == 0:
+                        course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],bckgr=True)    
+                        nextBtn = course.centeredBtn(2.15,dark_green,"Next",adjustToDialog=True)
+                    elif TD_count == 3:
+                        if not commandsCorrect:
+                            course.dialogTop(6.41,strs[4],strs[5],strs[6],bckgr=True) 
+                            nextBtn = course.centeredBtn(2.61,dark_green,"Console",adjustToDialog=True)
+                        else:
+                            course.dialogTop(6.41,strs[7],strs[8],strs[9],bckgr=True) 
+                            nextBtn = course.centeredBtn(2.61,dark_green,"Ready",adjustToDialog=True)
+
+                try:
+                    if not TD_consoleShown:
+                        if event.type == MOUSEMOTION:
+                            if nextBtn.collidepoint(mouse_pos) and TD_count == 0:
+                                course.centeredBtn(2.15,green,"Next",adjustToDialog=True)             
+                                course.centeredBtn(2.15,dark_green,"",adjustToDialog=True,border=size_w//250) 
+                            elif nextBtn.collidepoint(mouse_pos) and not commandsCorrect and TD_count == 3:
+                                course.centeredBtn(2.61,green,"Console",adjustToDialog=True)             
+                                course.centeredBtn(2.61,dark_green,"",adjustToDialog=True,border=size_w//250) 
+                            elif nextBtn.collidepoint(mouse_pos) and TD_count == 3 and commandsCorrect:
+                                course.centeredBtn(2.61,green,"Ready",adjustToDialog=True)             
+                                course.centeredBtn(2.61,dark_green,"",adjustToDialog=True,border=size_w//250) 
+                        elif event.type == MOUSEBUTTONDOWN:
+                            if nextBtn.collidepoint(mouse_pos) and TD_count == 0:
+                                TD_count += 3  
+                            elif nextBtn.collidepoint(mouse_pos) and TD_count == 3 and not commandsCorrect:
+                                TD_consoleShown = True
+                            elif nextBtn.collidepoint(mouse_pos) and TD_count == 3 and commandsCorrect:
+                                TD_count = 0
+                                courseLvl += 1
+                                course.tower_defence.reset()
+                                iterator = 3
+                except:
+                    pass  
+            elif courseLvl == 15:
+                TD_lvlType = "mixed"
+                TD_toDefeat = 3
+                TD_iterator = 2
+                course.tower_defence.drawMap()
+                course.tower_defence.adminTools()
+                course.tower_defence.console()      
+            elif courseLvl == 16:
+                notBlocked = False
+                course.tower_defence.drawMap()
+                course.tower_defence.console()
+                course.eventsReset()                                   
     def lesson5():
         course.standardLessonEvents("lesson5",99)
     def lesson6():
@@ -4891,8 +4972,10 @@ class Music():
     def init():
         global soundFantasy1,soundMagic1
         global fantasyChannel,fantasyChannelSounds,magicChannel
+        print("Loading sounds...")
         soundFantasy1 = pygame.mixer.Sound(f"{dirPath}/Music/Ale-and-Anecdotes-by-Darren-Curtis.ogg")
         soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.ogg")
+        print("Sounds loaded!")
         
         fantasyChannel = pygame.mixer.Channel(1)
         fantasyChannel.set_volume(0.2)
