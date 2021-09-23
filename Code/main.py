@@ -4411,7 +4411,29 @@ class Course(pygame.sprite.Sprite):
                 notBlocked = False
                 course.tower_defence.drawMap()
                 course.tower_defence.console()
-                course.eventsReset()      
+                course.eventsReset()     
+                strs= [
+                    "We're almost done here apprentice,",
+                    "only few more enemies to beat and",
+                    "and friends to save, ready?"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],bckgr=True) 
+                readyBtn= course.centeredBtn(2.57,dark_green,"Ready",adjustToDialog=True)
+
+                if event.type == MOUSEMOTION:
+                    if readyBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(2.57,green,"Ready",adjustToDialog=True)
+                        course.centeredBtn(2.57,dark_green,"",adjustToDialog=True,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN:
+                    if readyBtn.collidepoint(mouse_pos):
+                        courseLvl += 1
+                        iterator = 5
+            elif courseLvl== 17:
+                TD_lvlType = 'mixed'
+                TD_toDefeat = 6
+                course.tower_defence.drawMap()
+                course.tower_defence.adminTools()
+                course.tower_defence.console()                 
                 #iterator is 3, set to 5 and +=2 till 9       
     def lesson5():
         course.standardLessonEvents("lesson5",99)
@@ -5012,7 +5034,7 @@ contacts = Contacts
 prize = Prize
 music = Music
 start.useScreenDef()
-music.init()
+#music.init()
 print("Init_End_Time: ",str(datetime.now())[10:])
 while running:
     try:
@@ -5023,7 +5045,7 @@ while running:
     start.adminTools.counterCords()
     start.adminTools.counterFPS()
     course.tower_defence.loadingBar(storedTime)
-    music.playBackground()
+    #music.playBackground()
     for event in pygame.event.get():
         start.sideBarEvents()
         start.setNameScreen()
