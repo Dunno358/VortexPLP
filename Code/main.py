@@ -411,6 +411,7 @@ def errorInit(text,fontSize=2):
     errorShowed = True
 def errorHandling(): #STILL UNDER DEVELOPMENT
     global activities,activeAny,activeMain,activeMenu,errorShowed,activeCourse,errorText,errorFontSize
+    global courseLvl
     if errorShowed:
         pygame.event.set_blocked([MOUSEMOTION,KEYUP,KEYDOWN])
         pygame.draw.rect(screen, color1, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
@@ -431,6 +432,7 @@ def errorHandling(): #STILL UNDER DEVELOPMENT
                 activities[2] = False
                 activities[3] = False
                 activities[4] = False
+                courseLvl = 1
                 activeAny = False
                 activeMenu = True
                 activeMain = True
@@ -478,13 +480,17 @@ class Start(pygame.sprite.Sprite):
         sideBarOpt4 = pygame.draw.rect(screen,color1,[sideBarRctWStart,sideBarRctHStart+spaceBetween*3,sideBarRctWE,sideBarRctHghtE],size_w//270,15)
         sideBarOpt5 = pygame.draw.rect(screen,color1,[sideBarRctWStart,sideBarRctHStart+spaceBetween*4,sideBarRctWE,sideBarRctHghtE],size_w//270,15)
        
-        courseIcon = pygame.image.load(r"{}/Images/python-iconx128.png".format(dirPath))
-        magnifierIcon = pygame.image.load(r"{}/Images/magnifier-iconx128.png".format(dirPath))
-        settingsIcon = pygame.image.load(r"{}/Images/settings-iconx128.png".format(dirPath))
-        prizeIcon = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
-        contactsIcon = pygame.image.load(r"{}/Images/contacts-iconx128.png".format(dirPath))
+        try:
+            courseIcon = pygame.image.load(r"{}/Images/python-iconx128.png".format(dirPath))
+            magnifierIcon = pygame.image.load(r"{}/Images/magnifier-iconx128.png".format(dirPath))
+            settingsIcon = pygame.image.load(r"{}/Images/settings-iconx128.png".format(dirPath))
+            prizeIcon = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
+            contactsIcon = pygame.image.load(r"{}/Images/contacts-iconx128.png".format(dirPath))
+            sideBarIcons = [courseIcon,magnifierIcon,settingsIcon,prizeIcon,contactsIcon]
+        except:
+            errorInit("Failed to load SideBar Icons",fontSize=1.6)
+            sideBarIcons = []
 
-        sideBarIcons = [courseIcon,magnifierIcon,settingsIcon,prizeIcon,contactsIcon]
         for icon in sideBarIcons:
             index = sideBarIcons.index(icon)
             icon = pygame.transform.scale(icon,[int(size_w//21.3),int(size_h//12)])
@@ -906,43 +912,49 @@ class Course(pygame.sprite.Sprite):
                     [size_w/3.82,size_h/1.13,size_w/16,size_h/11]
                 ]
 
-                guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
-                guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
-                cords = [
-                    [size_w/3.24,size_h/2.3],
-                    [size_w/2.04,size_h/2.16],
-                    [size_w/1.75,size_h/2.16],
-                    [size_w/1.37,size_h/2.33]
-                ]
-                for cord in cords:
-                    #guardIcon = screen.blit(guard,cord)
-                    holdGuard = [cord[0]+guard.get_width()/2,cord[1]+guard.get_height()/2]
-                    holdGuardRect = [cord[0],cord[1],guard.get_width(),guard.get_height()]
-                    TD_guards.append(holdGuard)
-                    TD_guardRects.append(holdGuardRect)
-                for guardian in TD_guards:
-                    wdth = guardian[0]
-                    hght = guardian[1]
-                    circ = pygame.draw.circle(screen, TD_darkGreen, [wdth,hght], size_w/10, size_w//900)
-                    TD_circs.append(circ)
+                try:
+                    guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
+                    guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
+                    cords = [
+                        [size_w/3.24,size_h/2.3],
+                        [size_w/2.04,size_h/2.16],
+                        [size_w/1.75,size_h/2.16],
+                        [size_w/1.37,size_h/2.33]
+                    ]
+                    for cord in cords:
+                        #guardIcon = screen.blit(guard,cord)
+                        holdGuard = [cord[0]+guard.get_width()/2,cord[1]+guard.get_height()/2]
+                        holdGuardRect = [cord[0],cord[1],guard.get_width(),guard.get_height()]
+                        TD_guards.append(holdGuard)
+                        TD_guardRects.append(holdGuardRect)
+                    for guardian in TD_guards:
+                        wdth = guardian[0]
+                        hght = guardian[1]
+                        circ = pygame.draw.circle(screen, TD_darkGreen, [wdth,hght], size_w/10, size_w//900)
+                        TD_circs.append(circ)
 
-                for cord in cords:
-                    screen.blit(guard,cord)
+                    for cord in cords:
+                        screen.blit(guard,cord)
+                except:
+                    errorInit("Failed to load 'guard.png'")
 
             if trees:
-                tree = pygame.image.load(r"{}/Images/Game/2dmap/tree.png".format(dirPath))
-                tree = pygame.transform.scale(tree, [int(size_w/10.6),int(size_h/6)])
-                treeCords = [
-                    [size_w/3.93,size_h/4.29], #up1
-                    [size_w/2.95,size_h/11.82], #up2
-                    [size_w/2.1,size_h/7.18], #up3
-                    [size_w/1.68,size_h/10.82], #up4
-                    [size_w/1.38,size_h/7.5], #up5
-                    [size_w/2.65,size_h/1.32], #down1
-                    [size_w/1.73,size_h/1.32] #down2
-                ]
-                for cords in treeCords:
-                    screen.blit(tree,cords)
+                try:
+                    tree = pygame.image.load(r"{}/Images/Game/2dmap/tree.png".format(dirPath))
+                    tree = pygame.transform.scale(tree, [int(size_w/10.6),int(size_h/6)])
+                    treeCords = [
+                        [size_w/3.93,size_h/4.29], #up1
+                        [size_w/2.95,size_h/11.82], #up2
+                        [size_w/2.1,size_h/7.18], #up3
+                        [size_w/1.68,size_h/10.82], #up4
+                        [size_w/1.38,size_h/7.5], #up5
+                        [size_w/2.65,size_h/1.32], #down1
+                        [size_w/1.73,size_h/1.32] #down2
+                    ]
+                    for cords in treeCords:
+                        screen.blit(tree,cords)
+                except:
+                    errorInit("Failed to load 'tree.png'")
     
             course.tower_defence.drawPath()
         def nextBtn(color,text,border=False,colorIfBorder=(0,0,0)):
@@ -954,8 +966,12 @@ class Course(pygame.sprite.Sprite):
         def makingGuards():
             global selected,storedTime,chosen,storedCords,done,circles,loadingBar,TD_icon
             if isinstance(TD_icon,str):
-                TD_icon = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
-                TD_icon = pygame.transform.scale(TD_icon,[int(size_w/42.68),int(size_h/12)])
+                try:
+                    TD_icon = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
+                    TD_icon = pygame.transform.scale(TD_icon,[int(size_w/42.68),int(size_h/12)])
+                except:
+                    errorInit("Failed to load 'potion.png'",fontSize=1.8)
+                    TD_icon = None
             cords=[[size_w/2.72,size_h/1.92],
                     [size_w/1.91,size_h/1.94],
                     [size_w/1.67,size_h/1.94],
@@ -993,15 +1009,21 @@ class Course(pygame.sprite.Sprite):
                             chosen = index
                             storedTime = getActualSecond()
                             loadingBar = True
-                            pygame.mixer.music.load(f"{dirPath}/Music/water_pouring.ogg")
-                            pygame.mixer.music.play(1)
+                            try:
+                                pygame.mixer.music.load(f"{dirPath}/Music/water_pouring.ogg")
+                                pygame.mixer.music.play(1)
+                            except:
+                                errorInit("Failed to load 'water_pouring.ogg' at makingGuards",fontSize=1.5)
 
 
             correctWidth = mouse_pos[0] > size_w/4.93 and mouse_pos[0] < size_w/1.2
             correctHight = mouse_pos[1] > size_h/3.41 and mouse_pos[1] < size_h/1.17
             if not loadingBar:
                 if correctWidth and correctHight:
-                    screen.blit(TD_icon,[mouse_pos[0]+size_w//400,mouse_pos[1]])
+                    try:
+                        screen.blit(TD_icon,[mouse_pos[0]+size_w//400,mouse_pos[1]])
+                    except:
+                        pass
             else:
                 try:
                     blitWdth = circles[selected][0] + circles[selected][2]/2
