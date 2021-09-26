@@ -117,8 +117,13 @@ name=""
 lookForPhrase=""
 text = ""
 
+#ERROR
+errorShowed = False
+
 #HOLDER
 storedItems = []
+errorText = ''
+errorFontSize = 2
 
 #TIME
 wait = False
@@ -399,7 +404,38 @@ def resetEvents():
     for event in events:
         if pygame.event.get_blocked(event):
             pygame.event.set_allowed(event)
+def errorInit(text,fontSize=2):
+    global errorText,errorFontSize,errorShowed
+    errorText = text
+    errorFontSize = fontSize
+    errorShowed = True
+def errorHandling(): #STILL UNDER DEVELOPMENT
+    global activities,activeAny,activeMain,activeMenu,errorShowed,activeCourse,errorText,errorFontSize
+    if errorShowed:
+        pygame.event.set_blocked([MOUSEMOTION,KEYUP,KEYDOWN])
+        pygame.draw.rect(screen, color1, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+        pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
 
+        pygame.draw.rect(screen, color1, [size_w/3.43,size_h/3.94,size_w/2,size_h/2.5], 0,size_w//200)
+        pygame.draw.rect(screen, red, [size_w/3.43,size_h/3.94,size_w/2,size_h/2.5], size_w//450,size_w//200)
+        
+        Write(round(size_w//100*errorFontSize),errorText,red,[size_w/1.82,size_h/2.65])
+
+        okBtn = course.centeredBtn(1.93,dark_red,"OK",adjustToDialog=True)
+
+        if event.type == MOUSEBUTTONDOWN:
+            if okBtn.collidepoint(mouse_pos):
+                pygame.event.set_allowed([MOUSEMOTION,KEYUP,KEYDOWN])
+                activities[0] = False
+                activities[1] = False
+                activities[2] = False
+                activities[3] = False
+                activities[4] = False
+                activeAny = False
+                activeMenu = True
+                activeMain = True
+                errorShowed = False
+                start.welcomeScreen()
 
 
 class Start(pygame.sprite.Sprite):
@@ -807,11 +843,14 @@ class Course(pygame.sprite.Sprite):
                         screen.blit(icons[1],[wdth,hght])
                         course.coursorMarked()
                         if soundEnabled:
-                            if chosen == 0:
-                                pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.ogg")
-                            else:
-                                pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
-                            pygame.mixer.music.play(1)
+                            try:
+                                if chosen == 0:
+                                    pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.ogg")
+                                else:
+                                    pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
+                                pygame.mixer.music.play(1)
+                            except:
+                                errorInit("Failed to load sounds: singleUnitClickEvent",fontSize=1.5)
                         iterator += 1  
                 if fightBtn.collidepoint(mouse_pos) and not inFight:
                     inFight = True
@@ -2091,16 +2130,20 @@ class Course(pygame.sprite.Sprite):
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
-        global bckgrMusicPlayed,soundEnabled
-        course.standardLessonEvents("lesson1",11)   
-        if getTheme().lower() == "light":
-            mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
-        else:
-            mentorIcon = pygame.image.load(r"{}/Images/Game/orc.png".format(dirPath))
-        mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
-        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson1":
+        global bckgrMusicPlayed,soundEnabled,errorShowed
+        if not errorShowed:
+            course.standardLessonEvents("lesson1",11) 
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson1" and not errorShowed:
             language = getLang()
-            if courseLvl == 1: #LVL1
+            try:
+                if getTheme().lower() == "light":
+                    mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
+                else:
+                    mentorIcon = pygame.image.load(r"{}/Images/Game/orc.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
+            except:
+                errorInit("[Lesson1] Failed to load mentor icon!",fontSize=1.7)
+            if courseLvl == 1 and activities[0]: #LVL1
                 if language == "ENG":
                     course.dialogStandard(2.6,"Hello! My name is Romo and","I will help you to get through","beggining of this course.")
                     Write(round(size_w//100*1.5),"Click here",color3,[size_w/1.33,size_h/1.08]) 
@@ -2226,8 +2269,11 @@ class Course(pygame.sprite.Sprite):
                     for rect in rects:
                         if rect.collidepoint(mouse_pos):
                             if soundEnabled:
-                                pygame.mixer.music.load(f"{dirPath}/Music/wooden_chest.ogg")
-                                pygame.mixer.music.play(1)
+                                try:
+                                    pygame.mixer.music.load(f"{dirPath}/Music/wooden_chest.ogg")
+                                    pygame.mixer.music.play(1)
+                                except:
+                                    errorInit("Failed to load 'wooden_chest.ogg'!",fontSize=1.7)
                             index = rects.index(rect)
                             storedItems.append(index)
                             print(index,storedItems)
@@ -2382,9 +2428,12 @@ class Course(pygame.sprite.Sprite):
                     screen.blit(mentorIcon,[size_w/2.9,size_h/6.1])
                 else:  
                     screen.blit(mentorIcon,[size_w/3.1,size_h/6.1])
-                cup = pygame.image.load(r"{}/Images/Install/cup.png".format(dirPath))
-                cup = pygame.transform.scale(cup, [int(size_w/5.33),int(size_h/3)])
-                screen.blit(cup,[size_w/2.13,size_h/2.4])  
+                try:
+                    cup = pygame.image.load(r"{}/Images/Install/cup.png".format(dirPath))
+                    cup = pygame.transform.scale(cup, [int(size_w/5.33),int(size_h/3)])
+                    screen.blit(cup,[size_w/2.13,size_h/2.4]) 
+                except:
+                    errorInit("Failed to load 'cup.png'!") 
 
                 pygame.draw.rect(screen, color1, [size_w/2.24,size_h/7.14,size_w/4,size_h/8], size_w//150,15)
                 if language == "ENG":
@@ -2409,16 +2458,19 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False
     def lesson2():
         global activeMenu,courseLvl,mentorIcon,wait,storedTime,activeMain,type,chosen,inFight,notBlocked,theme
-        global hp1,hp2,iterator,activeMain,rectCenter,langugage,bckgrMusicPlayed
-        if activeMain:
+        global hp1,hp2,iterator,activeMain,rectCenter,langugage,bckgrMusicPlayed,errorShowed
+        if activeMain and not errorShowed:
             course.standardLessonEvents("lesson2",16,condition=notBlocked)
-        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson2":
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson2" and not errorShowed:
             language = getLang()
-            if getTheme().lower() == "light":
-                mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
-            else:
-                mentorIcon = pygame.image.load(r"{}/Images/Game/orc.png".format(dirPath))
-            mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
+            try:
+                if getTheme().lower() == "light":
+                    mentorIcon = pygame.image.load(r"{}/Images/Game/orcM.png".format(dirPath))
+                else:
+                    mentorIcon = pygame.image.load(r"{}/Images/Game/orc.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
             if courseLvl == 1:
                 if language == "ENG":
                     course.dialogStandard(2.65,"Now when you're ready","it's time for some adventure!")
@@ -3071,12 +3123,15 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False                    
     def lesson3():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
-        global bckgrMusicPlayed
-        if activeMain:
+        global bckgrMusicPlayed,errorShowed
+        if activeMain and not errorShowed:
             course.standardLessonEvents("lesson3",28,condition=notBlocked)
-        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson3":
-            mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
-            mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson3" and not errorShowed:
+            try:
+                mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
             if courseLvl == 1:
                 if language == "ENG":
@@ -3853,12 +3908,15 @@ class Course(pygame.sprite.Sprite):
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
         global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls,TD_iterator
         global TD_count,TD_subDone,TD_toDefeat,TD_done,TD_consoleTxts,wrong,TD_consoleShown
-        global bckgrMusicPlayed
+        global bckgrMusicPlayed,errorShowed
         language = getLang()
-        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4":
-            mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
-            mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
-            if activeMain:
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and not errorShowed:
+            try:
+                mentorIcon = pygame.image.load(r"{}/Images/Game/wizard.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
+            if activeMain and not errorShowed:
                 if courseLvl in TD_Lvls:
                     course.standardLessonEvents("lesson4",99,condition=notBlocked,standard=False,customCol=TD_darkGreen) 
                 else:
@@ -5022,12 +5080,13 @@ class Music():
         if soundEnabled and activities[0]:
             if bckgrMusicPlayed: 
                 lessonNr = str(activeLesson)[17:-23]
-                if lessonNr in ["lesson1","lesson2"]:
-                    if not fantasyChannel.get_busy():
-                        fantasyChannel.play(soundFantasy1)
-                elif lessonNr in ["lesson3","lesson4"]:
-                    if not magicChannel.get_busy():
-                        magicChannel.play(soundMagic1)
+                if not activeMenu:
+                    if lessonNr in ["lesson1","lesson2"]:
+                        if not fantasyChannel.get_busy():
+                            fantasyChannel.play(soundFantasy1)
+                    elif lessonNr in ["lesson3","lesson4"]:
+                        if not magicChannel.get_busy():
+                            magicChannel.play(soundMagic1)
             else:
                 fantasyChannel.stop()
                 magicChannel.stop()
@@ -5045,7 +5104,7 @@ contacts = Contacts
 prize = Prize
 music = Music
 start.useScreenDef()
-#music.init()
+music.init()
 print("Init_End_Time: ",str(datetime.now())[10:])
 while running:
     try:
@@ -5056,8 +5115,9 @@ while running:
     start.adminTools.counterCords()
     start.adminTools.counterFPS()
     course.tower_defence.loadingBar(storedTime)
-    #music.playBackground()
+    music.playBackground()
     for event in pygame.event.get():
+        errorHandling()
         start.sideBarEvents()
         start.setNameScreen()
         start.welcomeScreen()
