@@ -1,0 +1,4 @@
+Project started at 15.06.2021
+This file started at 26.09.2021
+
+[26.09.2021] Added error system
