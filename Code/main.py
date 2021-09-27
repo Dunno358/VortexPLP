@@ -10,6 +10,7 @@ from random import uniform
 import sys
 import os
 import time
+import unicodedata
 pygInit = pygame.init()
 pygame.mixer.init()
 pygame.key.set_repeat(500, 100)
@@ -44,11 +45,6 @@ TD_darkGray = (38, 38, 38)
 dark_brown = (56, 38, 10)
 lt_brown = (79, 53, 13)
 
-#DIR PATH
-dirPath = os.path.dirname(os.path.realpath(__file__))
-dirPath = dirPath[:-5] #-15 for .exe, -5 for .py
-print("Dir Path: ",dirPath)
-
 def cipher(textin):
     ciphered = ""
     for char in textin:
@@ -67,6 +63,13 @@ def getDisplayStyle():
     file.close() 
     display = decipher(readFile)
     return display 
+
+#DIR PATH
+dirPath = os.path.dirname(os.path.realpath(__file__))
+dirPath = dirPath[:-5] #-15 for .exe, -5 for .py
+print("Dir Path: ",dirPath)
+
+
 
 #DISPLAY
 displaySize = pygame.display.Info()
@@ -420,7 +423,13 @@ def errorHandling(): #STILL UNDER DEVELOPMENT
         pygame.draw.rect(screen, color1, [size_w/3.43,size_h/3.94,size_w/2,size_h/2.5], 0,size_w//200)
         pygame.draw.rect(screen, red, [size_w/3.43,size_h/3.94,size_w/2,size_h/2.5], size_w//450,size_w//200)
         
-        Write(round(size_w//100*errorFontSize),errorText,red,[size_w/1.82,size_h/2.65])
+        if not isinstance(errorText,list):
+            Write(round(size_w//100*errorFontSize),errorText,red,[size_w/1.82,size_h/2.65])
+        elif isinstance(errorText,list):
+            hght = size_h/2.65
+            for txt in errorText:
+                Write(round(size_w//100*errorFontSize),txt,red,[size_w/1.82,hght])
+                hght += size_h/20
 
         okBtn = course.centeredBtn(1.93,dark_red,"OK",adjustToDialog=True)
 
@@ -1078,47 +1087,50 @@ class Course(pygame.sprite.Sprite):
             if activities[0] and not activeMenu and lessonOk and lvlOk and not TD_consoleShown:
                 eventsBlocked = True
                 if len(TD_queue)<2:
-                    enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
-                    enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/19.51),int(size_h/10.97)])
-                    enemyGhost = pygame.transform.flip(enemyGhost, True, False)
-                    friendJav = pygame.image.load(r"{}/Images/Game/2dmap/jav.png".format(dirPath))
-                    friendJav = pygame.transform.scale(friendJav, [int(size_w/21.34),int(size_h/12)])
-                    werewolf = pygame.image.load(r"{}/Images/Game/2dmap/werewolf.png".format(dirPath))
-                    werewolf = pygame.transform.scale(werewolf, [int(size_w/21.34),int(size_h/12)])
-                    dwarf = pygame.image.load(r"{}/Images/Game/2dmap/dwarf.png".format(dirPath))
-                    dwarf = pygame.transform.scale(dwarf, [int(size_w/19.51),int(size_h/10.97)])
-                    dwarf = pygame.transform.flip(dwarf, True, False)
-                    reptill = pygame.image.load(r"{}/Images/Game/2dmap/reptill.png".format(dirPath))
-                    reptill = pygame.transform.scale(reptill, [int(size_w/19.51),int(size_h/10.97)])
-                    reptill = pygame.transform.flip(reptill, True, False)
-                    fairyFriend = pygame.image.load(r"{}/Images/Game/2dmap/fairy2.png".format(dirPath))
-                    fairyFriend = pygame.transform.scale(fairyFriend, [int(size_w/19.51),int(size_h/10.97)])
-                    fairyFriend = pygame.transform.flip(fairyFriend, True, False)   
-                    demon = pygame.image.load(r"{}/Images/Game/2dmap/demon.png".format(dirPath))
-                    demon = pygame.transform.scale(demon, [int(size_w/21.34),int(size_h/12)])    
-                    fairyFriend2 = pygame.image.load(r"{}/Images/Game/2dmap/fairy.png".format(dirPath))
-                    fairyFriend2 = pygame.transform.scale(fairyFriend2, [int(size_w/21.34),int(size_h/12)])
-                    fairyFriend2 = pygame.transform.flip(fairyFriend2, True, False)   
-                    evilFairy = pygame.image.load(r"{}/Images/Game/2dmap/evilFairy.png".format(dirPath))
-                    evilFairy = pygame.transform.scale(evilFairy, [int(size_w/19.51),int(size_h/10.97)])
-                    evilFairy = pygame.transform.flip(evilFairy, True, False)  
-                    armored = pygame.image.load(r"{}/Images/Game/2dmap/armoredFriend.png".format(dirPath))
-                    armored = pygame.transform.scale(armored, [int(size_w/19.51),int(size_h/10.97)])
-                    armored = pygame.transform.flip(armored, True, False)          
-                    TD_enemies = [enemyGhost,werewolf,reptill,demon,evilFairy]
-                    TD_friends = [friendJav,dwarf,fairyFriend,fairyFriend2,armored]
-                    TD_queue = [
-                        enemyGhost,
-                        friendJav,
-                        werewolf,
-                        dwarf,
-                        reptill,
-                        fairyFriend,
-                        demon,
-                        fairyFriend2,
-                        evilFairy,
-                        armored
-                        ]
+                    try:
+                        enemyGhost = pygame.image.load(r"{}/Images/Game/2dmap/ghost.png".format(dirPath))
+                        enemyGhost = pygame.transform.scale(enemyGhost, [int(size_w/19.51),int(size_h/10.97)])
+                        enemyGhost = pygame.transform.flip(enemyGhost, True, False)
+                        friendJav = pygame.image.load(r"{}/Images/Game/2dmap/jav.png".format(dirPath))
+                        friendJav = pygame.transform.scale(friendJav, [int(size_w/21.34),int(size_h/12)])
+                        werewolf = pygame.image.load(r"{}/Images/Game/2dmap/werewolf.png".format(dirPath))
+                        werewolf = pygame.transform.scale(werewolf, [int(size_w/21.34),int(size_h/12)])
+                        dwarf = pygame.image.load(r"{}/Images/Game/2dmap/dwarf.png".format(dirPath))
+                        dwarf = pygame.transform.scale(dwarf, [int(size_w/19.51),int(size_h/10.97)])
+                        dwarf = pygame.transform.flip(dwarf, True, False)
+                        reptill = pygame.image.load(r"{}/Images/Game/2dmap/reptill.png".format(dirPath))
+                        reptill = pygame.transform.scale(reptill, [int(size_w/19.51),int(size_h/10.97)])
+                        reptill = pygame.transform.flip(reptill, True, False)
+                        fairyFriend = pygame.image.load(r"{}/Images/Game/2dmap/fairy2.png".format(dirPath))
+                        fairyFriend = pygame.transform.scale(fairyFriend, [int(size_w/19.51),int(size_h/10.97)])
+                        fairyFriend = pygame.transform.flip(fairyFriend, True, False)   
+                        demon = pygame.image.load(r"{}/Images/Game/2dmap/demon.png".format(dirPath))
+                        demon = pygame.transform.scale(demon, [int(size_w/21.34),int(size_h/12)])    
+                        fairyFriend2 = pygame.image.load(r"{}/Images/Game/2dmap/fairy.png".format(dirPath))
+                        fairyFriend2 = pygame.transform.scale(fairyFriend2, [int(size_w/21.34),int(size_h/12)])
+                        fairyFriend2 = pygame.transform.flip(fairyFriend2, True, False)   
+                        evilFairy = pygame.image.load(r"{}/Images/Game/2dmap/evilFairy.png".format(dirPath))
+                        evilFairy = pygame.transform.scale(evilFairy, [int(size_w/19.51),int(size_h/10.97)])
+                        evilFairy = pygame.transform.flip(evilFairy, True, False)  
+                        armored = pygame.image.load(r"{}/Images/Game/2dmap/armoredFriend.png".format(dirPath))
+                        armored = pygame.transform.scale(armored, [int(size_w/19.51),int(size_h/10.97)])
+                        armored = pygame.transform.flip(armored, True, False)          
+                        TD_enemies = [enemyGhost,werewolf,reptill,demon,evilFairy]
+                        TD_friends = [friendJav,dwarf,fairyFriend,fairyFriend2,armored]
+                        TD_queue = [
+                            enemyGhost,
+                            friendJav,
+                            werewolf,
+                            dwarf,
+                            reptill,
+                            fairyFriend,
+                            demon,
+                            fairyFriend2,
+                            evilFairy,
+                            armored
+                            ]
+                    except:
+                        errorInit("Failed to load TD Icons")
                 try:
                     if TD_lvlType.lower() == "mixed":
                         TD_actualEnemy = TD_queue[iterator]
@@ -1155,16 +1167,16 @@ class Course(pygame.sprite.Sprite):
                         course.tower_defence.drawPath()
                         TD_wdthStart += size_w/1000*TD_iterator
                     else:
-                        guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
-                        guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
-                        course.tower_defence.drawPath()
-                        #pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[3], width=0)
                         try:
+                            guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
+                            guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
+                            course.tower_defence.drawPath()
+                            #pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[3], width=0)
                             guardW = TD_guardRects[3][0]
                             guardH = TD_guardRects[3][1]
                             screen.blit(guard,[guardW,guardH]) 
                         except:
-                            print("Line 929 Error occured | TDGUARDS",TD_guardRects)
+                            errorInit("Failed to load 'guard.png'")
                         if pygame.event.get_blocked(MOUSEMOTION):
                             pygame.event.set_allowed(MOUSEMOTION)
                         #TD_done = True
@@ -4892,17 +4904,20 @@ class Settings(pygame.sprite.Sprite):
     def isSoundEnabled():
         global soundEnabled
         if activities[2]:
-            speaker = pygame.image.load(f"{dirPath}/images/speaker.png")
-            speaker = pygame.transform.scale(speaker, [int(size_w/28.29),int(size_h/18.22)])
-            if soundEnabled:
-                soundBtn = pygame.draw.rect(screen, lt_blue, [size_w/1.3,size_h/9.6,size_w/13,size_h/13], size_w//250,size_w//200)
-                screen.blit(speaker,[size_w/1.27,size_h/8.5])
-                Write(round(size_w/100*1.4),"ON",lt_blue,[size_w/1.24,size_h/4.89])
-            else:
-                soundBtn = pygame.draw.rect(screen,color1, [size_w/1.3,size_h/9.6,size_w/13,size_h/13], size_w//250,size_w//200)
-                screen.blit(speaker,[size_w/1.27,size_h/8.5])
-                pygame.draw.line(screen, color1, [size_w/1.28,size_h/6.1], [size_w/1.21,size_h/8.35], size_w//250)
-                Write(round(size_w/100*1.4),"OFF",color1,[size_w/1.24,size_h/4.89])
+            try:
+                speaker = pygame.image.load(f"{dirPath}/images/speaker.png")
+                speaker = pygame.transform.scale(speaker, [int(size_w/28.29),int(size_h/18.22)])
+                if soundEnabled:
+                    soundBtn = pygame.draw.rect(screen, lt_blue, [size_w/1.3,size_h/9.6,size_w/13,size_h/13], size_w//250,size_w//200)
+                    screen.blit(speaker,[size_w/1.27,size_h/8.5])
+                    Write(round(size_w/100*1.4),"ON",lt_blue,[size_w/1.24,size_h/4.89])
+                else:
+                    soundBtn = pygame.draw.rect(screen,color1, [size_w/1.3,size_h/9.6,size_w/13,size_h/13], size_w//250,size_w//200)
+                    screen.blit(speaker,[size_w/1.27,size_h/8.5])
+                    pygame.draw.line(screen, color1, [size_w/1.28,size_h/6.1], [size_w/1.21,size_h/8.35], size_w//250)
+                    Write(round(size_w/100*1.4),"OFF",color1,[size_w/1.24,size_h/4.89])
+            except:
+                errorInit(["Failed to load 'speaker.png'","at settings.isSoundEnabled()"])
             if event.type == MOUSEBUTTONDOWN:
                 if soundBtn.collidepoint(mouse_pos):
                     if soundEnabled:
@@ -5007,10 +5022,13 @@ class Prize(pygame.sprite.Sprite):
             else:
                 Write(round(size_w//100*2.5),f"Jak tam twoja kolekcja {getName()}?",color3,[size_w/1.8,size_h/8.83])
             
-            table = pygame.image.load(r"{}/Images/Game/table.png".format(dirPath))
-            table = pygame.transform.scale(table, [int(size_w/1.7),int(size_h/4)])
-            screen.blit(table,[size_w/4.11,size_h/2.86])
-            screen.blit(table,[size_w/4.11,size_h/1.4])
+            try:
+                table = pygame.image.load(r"{}/Images/Game/table.png".format(dirPath))
+                table = pygame.transform.scale(table, [int(size_w/1.7),int(size_h/4)])
+                screen.blit(table,[size_w/4.11,size_h/2.86])
+                screen.blit(table,[size_w/4.11,size_h/1.4])
+            except:
+                errorInit("Failed to load 'table.png'")
 
             if language == "ENG":
                 names = [
@@ -5035,21 +5053,24 @@ class Prize(pygame.sprite.Sprite):
                     "None",
                 ]
             
-            cupL = pygame.image.load(r"{}/Images/install/cup_locked.png".format(dirPath))
-            cupL = pygame.transform.scale(cupL, [int(size_w/10.6),int(size_h/6)])  
-            axeL = pygame.image.load(r"{}/Images/Game/romosaxe_locked.png".format(dirPath))
-            axeL = pygame.transform.scale(axeL, [int(size_w/10.6),int(size_h/6)]) 
-            potionL = pygame.image.load(r"{}/Images/Game/potion_locked.png".format(dirPath))
-            potionL = pygame.transform.scale(potionL, [int(size_w/14.6),int(size_h/6)]) 
-            iconsLocked = [cupL,axeL,potionL]
+            try:
+                cupL = pygame.image.load(r"{}/Images/install/cup_locked.png".format(dirPath))
+                cupL = pygame.transform.scale(cupL, [int(size_w/10.6),int(size_h/6)])  
+                axeL = pygame.image.load(r"{}/Images/Game/romosaxe_locked.png".format(dirPath))
+                axeL = pygame.transform.scale(axeL, [int(size_w/10.6),int(size_h/6)]) 
+                potionL = pygame.image.load(r"{}/Images/Game/potion_locked.png".format(dirPath))
+                potionL = pygame.transform.scale(potionL, [int(size_w/14.6),int(size_h/6)]) 
+                iconsLocked = [cupL,axeL,potionL]
 
-            cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
-            cup = pygame.transform.scale(cup, [int(size_w/10.6),int(size_h/6)])  
-            axe = pygame.image.load(r"{}/Images/Game/romosaxe.png".format(dirPath))
-            axe = pygame.transform.scale(axe, [int(size_w/10.6),int(size_h/6)]) 
-            potion = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
-            potion = pygame.transform.scale(potion, [int(size_w/14.6),int(size_h/6)]) 
-            iconsUnlock = [cup,axe,potion]
+                cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
+                cup = pygame.transform.scale(cup, [int(size_w/10.6),int(size_h/6)])  
+                axe = pygame.image.load(r"{}/Images/Game/romosaxe.png".format(dirPath))
+                axe = pygame.transform.scale(axe, [int(size_w/10.6),int(size_h/6)]) 
+                potion = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
+                potion = pygame.transform.scale(potion, [int(size_w/14.6),int(size_h/6)]) 
+                iconsUnlock = [cup,axe,potion]
+            except:
+                errorInit("Failed to load icons at prize.startScreen()",fontSize=1.7)
 
             wdth = size_w/3.34
             hght = size_h/2.13
@@ -5059,15 +5080,18 @@ class Prize(pygame.sprite.Sprite):
             for it in range(2):
                 for it2 in range(4):
                     pygame.draw.rect(screen, gold, [wdth,hght,size_w/12,size_h/15], 0,size_w//450)
-                    if iterator<=lvl:
-                        Write(round(size_w//100*0.7),names[iterator],color1,[wdth+(size_w/12)/2,hght+(size_h/15)/2])
-                        screen.blit(iconsUnlock[iterator],[wdth,hght-size_h/4.7])
-                    else:
-                        Write(round(size_w//100*1.2),"?",color1,[wdth+(size_w/12)/2,hght+(size_h/15)/2])
-                        try:
-                            screen.blit(iconsLocked[iterator],[wdth,hght-size_h/5])
-                        except:
-                            pass
+                    try:
+                        if iterator<=lvl:
+                            Write(round(size_w//100*0.7),names[iterator],color1,[wdth+(size_w/12)/2,hght+(size_h/15)/2])
+                            screen.blit(iconsUnlock[iterator],[wdth,hght-size_h/4.7])
+                        else:
+                            Write(round(size_w//100*1.2),"?",color1,[wdth+(size_w/12)/2,hght+(size_h/15)/2])
+                            try:
+                                screen.blit(iconsLocked[iterator],[wdth,hght-size_h/5])
+                            except:
+                                pass
+                    except:
+                        pass
                     wdth += size_w/8
                     iterator += 1
                 wdth = size_w/3.34
@@ -5087,8 +5111,11 @@ class Music():
         global soundFantasy1,soundMagic1
         global fantasyChannel,fantasyChannelSounds,magicChannel
         print("Loading sounds...")
-        soundFantasy1 = pygame.mixer.Sound(f"{dirPath}/Music/Ale-and-Anecdotes-by-Darren-Curtis.ogg")
-        soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.ogg")
+        try:
+            soundFantasy1 = pygame.mixer.Sound(r"{}\Music\Ale-and-Anecdotes-by-Darren-Curtis.ogg".format(dirPath))
+            soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.ogg")
+        except:
+            errorInit(["Failed to load sounds: music.init()","You can turn off sounds in settings"],fontSize=1.6)
         print("Sounds loaded!")
         
         fantasyChannel = pygame.mixer.Channel(1)
@@ -5103,12 +5130,15 @@ class Music():
             if bckgrMusicPlayed: 
                 lessonNr = str(activeLesson)[17:-23]
                 if not activeMenu:
-                    if lessonNr in ["lesson1","lesson2"]:
-                        if not fantasyChannel.get_busy():
-                            fantasyChannel.play(soundFantasy1)
-                    elif lessonNr in ["lesson3","lesson4"]:
-                        if not magicChannel.get_busy():
-                            magicChannel.play(soundMagic1)
+                    try:
+                        if lessonNr in ["lesson1","lesson2"]:
+                            if not fantasyChannel.get_busy():
+                                fantasyChannel.play(soundFantasy1)
+                        elif lessonNr in ["lesson3","lesson4"]:
+                            if not magicChannel.get_busy():
+                                magicChannel.play(soundMagic1)
+                    except:
+                        errorInit(["Failed to play sounds: music.playBackground()","You can turn off sounds in settings"],fontSize=1.6)
             else:
                 fantasyChannel.stop()
                 magicChannel.stop()
