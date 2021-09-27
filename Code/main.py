@@ -1176,7 +1176,7 @@ class Course(pygame.sprite.Sprite):
                             guardH = TD_guardRects[3][1]
                             screen.blit(guard,[guardW,guardH]) 
                         except:
-                            errorInit("Failed to load 'guard.png'")
+                            errorInit(["Failed to load 'guard.png'","at enemiesPath-first"])
                         if pygame.event.get_blocked(MOUSEMOTION):
                             pygame.event.set_allowed(MOUSEMOTION)
                         #TD_done = True
@@ -1206,16 +1206,16 @@ class Course(pygame.sprite.Sprite):
                             course.tower_defence.drawPath()
                             TD_wdthStart2 += size_w/1000*TD_iterator
                         else:
-                            guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
-                            guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
-                            course.tower_defence.drawPath()
-                            pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[3], width=0)
                             try:
+                                guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
+                                guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
+                                course.tower_defence.drawPath()
+                                pygame.draw.rect(screen, TD_darkGreen, TD_guardSubRects[3], width=0)
                                 guardW = TD_guardRects[3][0]
                                 guardH = TD_guardRects[3][1]
                                 screen.blit(guard,[guardW,guardH]) 
                             except:
-                                print("Line 929 Error occured | TDGUARDS",TD_guardRects)
+                                errorInit(["Failed to load 'guard.png'","at enemiesPath-secondGo"])
                             if pygame.event.get_blocked(MOUSEMOTION):
                                 pygame.event.set_allowed(MOUSEMOTION)
                             #TD_done = True
@@ -1295,8 +1295,11 @@ class Course(pygame.sprite.Sprite):
                         [size_w/1.77,size_h/2.18,size_w/11,size_h/5.5],
                         [size_w/1.405,size_h/2.31,size_w/8.5,size_h/6.7]
                     ]
-                    guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
-                    guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
+                    try:
+                        guard = pygame.image.load(r"{}/Images/Game/2dmap/guard.png".format(dirPath))
+                        guard = pygame.transform.scale(guard, [int(size_w/14.22),int(size_h/8)])
+                    except:
+                        errorInit("Failed to load 'guard.png' at targeting",fontSize=1.7)
 
                     cords = [
                         [size_w/5,size_h/5.57,size_w/1.5,size_h/1.5],
@@ -1337,8 +1340,11 @@ class Course(pygame.sprite.Sprite):
                                         if TD_hp > 0:
                                             TD_hp -= size_w/1000*len(TD_active)/1.5
                                             lineColor = lt_blue
-                                            pygame.mixer.music.load(f"{dirPath}/Music/punch.wav")
-                                            pygame.mixer.music.play(1)
+                                            try:
+                                                pygame.mixer.music.load(f"{dirPath}/Music/punch.wav")
+                                                pygame.mixer.music.play(1)
+                                            except:
+                                                errorInit("Failed to load 'punch.wav'")
                                         else:
                                             #course.tower_defence.drawMap()
                                             pygame.event.post(KEYUP)
@@ -1749,11 +1755,10 @@ class Course(pygame.sprite.Sprite):
                 circleH += size_h//3.5
             isCorrectActivity()
 
+        if pygame.event.get_blocked(MOUSEMOTION):
+            pygame.event.set_allowed(MOUSEMOTION)
+
         if event.type == MOUSEMOTION and activities[0] and activeMenu:
-            permitionsFile = open(r"{}/Metadata/course/permitions.txt".format(dirPath),"r")
-            permitionLvl = permitionsFile.read()
-            permitionsFile.close()
-            permitionLvl = int(decipher(permitionLvl[34:]))
             lineH = size_h/4.5
             for x in range(3):
                 firstmainLine = pygame.draw.line(screen, colors[x], [size_w/4.5,lineH], [size_w/1.2,lineH], size_w//168) 
