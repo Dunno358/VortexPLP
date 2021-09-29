@@ -201,7 +201,7 @@ TD_toDefeat = 0
 TD_unitsPassed = 0
 TD_added = False
 TD_added2 = False
-TD_Lvls = [3,4,9,10,11,12,13,14,15,16]
+TD_Lvls = [3,4,9,10,11,12,13,14,15,16,17]
 TD_excludeLvls = 3
 TD_excludedLvls = [12,14,16]
 TD_friendsLvl = [13]
@@ -1341,7 +1341,7 @@ class Course(pygame.sprite.Sprite):
                                             TD_hp -= size_w/1000*len(TD_active)/1.5
                                             lineColor = lt_blue
                                             try:
-                                                pygame.mixer.music.load(f"{dirPath}/Music/punch.wav")
+                                                pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
                                                 pygame.mixer.music.play(1)
                                             except:
                                                 errorInit("Failed to load 'punch.wav'")
@@ -1373,7 +1373,7 @@ class Course(pygame.sprite.Sprite):
                                         if TD_hp2 > 0:
                                             TD_hp2 -= size_w/700*len(TD_active2)
                                             lineColor = lt_blue
-                                            pygame.mixer.music.load(f"{dirPath}/Music/punch.wav")
+                                            pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
                                             pygame.mixer.music.play(1)
                                         else:
                                             course.tower_defence.drawMap()
@@ -1690,6 +1690,17 @@ class Course(pygame.sprite.Sprite):
             Write(round(size_w//100*2.5),text,red,[size_w/1.9,size_h/2.2])
             Write(round(size_w//100*5.5),"Lost",red,[size_w/1.88,size_h/2.8])
             Write(round(size_w//100*2),"Click anywhere to restart...",red,[size_w/1.92,size_h/1.63])
+        def handlingFinalLvl():
+            global activeMenu,activeLesson,activities,TD_consoleShown
+            global TD_count,iterator,courseLvl
+            lvlOk = courseLvl == 17
+            if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
+                if TD_count == 2 and iterator < 6:
+                    iterator += 2 #7
+                elif TD_count == 4 and iterator < 8:
+                    iterator += 2 #9
+
+
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -3947,7 +3958,7 @@ class Course(pygame.sprite.Sprite):
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,notBlocked
         global storedCords,done,language,chosen,loadingBar,storedTime,TD_lvlType,TD_Lvls,TD_iterator
         global TD_count,TD_subDone,TD_toDefeat,TD_done,TD_consoleTxts,wrong,TD_consoleShown
-        global bckgrMusicPlayed,errorShowed
+        global bckgrMusicPlayed,errorShowed,TD_unitsPassed
         language = getLang()
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and not errorShowed:
             try:
@@ -4498,11 +4509,12 @@ class Course(pygame.sprite.Sprite):
                                 course.centeredBtn(2.61,dark_green,"",adjustToDialog=True,border=size_w//250) 
                         elif event.type == MOUSEBUTTONDOWN:
                             if nextBtn.collidepoint(mouse_pos) and TD_count == 0:
-                                TD_count += 3  
+                                TD_count += 3
                             elif nextBtn.collidepoint(mouse_pos) and TD_count == 3 and not commandsCorrect:
                                 TD_consoleShown = True
                             elif nextBtn.collidepoint(mouse_pos) and TD_count == 3 and commandsCorrect:
                                 TD_count = 0
+                                TD_unitsPassed = 0
                                 courseLvl += 1
                                 course.tower_defence.reset()
                                 iterator = 3
@@ -4536,13 +4548,15 @@ class Course(pygame.sprite.Sprite):
                     if readyBtn.collidepoint(mouse_pos):
                         courseLvl += 1
                         iterator = 5
+                        TD_count = 0
+                        TD_unitsPassed = 0
             elif courseLvl== 17:
                 TD_lvlType = 'mixed'
                 TD_toDefeat = 6
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()                 
-                #iterator is 3, set to 5 and +=2 till 9       
+                #TODO after clicking ready from lvl16 you need to post another event on lvl17 to refresh - do something with it      
     def lesson5():
         course.standardLessonEvents("lesson5",99)
     def lesson6():
@@ -5211,5 +5225,6 @@ while running:
     #EVENTS THAT NEED TO BE REFRESHED FASTER THAN EVENT LOOP
     course.tower_defence.enemiesPath(storedTime)
     course.tower_defence.targeting()
+    course.tower_defence.handlingFinalLvl()
     if pygame.display.get_init():
         pygame.display.update()
