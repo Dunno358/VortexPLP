@@ -5118,9 +5118,12 @@ class Music():
         print("Loading sounds...")
         try:
             soundFantasy1 = pygame.mixer.Sound(r"{}\Music\Ale-and-Anecdotes-by-Darren-Curtis.ogg".format(dirPath))
+        except:
+            errorInit(["Failed to load sounds: music.init()[1]","You can turn off sounds in settings"],fontSize=1.6)
+        try:
             soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.ogg")
         except:
-            errorInit(["Failed to load sounds: music.init()","You can turn off sounds in settings"],fontSize=1.6)
+            errorInit(["Failed to load sounds: music.init()[2]","You can turn off sounds in settings"],fontSize=1.6)
         print("Sounds loaded!")
         
         fantasyChannel = pygame.mixer.Channel(1)
