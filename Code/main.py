@@ -207,6 +207,10 @@ TD_excludedLvls = [12,14,16]
 TD_friendsLvl = [13]
 TD_subDone = False
 TD_btnClicked = False
+
+#PRIZE
+iconsUnlock = []
+iconsLocked = []
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
         pygame.sprite.Sprite.__init__(self)
@@ -3970,9 +3974,9 @@ class Course(pygame.sprite.Sprite):
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             if activeMain and not errorShowed:
                 if courseLvl in TD_Lvls:
-                    course.standardLessonEvents("lesson4",99,condition=notBlocked,standard=False,customCol=TD_darkGreen) 
+                    course.standardLessonEvents("lesson4",19,condition=notBlocked,standard=False,customCol=TD_darkGreen) 
                 else:
-                    course.standardLessonEvents("lesson4",99,condition=notBlocked) 
+                    course.standardLessonEvents("lesson4",19,condition=notBlocked) 
             if courseLvl == 1:
                 if language == "ENG":
                     txts = [
@@ -4562,7 +4566,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 18:  
                 notBlocked = True
                 course.eventsReset()
-                course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful and so do I")
+                course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful","and so do I")
             elif courseLvl == 19:
                 try:
                     #CHANGE BOOK SIZE TO BIGGER SO IT WON'T BE SO PIXELED
@@ -5053,6 +5057,7 @@ class Prize(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,name
         if activities[3]:
+            global iconsUnlock,iconsLocked
             language = getLang()
             if pygame.event.get_blocked(MOUSEMOTION):
                 pygame.event.set_allowed(MOUSEMOTION)
@@ -5083,7 +5088,7 @@ class Prize(pygame.sprite.Sprite):
                     "Beginner's cup",
                     "Romo's axe",
                     "Magic potion",
-                    "None",
+                    "Book of spells",
                     "None",
                     "None",
                     "None",
@@ -5094,7 +5099,7 @@ class Prize(pygame.sprite.Sprite):
                     "Puchar nowicjusza",
                     "Topór Romo",
                     "Magiczny eliksir",
-                    "None",
+                    "Księga zaklęć",
                     "None",
                     "None",
                     "None",
@@ -5102,22 +5107,27 @@ class Prize(pygame.sprite.Sprite):
                 ]
             
             try:
-                #TODO MAKE BOOK.PNG TO LOCKED AND ADD BOTH
-                cupL = pygame.image.load(r"{}/Images/install/cup_locked.png".format(dirPath))
-                cupL = pygame.transform.scale(cupL, [int(size_w/10.6),int(size_h/6)])  
-                axeL = pygame.image.load(r"{}/Images/Game/romosaxe_locked.png".format(dirPath))
-                axeL = pygame.transform.scale(axeL, [int(size_w/10.6),int(size_h/6)]) 
-                potionL = pygame.image.load(r"{}/Images/Game/potion_locked.png".format(dirPath))
-                potionL = pygame.transform.scale(potionL, [int(size_w/14.6),int(size_h/6)]) 
-                iconsLocked = [cupL,axeL,potionL]
+                if len(iconsLocked) < 1:
+                    cupL = pygame.image.load(r"{}/Images/install/cup_locked.png".format(dirPath))
+                    cupL = pygame.transform.scale(cupL, [int(size_w/10.6),int(size_h/6)])  
+                    axeL = pygame.image.load(r"{}/Images/Game/romosaxe_locked.png".format(dirPath))
+                    axeL = pygame.transform.scale(axeL, [int(size_w/10.6),int(size_h/6)]) 
+                    potionL = pygame.image.load(r"{}/Images/Game/potion_locked.png".format(dirPath))
+                    potionL = pygame.transform.scale(potionL, [int(size_w/14.6),int(size_h/6)]) 
+                    bookL = pygame.image.load(r"{}/Images/Game/book_locked.png".format(dirPath))
+                    bookL = pygame.transform.scale(bookL, [int(size_w/10.6),int(size_h/6)]) 
+                    iconsLocked = [cupL,axeL,potionL,bookL]
 
-                cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
-                cup = pygame.transform.scale(cup, [int(size_w/10.6),int(size_h/6)])  
-                axe = pygame.image.load(r"{}/Images/Game/romosaxe.png".format(dirPath))
-                axe = pygame.transform.scale(axe, [int(size_w/10.6),int(size_h/6)]) 
-                potion = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
-                potion = pygame.transform.scale(potion, [int(size_w/14.6),int(size_h/6)]) 
-                iconsUnlock = [cup,axe,potion]
+                if len(iconsUnlock) < 1:
+                    cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
+                    cup = pygame.transform.scale(cup, [int(size_w/10.6),int(size_h/6)])  
+                    axe = pygame.image.load(r"{}/Images/Game/romosaxe.png".format(dirPath))
+                    axe = pygame.transform.scale(axe, [int(size_w/10.6),int(size_h/6)]) 
+                    potion = pygame.image.load(r"{}/Images/Game/potion.png".format(dirPath))
+                    potion = pygame.transform.scale(potion, [int(size_w/14.6),int(size_h/6)]) 
+                    book = pygame.image.load(r"{}/Images/Game/book.png".format(dirPath))
+                    book = pygame.transform.scale(book, [int(size_w/10.6),int(size_h/6)]) 
+                    iconsUnlock = [cup,axe,potion,book]
             except:
                 errorInit("Failed to load icons at prize.startScreen()",fontSize=1.7)
 
