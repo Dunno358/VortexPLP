@@ -141,7 +141,7 @@ confirmed = True
 activeWriting = False
 done = False
 bckgrMusicPlayed = False
-soundEnabled = True
+soundEnabled = False #True
 
 #DRAGGING ITEMS
 held = False
@@ -206,6 +206,7 @@ TD_excludeLvls = 3
 TD_excludedLvls = [12,14,16]
 TD_friendsLvl = [13]
 TD_subDone = False
+TD_btnClicked = False
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
         pygame.sprite.Sprite.__init__(self)
@@ -1341,10 +1342,11 @@ class Course(pygame.sprite.Sprite):
                                             TD_hp -= size_w/1000*len(TD_active)/1.5
                                             lineColor = lt_blue
                                             try:
-                                                pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
-                                                pygame.mixer.music.play(1)
+                                                if soundEnabled:
+                                                    pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
+                                                    pygame.mixer.music.play(1)
                                             except:
-                                                errorInit("Failed to load 'punch.wav'")
+                                                errorInit("Failed to load 'punch.ogg'")
                                         else:
                                             #course.tower_defence.drawMap()
                                             pygame.event.post(KEYUP)
@@ -1692,15 +1694,15 @@ class Course(pygame.sprite.Sprite):
             Write(round(size_w//100*2),"Click anywhere to restart...",red,[size_w/1.92,size_h/1.63])
         def handlingFinalLvl():
             global activeMenu,activeLesson,activities,TD_consoleShown
-            global TD_count,iterator,courseLvl
+            global TD_count,iterator,courseLvl,TD_btnClicked
             lvlOk = courseLvl == 17
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 if TD_count == 2 and iterator < 6:
                     iterator += 2 #7
                 elif TD_count == 4 and iterator < 8:
                     iterator += 2 #9
-
-
+                #if not TD_btnClicked:
+                #    course.dialogTop(6.41,"Click anywhere when you're ready","to start final wave",bckgr=False)
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -4523,7 +4525,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 15:
                 TD_lvlType = "mixed"
                 TD_toDefeat = 3
-                TD_iterator = 2
+                TD_iterator = 1
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()      
@@ -4546,17 +4548,44 @@ class Course(pygame.sprite.Sprite):
                         course.centeredBtn(2.57,dark_green,"",adjustToDialog=True,border=size_w//250)
                 elif event.type == MOUSEBUTTONDOWN:
                     if readyBtn.collidepoint(mouse_pos):
-                        courseLvl += 1
-                        iterator = 5
                         TD_count = 0
                         TD_unitsPassed = 0
+                        courseLvl += 1
+                        course.tower_defence.reset()
+                        iterator = 5
             elif courseLvl== 17:
                 TD_lvlType = 'mixed'
                 TD_toDefeat = 6
                 course.tower_defence.drawMap()
                 course.tower_defence.adminTools()
                 course.tower_defence.console()                 
-                #TODO after clicking ready from lvl16 you need to post another event on lvl17 to refresh - do something with it      
+            elif courseLvl == 18:  
+                notBlocked = True
+                course.eventsReset()
+                course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful and so do I")
+            elif courseLvl == 19:
+                try:
+                    #CHANGE BOOK SIZE TO BIGGER SO IT WON'T BE SO PIXELED
+                    book = pygame.image.load(f"{dirPath}/Images/Game/book.png") #In case of missing: https://iconarchive.com/show/library-icons-by-robinweatherall/book-icon.html
+                    book = pygame.transform.scale(book, [int(size_w/5.33),int(size_h/3)])
+                    screen.blit(book,[size_w/2.27,size_h/3.27])
+                except:
+                    errorInit("Failed to load 'book.png'")
+                course.dialogTop(6.41,"Here, take this as reward and souvenir","to remember me, that was an honour")
+                finishBtn = course.centeredBtn(1.37,dark_green,"Finish")
+
+                if event.type == MOUSEMOTION:
+                    if finishBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.37,green,"Finish")
+                        course.centeredBtn(1.37,dark_green,"",border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN:
+                    if finishBtn.collidepoint(mouse_pos):
+                        if getCourseLvl() < 5:
+                            changeCourselvl(5)
+                        activeMenu = True
+                        courseLvl = 1  
+                        iterator = 1 
+                        bckgrMusicPlayed = False                        
     def lesson5():
         course.standardLessonEvents("lesson5",99)
     def lesson6():
@@ -5073,6 +5102,7 @@ class Prize(pygame.sprite.Sprite):
                 ]
             
             try:
+                #TODO MAKE BOOK.PNG TO LOCKED AND ADD BOTH
                 cupL = pygame.image.load(r"{}/Images/install/cup_locked.png".format(dirPath))
                 cupL = pygame.transform.scale(cupL, [int(size_w/10.6),int(size_h/6)])  
                 axeL = pygame.image.load(r"{}/Images/Game/romosaxe_locked.png".format(dirPath))
@@ -5127,19 +5157,21 @@ class Contacts(pygame.sprite.Sprite):
             isCorrectActivity()
 class Music():
     def init():
-        global soundFantasy1,soundMagic1
-        global fantasyChannel,fantasyChannelSounds,magicChannel
-        print("Loading sounds...")
-        try:
-            soundFantasy1 = pygame.mixer.Sound(r"{}\Music\Ale-and-Anecdotes-by-Darren-Curtis.ogg".format(dirPath))
-        except:
-            errorInit(["Failed to load sounds: music.init()[1]","You can turn off sounds in settings"],fontSize=1.6)
-        try:
-            soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.ogg")
-        except:
-            errorInit(["Failed to load sounds: music.init()[2]","You can turn off sounds in settings"],fontSize=1.6)
-        print("Sounds loaded!")
-        
+        global soundEnabled
+        if soundEnabled:
+            global soundFantasy1,soundMagic1
+            global fantasyChannel,fantasyChannelSounds,magicChannel
+            print("Loading sounds...")
+            try:
+                soundFantasy1 = pygame.mixer.Sound(r"{}\Music\Ale-and-Anecdotes-by-Darren-Curtis.ogg".format(dirPath))
+            except:
+                errorInit(["Failed to load sounds: music.init()[1]","You can turn off sounds in settings"],fontSize=1.6)
+            try:
+                soundMagic1 = pygame.mixer.Sound(f"{dirPath}/Music/Wizardtorium.ogg")
+            except:
+                errorInit(["Failed to load sounds: music.init()[2]","You can turn off sounds in settings"],fontSize=1.6)
+            print("Sounds loaded!")
+            
         fantasyChannel = pygame.mixer.Channel(1)
         fantasyChannel.set_volume(0.2)
         fantasyChannelSounds = pygame.mixer.Channel(2)
