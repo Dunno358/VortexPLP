@@ -1864,7 +1864,7 @@ class Course(pygame.sprite.Sprite):
                 else:
                     backBtn = pygame.draw.rect(screen, customCol, [size_w/4.56,size_h/1.25,size_w/8,size_h/8], 0,30)
                 backArrow = Write(size_w//100*4,"<-",color3,[size_w/3.59,size_h/1.16]) 
-            lvlTxt = Write(round(size_w//100*1.5),"{}/{}".format(courseLvl,maxLvl),color1,[size_w/1.19,size_h/11.53])
+            lvlTxt = Write(round(size_w//100*1.5),"{}/{}".format(courseLvl,maxLvl),color3,[size_w/1.19,size_h/11.53])
 
 
             if event.type == MOUSEMOTION:
@@ -4350,43 +4350,61 @@ class Course(pygame.sprite.Sprite):
                 course.eventsReset()
 
                 if TD_count == 0:
-                    course.dialogTop(6.41,"But as friends are approaching","we have to adjust our defenses",bckgr=True)
+                    if language == "ENG":
+                        course.dialogTop(6.41,"But as friends are approaching","we have to adjust our defenses",bckgr=True)
+                    else:
+                        course.dialogTop(6.41,"Ale jako, że nadciągają przyjaciele","musimy dostosować obronę",bckgr=True)
                 elif TD_count == 1:
                     if not TD_consoleShown:
-                        course.dialogTop(6.41,"Click marked button",bckgr=True)
+                        if language == "ENG":
+                            course.dialogTop(6.41,"Click marked button",bckgr=True)
+                        else:
+                            course.dialogTop(6.41,"Wciśnij oznaczony przycisk",bckgr=True)
                         pygame.draw.rect(screen, red, [size_w/4.99,size_h/3.8,size_w/30,size_h/5.8], size_w//250,size_w//150)
                         pygame.draw.line(screen, red, [size_w/4.14,size_h/3.59], [size_w/3.83,size_h/3.92], size_w//250)
                         pygame.draw.line(screen, red, [size_w/4.14,size_h/3.06], [size_w/3.83,size_h/3.27], size_w//250)
                         pygame.draw.line(screen, red, [size_w/4.14,size_h/2.41], [size_w/3.83,size_h/2.27], size_w//250)
                         pygame.draw.line(screen, red, [size_w/4.14,size_h/2.63], [size_w/3.83,size_h/2.5], size_w//250)
                     else:
-                        consoleTxts = [
-                            "We will use if/else that you learnt earlier.",
-                            "As statement you can give either friend or",
-                            "enemy keyword and wait() or attack() as",
-                            "action. Remeber we can't harm Javs!",
-                            "Here's an example:",
-                            "if enemy:",
-                            "        attack()",
-                            "Try doing it with friend keyword and wait() function!"
-                        ]
+                        if language == "ENG":
+                            consoleTxts = [
+                                "We will use if/else that you learnt earlier.",
+                                "As statement you can give either friend or",
+                                "enemy keyword and wait() or attack() as",
+                                "action. Remeber we can't harm Javs!"
+                            ]
+                            next = "Next"
+                        else:
+                            consoleTxts = [
+                                "Użyjemy if/else którego nauczyliśmy się wcześniej.",
+                                "Jako argument można dać słowo friend lub",
+                                "enemy oraz funkcje wait() lub attack() jako",
+                                "akcje. Pamiętaj, że nie możemy zranić Javów!"
+                            ]
+                            next = "Dalej"                            
                         course.dialogTop(6.41,consoleTxts[0],consoleTxts[1],consoleTxts[2],consoleTxts[3],bckgr=True)
-                        consoleNextBtn = course.centeredBtn(2.13,dark_green,"Next",adjustToDialog=True)
+                        consoleNextBtn = course.centeredBtn(2.13,dark_green,next,adjustToDialog=True)
                         if event.type == MOUSEMOTION:
                             try:
                                 if consoleNextBtn.collidepoint(mouse_pos):
-                                    course.centeredBtn(2.13,green,"Next",adjustToDialog=True)
+                                    course.centeredBtn(2.13,green,next,adjustToDialog=True)
                                     course.centeredBtn(2.13,dark_green,"",adjustToDialog=True,border=size_w//250)
                             except:
                                 pass
                 elif TD_count == 2:
-                    consoleTxts = [
-                        "Here's an example:",
-                        "if enemy:",
-                        "        attack()",
-                        "Try doing it with keyword 'friend'",
-                        "and wait() function!"
-                    ]
+                    if language == "ENG":
+                        consoleTxts = [
+                            "Here's an example:",
+                            "if enemy:",
+                            "        attack()",
+                            "Try doing it with keyword 'friend'",
+                            "and wait() function!"
+                        ]
+                    else:
+                            "Oto przykład:",
+                            "if enemy:",
+                            "        attack()",
+                            "Spróbuj tego ze słowem friend i funkcją wait()"
                     if TD_consoleShown:
                         course.dialogTop(6.41,consoleTxts[0],consoleTxts[1],consoleTxts[2],consoleTxts[3],consoleTxts[4],bckgr=True)
                         consoleNextBtn = course.centeredBtn(1.83,dark_green,"Ok",adjustToDialog=True)
@@ -4398,6 +4416,7 @@ class Course(pygame.sprite.Sprite):
                             except:
                                 pass
                 elif TD_count == 3 and not TD_consoleShown:
+                    #TODO translating ENG->PL
                     course.dialogTop(6.41,"Are you ready to go further?",bckgr=True)
                     readyBtn = course.centeredBtn(4.11,dark_green,"Ready",adjustToDialog=True)
                     correctCommands = TD_consoleTxts[0] == "if friend:" and TD_consoleTxts[1] == "wait()"
@@ -4474,44 +4493,64 @@ class Course(pygame.sprite.Sprite):
                 course.tower_defence.drawMap()
                 course.tower_defence.console()
                 course.eventsReset()  
-                strs = [
-                    "Now when we already told our",
-                    "archespors to not attack friends,",
-                    "let's ensure ourselves that enemies", 
-                    "will be attacked as they should",
-                    "Add 'else' or 'elif enemy' after",
-                    "existing 'if' controlling friends",
-                    "and use attack() function",
-                    "That's the spirit! I heard of some",
-                    "dwarfs trying to escape werewolfs",
-                    "hordes attacking, get ready!"
-                ]
+                if language == "ENG":
+                    strs = [
+                        "Now when we already told our",
+                        "archespors to not attack friends,",
+                        "let's ensure ourselves that enemies", 
+                        "will be attacked as they should",
+                        "Add 'else' or 'elif enemy' after",
+                        "existing 'if' controlling friends",
+                        "and use attack() function",
+                        "That's the spirit! I heard of some",
+                        "dwarfs trying to escape werewolfs",
+                        "hordes attacking, get ready!"
+                    ]
+                    next = "Next"
+                    console = "Console"
+                    ready = "Ready"
+                else:
+                    strs = [
+                        "Teraz, gdy nauczyliśmy nasze",
+                        "archespory, by nie atakować przyjaciół,",
+                        "upewnijmy się, żeby wrogowie byli", 
+                        "atakowani tak jak powinni",
+                        "Dodaj 'else' lub 'elif enemy' po",
+                        "isniejącym 'if' kontrolującym",
+                        "przyjaciół i użyj funkcji attack()",
+                        "O to chodzi! Słyszałem o krasnoludach",
+                        "próbujących uciec przed hordą",
+                        "wilkołaków, przygotuj się!"
+                    ]
+                    next = "Dalej"
+                    console = "Konsola"
+                    ready = "Gotów"                    
 
                 commandsCorrect = TD_consoleTxts[2] in ['else:','elif enemy:'] and TD_consoleTxts[3] == 'attack()'
 
                 if not TD_consoleShown:
                     if TD_count == 0:
                         course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],bckgr=True)    
-                        nextBtn = course.centeredBtn(2.15,dark_green,"Next",adjustToDialog=True)
+                        nextBtn = course.centeredBtn(2.15,dark_green,next,adjustToDialog=True)
                     elif TD_count == 3:
                         if not commandsCorrect:
                             course.dialogTop(6.41,strs[4],strs[5],strs[6],bckgr=True) 
-                            nextBtn = course.centeredBtn(2.61,dark_green,"Console",adjustToDialog=True)
+                            nextBtn = course.centeredBtn(2.61,dark_green,console,adjustToDialog=True)
                         else:
                             course.dialogTop(6.41,strs[7],strs[8],strs[9],bckgr=True) 
-                            nextBtn = course.centeredBtn(2.61,dark_green,"Ready",adjustToDialog=True)
+                            nextBtn = course.centeredBtn(2.61,dark_green,ready,adjustToDialog=True)
 
                 try:
                     if not TD_consoleShown:
                         if event.type == MOUSEMOTION:
                             if nextBtn.collidepoint(mouse_pos) and TD_count == 0:
-                                course.centeredBtn(2.15,green,"Next",adjustToDialog=True)             
+                                course.centeredBtn(2.15,green,next,adjustToDialog=True)             
                                 course.centeredBtn(2.15,dark_green,"",adjustToDialog=True,border=size_w//250) 
                             elif nextBtn.collidepoint(mouse_pos) and not commandsCorrect and TD_count == 3:
-                                course.centeredBtn(2.61,green,"Console",adjustToDialog=True)             
+                                course.centeredBtn(2.61,green,console,adjustToDialog=True)             
                                 course.centeredBtn(2.61,dark_green,"",adjustToDialog=True,border=size_w//250) 
                             elif nextBtn.collidepoint(mouse_pos) and TD_count == 3 and commandsCorrect:
-                                course.centeredBtn(2.61,green,"Ready",adjustToDialog=True)             
+                                course.centeredBtn(2.61,green,ready,adjustToDialog=True)             
                                 course.centeredBtn(2.61,dark_green,"",adjustToDialog=True,border=size_w//250) 
                         elif event.type == MOUSEBUTTONDOWN:
                             if nextBtn.collidepoint(mouse_pos) and TD_count == 0:
@@ -4537,18 +4576,27 @@ class Course(pygame.sprite.Sprite):
                 notBlocked = False
                 course.tower_defence.drawMap()
                 course.tower_defence.console()
-                course.eventsReset()     
-                strs= [
-                    "We're almost done here apprentice,",
-                    "only few more enemies to beat and",
-                    "and friends to save, ready?"
-                ]
+                course.eventsReset()  
+                if language == "ENG":
+                    ready = "Ready"   
+                    strs= [
+                        "We're almost done here apprentice,",
+                        "only few more enemies to beat and",
+                        "and friends to save, ready?"
+                    ]
+                else:
+                    ready = "Gotów"   
+                    strs= [
+                        "To już prawie koniec mój uczniu,",
+                        "jeszcze tylko kilku przeciwników,",
+                        "do pokonania i przyjaciół do uratowania"
+                    ]                   
                 course.dialogTop(6.41,strs[0],strs[1],strs[2],bckgr=True) 
-                readyBtn= course.centeredBtn(2.57,dark_green,"Ready",adjustToDialog=True)
+                readyBtn= course.centeredBtn(2.57,dark_green,ready,adjustToDialog=True)
 
                 if event.type == MOUSEMOTION:
                     if readyBtn.collidepoint(mouse_pos):
-                        course.centeredBtn(2.57,green,"Ready",adjustToDialog=True)
+                        course.centeredBtn(2.57,green,ready,adjustToDialog=True)
                         course.centeredBtn(2.57,dark_green,"",adjustToDialog=True,border=size_w//250)
                 elif event.type == MOUSEBUTTONDOWN:
                     if readyBtn.collidepoint(mouse_pos):
@@ -4566,7 +4614,10 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 18:  
                 notBlocked = True
                 course.eventsReset()
-                course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful","and so do I")
+                if language == "ENG":
+                    course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful","and so do I")
+                else:
+                    course.dialogStandard(2.65,"Dobra robota mój uczniu!","Ludzie są ci wdzięczni,","tak jak i ja jestem ci wdzięczny")
             elif courseLvl == 19:
                 if language == "ENG":
                     finish = "Finish"
@@ -4580,10 +4631,9 @@ class Course(pygame.sprite.Sprite):
                     strs = [
                         "Błąd wczytywania 'book.png'",
                         "Weź to jako nagrodę oraz pamiątke,",
-                        "by mnie pamiętać, to był zaszczyt"
+                        "by mnie pamiętać, to był zaszczyt!"
                     ]                    
                 try:
-                    #CHANGE BOOK SIZE TO BIGGER SO IT WON'T BE SO PIXELED
                     book = pygame.image.load(f"{dirPath}/Images/Game/book.png") #In case of missing: https://iconarchive.com/show/library-icons-by-robinweatherall/book-icon.html
                     book = pygame.transform.scale(book, [int(size_w/5.33),int(size_h/3)])
                     screen.blit(book,[size_w/2.27,size_h/3.27])
