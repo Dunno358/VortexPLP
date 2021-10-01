@@ -4568,19 +4568,33 @@ class Course(pygame.sprite.Sprite):
                 course.eventsReset()
                 course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful","and so do I")
             elif courseLvl == 19:
+                if language == "ENG":
+                    finish = "Finish"
+                    strs = [
+                        "Failed to load 'book.png'",
+                        "Here, take this as reward and souvenir",
+                        "to remember me, that was an honour"
+                    ]
+                else:
+                    finish = "Zakończ"
+                    strs = [
+                        "Błąd wczytywania 'book.png'",
+                        "Weź to jako nagrodę oraz pamiątke,",
+                        "by mnie pamiętać, to był zaszczyt"
+                    ]                    
                 try:
                     #CHANGE BOOK SIZE TO BIGGER SO IT WON'T BE SO PIXELED
                     book = pygame.image.load(f"{dirPath}/Images/Game/book.png") #In case of missing: https://iconarchive.com/show/library-icons-by-robinweatherall/book-icon.html
                     book = pygame.transform.scale(book, [int(size_w/5.33),int(size_h/3)])
                     screen.blit(book,[size_w/2.27,size_h/3.27])
                 except:
-                    errorInit("Failed to load 'book.png'")
-                course.dialogTop(6.41,"Here, take this as reward and souvenir","to remember me, that was an honour")
-                finishBtn = course.centeredBtn(1.37,dark_green,"Finish")
+                    errorInit(strs[0])
+                course.dialogTop(6.41,strs[1],strs[2])
+                finishBtn = course.centeredBtn(1.37,dark_green,finish)
 
                 if event.type == MOUSEMOTION:
                     if finishBtn.collidepoint(mouse_pos):
-                        course.centeredBtn(1.37,green,"Finish")
+                        course.centeredBtn(1.37,green,finish)
                         course.centeredBtn(1.37,dark_green,"",border=size_w//250)
                 elif event.type == MOUSEBUTTONDOWN:
                     if finishBtn.collidepoint(mouse_pos):
