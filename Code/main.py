@@ -5040,6 +5040,7 @@ class Settings(pygame.sprite.Sprite):
                         soundEnabled = False
                     else:
                         soundEnabled = True
+                        music.init()
     def displayStyle(): #NOT WORKING CORRECTLY YET
         global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,running
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon,exiting
