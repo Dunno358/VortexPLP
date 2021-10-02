@@ -2179,7 +2179,10 @@ class Course(pygame.sprite.Sprite):
                     elif event.key == K_SEMICOLON:
                         text += ":"
                     else:
-                        text += chr(event.key)
+                        try:
+                            text += chr(event.key)
+                        except:
+                            errorInit("Key Error")
                 elif keys[K_RALT or K_LALT]:
                     if event.key==K_l:
                         text += "ł"        
