@@ -2182,7 +2182,7 @@ class Course(pygame.sprite.Sprite):
                         try:
                             text += chr(event.key)
                         except:
-                            errorInit("Key Error")
+                            pass
                 elif keys[K_RALT or K_LALT]:
                     if event.key==K_l:
                         text += "ł"        
