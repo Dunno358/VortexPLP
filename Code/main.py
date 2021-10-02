@@ -208,6 +208,9 @@ TD_friendsLvl = [13]
 TD_subDone = False
 TD_btnClicked = False
 
+#SHOOTING RANGE
+SR_icon = None
+
 #PRIZE
 iconsUnlock = []
 iconsLocked = []
@@ -4710,7 +4713,41 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1 
                         bckgrMusicPlayed = False                        
     def lesson5():
-        course.standardLessonEvents("lesson5",99)
+        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
+        global bckgrMusicPlayed,errorShowed,SR_icon
+        if activeMain and not errorShowed:
+            course.standardLessonEvents("lesson5",99,condition=notBlocked)
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed:
+            try:
+                mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier4.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
+            language = getLang()
+            if courseLvl == 1:
+                course.dialogTop(6.41,"TEST","TEST")
+                course.dialogStandard(2.6,"TEST","TEST")
+            elif courseLvl == 2:
+                if SR_icon == None:
+                    iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
+                    iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                    #When using those below need to adjust blit width
+                    #iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
+                    #iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)])
+                    SR_icon = iron_sight
+                try:
+                    correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
+                    correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
+                    sight_rect = SR_icon.get_rect()
+                    if correctH and correctW:
+                        pygame.mouse.set_visible(True)
+                        screen.blit(SR_icon,[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                    else:
+                        pygame.mouse.set_visible(True)
+                except:
+                    pass
+                if event.type == MOUSEBUTTONDOWN:
+                    pygame.draw.circle(screen, orange, [mouse_pos[0],mouse_pos[1]], size_w//80, 0)
     def lesson6():
         course.standardLessonEvents("lesson6",99)  
     def lesson7():
@@ -4875,7 +4912,7 @@ class Settings(pygame.sprite.Sprite):
                 Write(size_w//100*2,"Chcesz coś zmienić {}?".format(getName()),color3,[size_w/1.8,size_h/8])
             isCorrectActivity()                   
     def resizing():
-        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay
+        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,SR_icon
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon
         if activities[2]:
             language = getLang()
@@ -4920,6 +4957,7 @@ class Settings(pygame.sprite.Sprite):
                             TD_circs = []
                             DG_icons = []
                             TD_icon = ""
+                            SR_icon = None
                             hp1 = size_w/2.66
                             hp2 = size_w/6
                             course.tower_defence.reset()
