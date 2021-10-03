@@ -209,7 +209,9 @@ TD_subDone = False
 TD_btnClicked = False
 
 #SHOOTING RANGE
-SR_icon = None
+SR_icons = []
+SR_cords = []
+SR_iterator = 0
 
 #PRIZE
 iconsUnlock = []
@@ -692,7 +694,7 @@ class Start(pygame.sprite.Sprite):
     class adminTools(pygame.sprite.Sprite):
         global admin
         def iterators():
-            global iterator,courseLvl
+            global iterator,courseLvl,SR_icons
             if admin:
                 motionColor = (38,38,38)
                 itBtn = pygame.draw.rect(screen, color2, [size_w/1.12,size_h/1.65,size_w/12,size_h/14], 0,15)
@@ -714,7 +716,8 @@ class Start(pygame.sprite.Sprite):
                     if lvlBtn.collidepoint(mouse_pos):
                         lvlBtn = pygame.draw.rect(screen, color1, [size_w/1.12,size_h/2.58,size_w/12,size_h/14], 0,15)
                         lvlTxt = Write(size_w//100,"Next Level",color3,[size_w/1.07,size_h/2.37]) 
-                        courseLvl += 1  
+                        courseLvl += 1 
+                        SR_icons.clear() 
                         course.tower_defence.clearAdminTools() 
                 elif event.type == MOUSEMOTION:
                     if itBtn.collidepoint(mouse_pos):
@@ -1866,7 +1869,7 @@ class Course(pygame.sprite.Sprite):
                 wait = False
     def standardLessonEvents(lesson,maxLvl,condition=True,bckgr=True,standard=True,customCol=""):
         global activeMenu,courseLvl,activeLesson,selected,chosen,inFight,notBlocked,loadingBar
-        global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs,bckgrMusicPlayed
+        global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs,bckgrMusicPlayed,SR_icons
         actualLesson = str(activeLesson)[17:-23]
         if not activeMenu and activities[0] and actualLesson==lesson:
             bckgrMusicPlayed = True
@@ -1946,6 +1949,7 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1
                         courseLvl -=1
                         selected = ""
+                        SR_icons.clear()
                         notBlocked = True
                 except:
                     pass
@@ -4714,40 +4718,139 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False                        
     def lesson5():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
-        global bckgrMusicPlayed,errorShowed,SR_icon
+        global bckgrMusicPlayed,errorShowed
+        global SR_icons,SR_cords,SR_iterator
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson5",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed:
             try:
-                mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier4.png".format(dirPath))
+                mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier6.png".format(dirPath))
                 mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
+
             if courseLvl == 1:
-                course.dialogTop(6.41,"TEST","TEST")
-                course.dialogStandard(2.6,"TEST","TEST")
+                course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)           
             elif courseLvl == 2:
-                if SR_icon == None:
-                    iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
-                    iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
-                    #When using those below need to adjust blit width
-                    #iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
-                    #iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)])
-                    SR_icon = iron_sight
+                #Single Init
+                notBlocked = False
+                if len(SR_icons)<1:
+                    for x in range(15):
+                        pointW = uniform(size_w/3.02,size_w/1.59)
+                        pointH = uniform(size_h/6.45,size_h/2.34)
+                        SR_cords.append([pointW,pointH])
+                    try:
+                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        SR_icons.append(iron_sight)
+                    except:
+                        errorInit("Failed to load iron_sight")
+
+                    try:
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/21.34),int(size_h/12)])
+                        SR_icons.append(shoot_shield)
+                    except:
+                        errorInit("Failed to load shoot_shield")
+
+                #Bliting and Writing content
+                Write(round(size_w//100*1.5),f"{30-SR_iterator}/30",color3,[size_w/1.24,size_h/1.08])
+
+                #GUN BLITING
                 try:
                     correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
                     correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
-                    sight_rect = SR_icon.get_rect()
+                    sight_rect = SR_icons[0].get_rect()
+                    try:
+                        shield = screen.blit(SR_icons[1],SR_cords[iterator])
+                    except:
+                        SR_icons.clear()
+                        courseLvl += 1
                     if correctH and correctW:
-                        pygame.mouse.set_visible(True)
-                        screen.blit(SR_icon,[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                        pygame.mouse.set_visible(False)
+                        screen.blit(SR_icons[0],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
                     else:
                         pygame.mouse.set_visible(True)
                 except:
                     pass
-                if event.type == MOUSEBUTTONDOWN:
-                    pygame.draw.circle(screen, orange, [mouse_pos[0],mouse_pos[1]], size_w//80, 0)
+
+                if event.type == MOUSEBUTTONDOWN and 30-SR_iterator > 0:
+                    if correctH and correctW:
+                        try:
+                            SR_iterator += 1
+                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
+                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                            pygame.mouse.set_visible(False)
+                            screen.blit(iron_sight,[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                        except:
+                            errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
+                    else:
+                        pygame.mouse.set_visible(True)
+                    try:
+                        if shield.collidepoint(mouse_pos):
+                            iterator += 1
+                    except:
+                        pass
+            elif courseLvl == 3:
+               #Single Init
+                notBlocked = False
+                if len(SR_icons)<1:
+                    for x in range(15):
+                        pointW = uniform(size_w/3.02,size_w/1.59)
+                        pointH = uniform(size_h/6.45,size_h/2.34)
+                        SR_cords.append([pointW,pointH])
+                    try:
+                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)])
+                        SR_icons.append(iron_sight)
+                    except:
+                        errorInit("Failed to load iron_sight")
+
+                    try:
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/21.34),int(size_h/12)])
+                        SR_icons.append(shoot_shield)
+                    except:
+                        errorInit("Failed to load shoot_shield")
+
+                #Bliting and Writing content
+                Write(round(size_w//100*1.5),f"{30-SR_iterator}/30",color3,[size_w/1.24,size_h/1.08])
+
+                #GUN BLITING
+                try:
+                    correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
+                    correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
+                    sight_rect = SR_icons[0].get_rect()
+                    try:
+                        shield = screen.blit(SR_icons[1],SR_cords[iterator])
+                    except:
+                        pass
+                    if correctH and correctW:
+                        pygame.mouse.set_visible(False)
+                        screen.blit(SR_icons[0],[mouse_pos[0]-sight_rect[2]/2,mouse_pos[1]-sight_rect[3]/12])
+                    else:
+                        pygame.mouse.set_visible(True)
+                except:
+                    pass
+
+                if event.type == MOUSEBUTTONDOWN and 30-SR_iterator > 0:
+                    if correctH and correctW:
+                        try:
+                            SR_iterator += 1
+                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2_shoot.png".format(dirPath))
+                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)])
+                            pygame.mouse.set_visible(False)
+                            screen.blit(iron_sight,[mouse_pos[0]-sight_rect[2]/2,mouse_pos[1]-sight_rect[3]/12])
+                        except:
+                            errorInit("Failed to load 'iron_sight2_shoot.png'",fontSize=1.7)
+                    else:
+                        pygame.mouse.set_visible(True)
+                    try:
+                        if shield.collidepoint(mouse_pos):
+                            iterator += 1
+                    except:
+                        pass                
     def lesson6():
         course.standardLessonEvents("lesson6",99)  
     def lesson7():
@@ -4912,7 +5015,7 @@ class Settings(pygame.sprite.Sprite):
                 Write(size_w//100*2,"Chcesz coś zmienić {}?".format(getName()),color3,[size_w/1.8,size_h/8])
             isCorrectActivity()                   
     def resizing():
-        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,SR_icon
+        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,SR_icons
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon
         if activities[2]:
             language = getLang()
@@ -4957,7 +5060,7 @@ class Settings(pygame.sprite.Sprite):
                             TD_circs = []
                             DG_icons = []
                             TD_icon = ""
-                            SR_icon = None
+                            SR_icons = None
                             hp1 = size_w/2.66
                             hp2 = size_w/6
                             course.tower_defence.reset()
