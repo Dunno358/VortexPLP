@@ -25,9 +25,12 @@ print(int(size_w/2.11),int(size_h/2.55))
 
 
 
+#512x512: [int(size_w/2.66),int(size_h/1.5)]
+#350x350: [int(size_w/3.90),int(size_h/2.19)]
 #256x256: [int(size_w/5.33),int(size_h/3)]
 #128x128: [int(size_w/10.6),int(size_h/6)]
 #96x96: [int(size_w/14.22),int(size_h/8)]
 #64x64: [int(size_w/21.34),int(size_h/12)]
+#54x54: [int(size_w/25.29),int(size_h/14.22)]
 #32x32: [int(size_w/42.68),int(size_h/24)]
 
