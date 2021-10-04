@@ -4731,9 +4731,12 @@ class Course(pygame.sprite.Sprite):
             language = getLang()
 
             if courseLvl == 1:
-                course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)           
+                course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
+                course.dialogTop(6.41,"But first you have to understand some things","specifically about WHILE loop")        
+            elif courseLvl == 10:
                 #Single Init
+                pygame.event.set_blocked(MOUSEWHEEL)
                 notBlocked = False
                 if len(SR_icons)<1:
                     for x in range(15):
@@ -4754,8 +4757,17 @@ class Course(pygame.sprite.Sprite):
                     except:
                         errorInit("Failed to load shoot_shield")
 
+                    try:
+                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        SR_icons.append(iron_sight)
+                    except:
+                        errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
+
                 #Bliting and Writing content
-                Write(round(size_w//100*1.5),f"{30-SR_iterator}/30",color3,[size_w/1.24,size_h/1.08])
+                Write(round(size_w//100*1.5),f"Ammo: {30-SR_iterator}/30",color3,[size_w/1.24,size_h/1.08])
+                reloadBtn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
+                reloadTxt = Write(round(size_w//100*2),"Reload",color1,[size_w/1.91,size_h/1.13])
 
                 #GUN BLITING
                 try:
@@ -4767,6 +4779,7 @@ class Course(pygame.sprite.Sprite):
                     except:
                         SR_icons.clear()
                         courseLvl += 1
+                        SR_iterator = 0
                     if correctH and correctW:
                         pygame.mouse.set_visible(False)
                         screen.blit(SR_icons[0],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
@@ -4775,24 +4788,34 @@ class Course(pygame.sprite.Sprite):
                 except:
                     pass
 
-                if event.type == MOUSEBUTTONDOWN and 30-SR_iterator > 0:
-                    if correctH and correctW:
+
+                if event.type == MOUSEMOTION:
+                    if reloadBtn.collidepoint(mouse_pos):
+                        reloadBtn = pygame.draw.rect(screen, logoBlue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
+                        reloadBtn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], size_w//200,size_w//250)
+                        reloadTxt = Write(round(size_w//100*2),"Reload",color3,[size_w/1.91,size_h/1.13])                        
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if 30-SR_iterator > 0:
+                        if correctH and correctW:
+                            try:
+                                SR_iterator += 1
+                                pygame.mouse.set_visible(False)
+                                screen.blit(SR_icons[2],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                            except:
+                                pass
+                        else:
+                            pygame.mouse.set_visible(True)
                         try:
-                            SR_iterator += 1
-                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
-                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
-                            pygame.mouse.set_visible(False)
-                            screen.blit(iron_sight,[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                            if shield.collidepoint(mouse_pos):
+                                iterator += 1
                         except:
-                            errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
-                    else:
-                        pygame.mouse.set_visible(True)
-                    try:
-                        if shield.collidepoint(mouse_pos):
-                            iterator += 1
-                    except:
-                        pass
-            elif courseLvl == 3:
+                            pass
+                    if reloadBtn.collidepoint(mouse_pos):
+                        SR_iterator = 0
+                elif event.type == KEYDOWN:
+                    if event.key == K_r:
+                        SR_iterator = 0
+            elif courseLvl == 11:
                #Single Init
                 notBlocked = False
                 if len(SR_icons)<1:
@@ -4814,8 +4837,17 @@ class Course(pygame.sprite.Sprite):
                     except:
                         errorInit("Failed to load shoot_shield")
 
+                    try:
+                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2_shoot.png".format(dirPath))
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)]) 
+                        SR_icons.append(iron_sight)  
+                    except:
+                        errorInit("Failed to load 'iron_sight2_shoot.png'",fontSize=1.7)                   
+
                 #Bliting and Writing content
-                Write(round(size_w//100*1.5),f"{30-SR_iterator}/30",color3,[size_w/1.24,size_h/1.08])
+                Write(round(size_w//100*1.5),f"Ammo: {30-SR_iterator}/30",color3,[size_w/1.24,size_h/1.08])
+                reloadBtn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
+                reloadTxt = Write(round(size_w//100*2),"Reload",color1,[size_w/1.91,size_h/1.13])
 
                 #GUN BLITING
                 try:
@@ -4825,7 +4857,9 @@ class Course(pygame.sprite.Sprite):
                     try:
                         shield = screen.blit(SR_icons[1],SR_cords[iterator])
                     except:
-                        pass
+                        SR_icons.clear()
+                        courseLvl += 1
+                        SR_iterator = 0
                     if correctH and correctW:
                         pygame.mouse.set_visible(False)
                         screen.blit(SR_icons[0],[mouse_pos[0]-sight_rect[2]/2,mouse_pos[1]-sight_rect[3]/12])
@@ -4834,23 +4868,33 @@ class Course(pygame.sprite.Sprite):
                 except:
                     pass
 
-                if event.type == MOUSEBUTTONDOWN and 30-SR_iterator > 0:
-                    if correctH and correctW:
+                if event.type == MOUSEMOTION:
+                    if reloadBtn.collidepoint(mouse_pos):
+                        reloadBtn = pygame.draw.rect(screen, logoBlue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
+                        reloadBtn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], size_w//200,size_w//250)
+                        reloadTxt = Write(round(size_w//100*2),"Reload",color3,[size_w/1.91,size_h/1.13])   
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    print(event.button)
+                    if 30-SR_iterator > 0:
+                        if correctH and correctW:
+                            try:
+                                SR_iterator += 1
+                                pygame.mouse.set_visible(False)
+                                screen.blit(SR_icons[2],[mouse_pos[0]-sight_rect[2]/2,mouse_pos[1]-sight_rect[3]/12])
+                            except:
+                                pass
+                        else:
+                            pygame.mouse.set_visible(True)
                         try:
-                            SR_iterator += 1
-                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2_shoot.png".format(dirPath))
-                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)])
-                            pygame.mouse.set_visible(False)
-                            screen.blit(iron_sight,[mouse_pos[0]-sight_rect[2]/2,mouse_pos[1]-sight_rect[3]/12])
+                            if shield.collidepoint(mouse_pos):
+                                iterator += 1
                         except:
-                            errorInit("Failed to load 'iron_sight2_shoot.png'",fontSize=1.7)
-                    else:
-                        pygame.mouse.set_visible(True)
-                    try:
-                        if shield.collidepoint(mouse_pos):
-                            iterator += 1
-                    except:
-                        pass                
+                            pass      
+                    if reloadBtn.collidepoint(mouse_pos):
+                        SR_iterator = 0    
+                elif event.type == KEYDOWN:
+                    if event.key == K_r:
+                        SR_iterator = 0     
     def lesson6():
         course.standardLessonEvents("lesson6",99)  
     def lesson7():
