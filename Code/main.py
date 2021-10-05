@@ -4718,7 +4718,7 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False                        
     def lesson5():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
-        global bckgrMusicPlayed,errorShowed
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords
         global SR_icons,SR_cords,SR_iterator
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson5",99,condition=notBlocked)
@@ -4733,8 +4733,25 @@ class Course(pygame.sprite.Sprite):
             if courseLvl == 1:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
-                course.dialogTop(6.41,"But first you have to understand some things","specifically about WHILE loop")   
+                course.dialogTop(6.41,"But first you have to understand some things","especially about WHILE loop and its dependencies")  
+                strs = [
+                    "while loop is a control flow statement that",
+                    "allows code to be executed repeatedly based", 
+                    "on a given Boolean condition"
+                ] 
+                pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
+                hght = size_h/2.09
+                Write(round(size_w//100*2.6),"Definition",red,[size_w/1.92,size_h/2.51])
+                for x in strs:
+                    Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
+                    hght += size_h/10
             elif courseLvl == 3:
+                course.dialogTop(6.41,"So yeah, shoot those shields to","check out some more facts")
+                strs = [
+                    "Fact no1",
+                    "Fact no2",
+                    "Fact no3"
+                ]
                 if(len(SR_icons)<1):
                     try:
                         shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
@@ -4744,13 +4761,32 @@ class Course(pygame.sprite.Sprite):
                         errorInit("Failed to load shoot_shield") 
 
                 try:
-                    height = size_h/4.82
+                    height = size_h/3.11
                     for x in range(3):
-                        screen.blit(SR_icons[0],[size_w/4.15,height])
-                        height += size_h/5
+                        shield = screen.blit(SR_icons[0],[size_w/4.15,height])
+                        if len(storedItems)<3:
+                            storedItems.append(shield)
+                        height += size_h/6
                 except:
                     pass
-
+                
+                for item in storedItems:
+                    index = storedItems.index(item)
+                    if index>iterator-1:
+                        pygame.draw.rect(screen,color2,[item[0],item[1],item[2],item[3]])
+                    elif index<iterator-1:
+                        pygame.draw.rect(screen,color1,[item[0]+size_w/8,item[1],size_w/2.5,item[3]],0,size_w//250)
+                        Write(round(size_w//100*2),strs[index],color3,[size_w/1.76,item[1]+item[3]/2])
+                        
+                for cord in storedCords:
+                    pygame.draw.circle(screen,dark_gray,cord,size_w//200)
+                
+                if event.type == MOUSEBUTTONDOWN:
+                    for item in storedItems:
+                        index = storedItems.index(item)
+                        if item.collidepoint(mouse_pos) and iterator-1==index and iterator < 4:
+                            iterator += 1
+                            storedCords.append([mouse_pos[0],mouse_pos[1]])
                                    
             elif courseLvl == 10:
                 #Single Init
@@ -5122,7 +5158,7 @@ class Settings(pygame.sprite.Sprite):
                             TD_circs = []
                             DG_icons = []
                             TD_icon = ""
-                            SR_icons = None
+                            SR_icons = []
                             hp1 = size_w/2.66
                             hp2 = size_w/6
                             course.tower_defence.reset()
