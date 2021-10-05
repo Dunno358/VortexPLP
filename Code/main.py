@@ -2536,7 +2536,7 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*1.5),"Romo jest dumny",color3,[size_w/1.77,size_h/4.9])
                     finish = "Zakończ"
 
-                finishBtn = pygame.draw.rect(screen, dark_green, [size_w/2.12,size_h/1.26,size_w/6,size_h/8], 0,20)
+                finishBtn = pygame.draw.rect(screen, dark_green, [size_w/2.12,size_h/1.26,size_w/6,size_h/8], 0,size_w//68)
                 Write(round(size_w//100*2),finish,color3,[size_w/1.81,size_h/1.17])        
 
                 if event.type == MOUSEMOTION:
@@ -4733,7 +4733,25 @@ class Course(pygame.sprite.Sprite):
             if courseLvl == 1:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
-                course.dialogTop(6.41,"But first you have to understand some things","specifically about WHILE loop")        
+                course.dialogTop(6.41,"But first you have to understand some things","specifically about WHILE loop")   
+            elif courseLvl == 3:
+                if(len(SR_icons)<1):
+                    try:
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/14.22),int(size_h/8)])
+                        SR_icons.append(shoot_shield)
+                    except:
+                        errorInit("Failed to load shoot_shield") 
+
+                try:
+                    height = size_h/4.82
+                    for x in range(3):
+                        screen.blit(SR_icons[0],[size_w/4.15,height])
+                        height += size_h/5
+                except:
+                    pass
+
+                                   
             elif courseLvl == 10:
                 #Single Init
                 pygame.event.set_blocked(MOUSEWHEEL)
