@@ -422,7 +422,7 @@ def errorInit(text,fontSize=2):
     errorText = text
     errorFontSize = fontSize
     errorShowed = True
-def errorHandling(): #STILL UNDER DEVELOPMENT
+def errorHandling(): 
     global activities,activeAny,activeMain,activeMenu,errorShowed,activeCourse,errorText,errorFontSize
     global courseLvl
     if errorShowed:
@@ -4746,11 +4746,15 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
                     hght += size_h/10
             elif courseLvl == 3:
+                if iterator < 4:
+                    notBlocked = False
+                else:
+                    notBlocked = True
                 course.dialogTop(6.41,"So yeah, shoot those shields to","check out some more facts")
                 strs = [
-                    "Fact no1",
-                    "Fact no2",
-                    "Fact no3"
+                    "You use while statement in your life daily",
+                    "It's often used to keep apps running",
+                    "(Syntax) while statement: action"
                 ]
                 if(len(SR_icons)<1):
                     try:
@@ -4759,6 +4763,12 @@ class Course(pygame.sprite.Sprite):
                         SR_icons.append(shoot_shield)
                     except:
                         errorInit("Failed to load shoot_shield") 
+                    try:
+                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        SR_icons.append(iron_sight)
+                    except:
+                        errorInit("Failed to load iron_sight")
 
                 try:
                     height = size_h/3.11
@@ -4776,7 +4786,7 @@ class Course(pygame.sprite.Sprite):
                         pygame.draw.rect(screen,color2,[item[0],item[1],item[2],item[3]])
                     elif index<iterator-1:
                         pygame.draw.rect(screen,color1,[item[0]+size_w/8,item[1],size_w/2.5,item[3]],0,size_w//250)
-                        Write(round(size_w//100*2),strs[index],color3,[size_w/1.76,item[1]+item[3]/2])
+                        Write(round(size_w//100*1.5),strs[index],color3,[size_w/1.76,item[1]+item[3]/2])
                         
                 for cord in storedCords:
                     pygame.draw.circle(screen,dark_gray,cord,size_w//200)
@@ -4786,8 +4796,113 @@ class Course(pygame.sprite.Sprite):
                         index = storedItems.index(item)
                         if item.collidepoint(mouse_pos) and iterator-1==index and iterator < 4:
                             iterator += 1
-                            storedCords.append([mouse_pos[0],mouse_pos[1]])
-                                   
+                            storedCords.append([mouse_pos[0],mouse_pos[1]])  
+                            course.coursorMarked()  
+            elif courseLvl == 4:
+                hght = size_h/3.2
+                txthght = size_h/2.65
+                if language == "ENG":
+                    txts = ["Single line syntax",
+                    "Multiple line syntax",
+                    "While...Else..."]
+                    descs = [
+                        ["Single line syntax contains both statement and action",
+                        "           while statement: action",
+                        "Where statement = bool and action is set of instructions",
+                        "Also: always remeber about ':' after statement"],
+                        [
+                            "Multiple line while loop also need tabulations",
+                            "while statement:",
+                            "                                                               instructions1...instruction2...etc.",
+                            "!Remember about [Tab]/[Space] before instruction!"
+                        ],
+                        [
+                            "If we want to select group of items from end we have to",
+                            "add \"-\" to our syntax, because that sign means from end",
+                            "of list, so syntax: list[:-endIndex], where this time endIndex",
+                            "means amount of items to be skipped beggining from end of list"
+                        ]
+                    ]
+                    back = "Back"
+                else:
+                    txts = ["Określona grupa przedmiotów",
+                    "Grupa przedmiotów od początku",
+                    "Grupa przedmiotów od końca"]
+                    descs = [
+                        ["By wybrać konkretną grupę przedmiotów musimy dać pierwszy i ostatni",
+                        "index. Jest to podobne do poprzedniej metody, ale bardziej rozbudowane:", 
+                        "składnia: lista[pierwszyIndex:ostatniIndex] | zwraca grupę przedmiotów", 
+                        "od pierwszyIndex(włącznie) do ostatniIndex(nie włączając)"], 
+                        [
+                            "By wybrać grupę od początku nie użyjemu startowego indexu,", 
+                            "więc składnia wygląda tak: lista[:ostatniIndex] gdzie", 
+                            "ostatniIndex nie jest włączony, a zwrócona grupa", 
+                            "zaczyna się od pierwszego elementu listy"
+                        ],
+                        [
+                            "Jeśli chcemy zacząć grupę od końca listy musimy dodać", 
+                            "\"-\" do naszej składni, gdyż ten znak znaczy \"od końca\" listy,", 
+                            "więc składnia to: lista[:-ostatniIndex], gdzie tym razem ostatniIndex", 
+                            "oznacza liczbe rzeczy do ominięcia poczynając od końca listy" 
+                        ]
+                    ]
+                    back = "Powrót"
+                rects = []
+                txtCords = []
+                if activeMain:
+                    if language == "ENG":
+                        course.dialogTop(6.41,"About syntax there's still few more","things, so let's check them out")
+                    else:
+                        course.dialogTop(6.41,"Co do składni wciąż jest jeszcze pare","rzeczy, więc sprawdźmy je")
+                    for it in range(3):
+                        rect = pygame.draw.rect(screen, color1, [size_w/3.25,hght,size_w/2.2,size_h/8], 0,15)
+                        rects.append(rect)
+                        txt=Write(size_w//100*2,txts[it],color2,[size_w/1.85,txthght])
+                        txtCords.append([size_w/1.85,txthght])
+                        hght += size_h/6
+                        txthght += size_h/6
+                else:
+                    pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                    backBtn = course.centeredBtn(12.8,dark_red,back)
+                    bckgr = pygame.draw.rect(screen, color1, [size_w/4.37,size_h/3.46,size_w/1.65,size_h/2], 0,10)
+                    descHght = size_h/2.59
+                    for desc in descs[iterator]:
+                        pygame.draw.rect(screen, color2, [size_w/4.01,size_h/3.16,size_w/1.8,size_h/2.3], size_w//450,15)
+                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/2.3], [size_w/1.248,size_h/2.3], size_w//450)
+                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/1.86], [size_w/1.248,size_h/1.86], size_w//450)
+                        pygame.draw.line(screen, color2, [size_w/4.01,size_h/1.57], [size_w/1.248,size_h/1.57], size_w//450)
+                        if getTheme().lower() == "light":
+                            WriteItalic(round(size_w//100*1.5),desc,color3,[size_w/1.91,descHght])
+                        else:
+                            WriteItalic(round(size_w//100*1.5),desc,dark_gray,[size_w/1.91,descHght])
+                        descHght += size_h/10
+                if event.type == MOUSEMOTION:
+                    for rect in rects:
+                        index = rects.index(rect)
+                        if rect.collidepoint(mouse_pos):
+                            pygame.draw.rect(screen, color3, [rect[0],rect[1],rect[2],rect[3]], size_w//450,15)
+                            Write(size_w//100*2,txts[index],color3,txtCords[index])
+                    if not activeMain:
+                        try:
+                            if backBtn.collidepoint(mouse_pos):
+                                course.centeredBtn(12.8,red,back)
+                        except:
+                            pass
+                elif event.type == MOUSEBUTTONDOWN:
+                    for rect in rects:
+                        index = rects.index(rect)
+                        if rect.collidepoint(mouse_pos):
+                            activeMain = False
+                            iterator = index
+                    if not activeMain:
+                        try:
+                            if backBtn.collidepoint(mouse_pos):
+                                activeMain = True
+                        except:
+                            pass
+                elif event.type == KEYDOWN:
+                    if not activeMain and event.key == K_ESCAPE:
+                        activeMain = True                      
             elif courseLvl == 10:
                 #Single Init
                 pygame.event.set_blocked(MOUSEWHEEL)
@@ -4833,7 +4948,6 @@ class Course(pygame.sprite.Sprite):
                     except:
                         SR_icons.clear()
                         courseLvl += 1
-                        SR_iterator = 0
                     if correctH and correctW:
                         pygame.mouse.set_visible(False)
                         screen.blit(SR_icons[0],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
@@ -4949,6 +5063,8 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
                         SR_iterator = 0     
+            elif courseLvl == 12:
+                pygame.mouse.set_visible(True)
     def lesson6():
         course.standardLessonEvents("lesson6",99)  
     def lesson7():
