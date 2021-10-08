@@ -4733,7 +4733,7 @@ class Course(pygame.sprite.Sprite):
             if courseLvl == 1:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
-                course.dialogTop(6.41,"But first you have to understand some things","especially about WHILE loop and its dependencies")  
+                course.dialogTop(6.41,"But first you have to understand some things","especially about WHILE loop and its dependencies",fontSize=1.3)  
                 strs = [
                     "while loop is a control flow statement that",
                     "allows code to be executed repeatedly based", 
@@ -4790,6 +4790,8 @@ class Course(pygame.sprite.Sprite):
                         
                 for cord in storedCords:
                     pygame.draw.circle(screen,dark_gray,cord,size_w//200)
+
+                pygame.mouse.set_visible(True)
                 
                 if event.type == MOUSEBUTTONDOWN:
                     for item in storedItems:
@@ -4798,6 +4800,13 @@ class Course(pygame.sprite.Sprite):
                             iterator += 1
                             storedCords.append([mouse_pos[0],mouse_pos[1]])  
                             course.coursorMarked()  
+                elif event.type == MOUSEMOTION:
+                    for item in storedItems:
+                        index = storedItems.index(item)
+                        if item.collidepoint(mouse_pos) and iterator-1==index and iterator < 4:
+                            pygame.mouse.set_visible(False)
+                            pygame.draw.circle(screen, red, mouse_pos, size_w//450, 0)     
+                            pygame.draw.circle(screen, red, mouse_pos, size_w//150, size_w//550)     
             elif courseLvl == 4:
                 hght = size_h/3.2
                 txthght = size_h/2.65
@@ -4817,34 +4826,35 @@ class Course(pygame.sprite.Sprite):
                             "!Remember about [Tab]/[Space] before instruction!"
                         ],
                         [
-                            "If we want to select group of items from end we have to",
-                            "add \"-\" to our syntax, because that sign means from end",
-                            "of list, so syntax: list[:-endIndex], where this time endIndex",
-                            "means amount of items to be skipped beggining from end of list"
+                            "While is a statetement checking instructions, that",
+                            "means statement can be not fulfilled, what then you ask?",
+                            "There's possibility to join else to your while loop, but how?",
+                            "It's really easy! It works the same way as with IF instruction",
                         ]
                     ]
                     back = "Back"
                 else:
-                    txts = ["Określona grupa przedmiotów",
-                    "Grupa przedmiotów od początku",
-                    "Grupa przedmiotów od końca"]
+                    txts = ["Składnia: jedna linia",
+                    "Składnia: wiele liń",
+                    "While...Else..."]
                     descs = [
-                        ["By wybrać konkretną grupę przedmiotów musimy dać pierwszy i ostatni",
-                        "index. Jest to podobne do poprzedniej metody, ale bardziej rozbudowane:", 
-                        "składnia: lista[pierwszyIndex:ostatniIndex] | zwraca grupę przedmiotów", 
-                        "od pierwszyIndex(włącznie) do ostatniIndex(nie włączając)"], 
+                        ["Single line syntax contains both statement and action",
+                        "           while statement: action",
+                        "Where statement = bool and action is set of instructions",
+                        "Also: always remeber about ':' after statement"],
                         [
-                            "By wybrać grupę od początku nie użyjemu startowego indexu,", 
-                            "więc składnia wygląda tak: lista[:ostatniIndex] gdzie", 
-                            "ostatniIndex nie jest włączony, a zwrócona grupa", 
-                            "zaczyna się od pierwszego elementu listy"
+                            "Multiple line while loop also need tabulations",
+                            "while statement:",
+                            "                                                               instructions1...instruction2...etc.",
+                            "!Remember about [Tab]/[Space] before instruction!"
                         ],
                         [
-                            "Jeśli chcemy zacząć grupę od końca listy musimy dodać", 
-                            "\"-\" do naszej składni, gdyż ten znak znaczy \"od końca\" listy,", 
-                            "więc składnia to: lista[:-ostatniIndex], gdzie tym razem ostatniIndex", 
-                            "oznacza liczbe rzeczy do ominięcia poczynając od końca listy" 
+                            "While is a statetement checking instructions, that",
+                            "means statement can be not fulfilled, what then you ask?",
+                            "There's possibility to join else to your while loop, but how?",
+                            "It's really easy! It works the same way as with IF instruction",
                         ]
+                    ]
                     ]
                     back = "Powrót"
                 rects = []
@@ -4903,6 +4913,9 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if not activeMain and event.key == K_ESCAPE:
                         activeMain = True                      
+            elif courseLvl == 5:
+                #TOPIC: INFINITE LOOP
+                course.dialogTop(6.41,"TEST")
             elif courseLvl == 10:
                 #Single Init
                 pygame.event.set_blocked(MOUSEWHEEL)
@@ -5231,6 +5244,7 @@ class Settings(pygame.sprite.Sprite):
     def resizing():
         global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,SR_icons
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon
+        global storedCords,storedItems
         if activities[2]:
             language = getLang()
             if language == "ENG":
@@ -5274,7 +5288,9 @@ class Settings(pygame.sprite.Sprite):
                             TD_circs = []
                             DG_icons = []
                             TD_icon = ""
-                            SR_icons = []
+                            SR_icons.clear()
+                            storedCords.clear()
+                            storedItems.clear()
                             hp1 = size_w/2.66
                             hp2 = size_w/6
                             course.tower_defence.reset()
