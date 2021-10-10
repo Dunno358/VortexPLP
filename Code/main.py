@@ -4718,7 +4718,7 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False                        
     def lesson5():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
-        global bckgrMusicPlayed,errorShowed,storedItems,storedCords
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen
         global SR_icons,SR_cords,SR_iterator
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson5",99,condition=notBlocked)
@@ -4855,7 +4855,6 @@ class Course(pygame.sprite.Sprite):
                             "It's really easy! It works the same way as with IF instruction",
                         ]
                     ]
-                    ]
                     back = "Powrót"
                 rects = []
                 txtCords = []
@@ -4914,8 +4913,87 @@ class Course(pygame.sprite.Sprite):
                     if not activeMain and event.key == K_ESCAPE:
                         activeMain = True                      
             elif courseLvl == 5:
-                #TOPIC: INFINITE LOOP
-                course.dialogTop(6.41,"TEST")
+                notBlocked = False
+                course.dialogTop(6.41,"Let's talk about next important","thing: infinity loop")
+                btn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/2.92,size_w/5,size_h/12], 0,size_w//250)
+                Write(round(size_w//100*2),"Infinity loop?",color1,[size_w/1.91,size_h/2.58])
+                if event.type == MOUSEMOTION:
+                    if btn.collidepoint(mouse_pos):
+                        btn = pygame.draw.rect(screen, logoBlue, [size_w/2.38,size_h/2.92,size_w/5,size_h/12], 0,size_w//250)
+                        btn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/2.92,size_w/5,size_h/12], size_w//200,size_w//250)
+                        Write(round(size_w//100*2),"Infinity loop?",color3,[size_w/1.91,size_h/2.58])   
+                elif event.type == MOUSEBUTTONDOWN:
+                    if btn.collidepoint(mouse_pos):
+                        courseLvl += 1 
+            elif courseLvl == 6:
+                notBlocked = True
+                strs = [
+                    "Yeah, infinity loops!",
+                    "Name is pretty accurate, that's a loop",
+                    "with a statement never going to be False",
+                    "by itself, so it will simply never end!"
+                ]
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2],strs[3],fontSize=1.5) 
+            elif courseLvl == 7:
+                course.dialogTop(6.41,"The best way to learn is to","check a way how it's done in practic")
+                course.consoleExample("while statement:",left=True,hght=3.37)
+                course.consoleExample("spawn_enemy()",hght=2.21)
+                btn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.4,size_w/5,size_h/12], 0,size_w//250)
+                Write(round(size_w//100*2),"Check it!",color1,[size_w/1.91,size_h/1.32])
+                if event.type == MOUSEMOTION:
+                    if btn.collidepoint(mouse_pos):
+                        btn = pygame.draw.rect(screen, logoBlue, [size_w/2.38,size_h/1.4,size_w/5,size_h/12], 0,size_w//250)
+                        btn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/1.4,size_w/5,size_h/12], size_w//200,size_w//250)
+                        Write(round(size_w//100*2),"Check it!",color3,[size_w/1.91,size_h/1.32])   
+                elif event.type == MOUSEBUTTONDOWN:
+                    if btn.collidepoint(mouse_pos):
+                        courseLvl += 1 
+            elif courseLvl == 8:
+                notBlocked = False
+
+                if(len(SR_icons)) < 1:
+                    enemy1 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy1.png")
+                    enemy1 = pygame.transform.scale(enemy1, [int(size_w/10.6),int(size_h/6)])
+                    SR_icons.append(enemy1)
+                    enemy2 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy2.png")
+                    enemy2 = pygame.transform.scale(enemy2, [int(size_w/16),int(size_h/7)])
+                    SR_icons.append(enemy2)
+                    enemy3 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy3.png")
+                    enemy3 = pygame.transform.scale(enemy3, [int(size_w/10.6),int(size_h/6)])
+                    SR_icons.append(enemy3)
+
+                Write(round(size_w//100*2.5),"Statement",color3,[size_w/2.22,size_h/4.09])
+
+                hght1 = size_h/5.15
+                opt1 = pygame.draw.rect(screen, color3, [size_w/1.85,hght1,size_w/50,size_h/30], size_w//500,size_w//300)
+                Write(round(size_w//100*1.3),"True",lt_blue,[size_w/1.68,size_h/4.8])
+                if(isinstance(chosen,int)):
+                    if chosen == 1:
+                        pygame.draw.line(screen, lt_blue, [size_w/1.85+size_w/50,hght1], [size_w/1.83,hght1+size_h/30], size_w//400)
+                        pygame.draw.line(screen, lt_blue, [size_w/1.83,hght1+size_h/30], [size_w/1.85,size_h/4.8] ,size_w//400)
+                
+                hght2 = size_h/4.13
+                opt2 = pygame.draw.rect(screen, color3, [size_w/1.85,hght2,size_w/50,size_h/30], size_w//500,size_w//300)
+                Write(round(size_w//100*1.3),"False",lt_blue,[size_w/1.68,size_h/3.8])
+                if(isinstance(chosen,int)):
+                    if chosen == 2:
+                        pygame.draw.line(screen, lt_blue, [size_w/1.85+size_w/50,hght2], [size_w/1.83,hght2+size_h/30], size_w//400)
+                        pygame.draw.line(screen, lt_blue, [size_w/1.83,hght2+size_h/30], [size_w/1.85,size_h/3.96] ,size_w//400)
+
+                try:
+                    if chosen == 1:
+                        randW = uniform(3.04,1.42)
+                        randH = uniform(2.33,1.79)
+                        randNr = randint(0,2)
+                        screen.blit(SR_icons[randNr],[size_w/randW,size_h/randH])
+                except:
+                    pass
+
+                if event.type == MOUSEBUTTONDOWN:
+                    if opt1.collidepoint(mouse_pos):
+                        chosen = 1
+                    elif opt2.collidepoint(mouse_pos):
+                        chosen = 2
             elif courseLvl == 10:
                 #Single Init
                 pygame.event.set_blocked(MOUSEWHEEL)
