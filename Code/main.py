@@ -212,6 +212,7 @@ TD_btnClicked = False
 SR_icons = []
 SR_cords = []
 SR_iterator = 0
+SR_holder = 0
 
 #PRIZE
 iconsUnlock = []
@@ -4719,7 +4720,7 @@ class Course(pygame.sprite.Sprite):
     def lesson5():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen
-        global SR_icons,SR_cords,SR_iterator
+        global SR_icons,SR_cords,SR_iterator,SR_holder
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson5",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed:
@@ -4755,7 +4756,7 @@ class Course(pygame.sprite.Sprite):
 
                 wdth = size_w/3.12
                 for x in range(3):
-                    cord = screen.blit(SR_icons[0],[wdth,size_h/8.08]) 
+                    cord = screen.blit(SR_icons[0],[wdth,size_h/2.34]) 
                     if cord not in SR_cords:
                         SR_cords.append(cord)
                     wdth += size_w/6
@@ -4774,7 +4775,7 @@ class Course(pygame.sprite.Sprite):
 
                 try:
                     
-                    Write(round(size_w//100*2.1),questions[iterator-1],red,[size_w/1.89,size_h/1.86])
+                    Write(round(size_w//100*2.1),questions[iterator-1],red,[size_w/1.89,size_h/3.96])
                 except:
                     print("questions out of range",iterator)
 
@@ -4787,7 +4788,7 @@ class Course(pygame.sprite.Sprite):
                     txthght = cord[1]+cord[3]/2
                     WriteItalic(round(size_w//100*2.5),answers[index],logoBlue,[txtwdth,txthght])
                     try:
-                        Write(round(size_w//100*1.1),allAnswers[iterator-1][index],red,[txtwdth,txthght+size_h/8])
+                        Write(round(size_w//100*1.1),allAnswers[iterator-1][index],red,[txtwdth,txthght-size_h/12])
                     except:
                         print("allAnswers out of range")
 
@@ -4797,6 +4798,7 @@ class Course(pygame.sprite.Sprite):
                     color=red
 
                 Write(round(size_w//100*1.5),f"Ammo: {20-SR_iterator}/20",color,[size_w/1.24,size_h/1.08])
+                Write(round(size_w//100*1.5),f"Points: {SR_holder}",green,[size_w/3.95,size_h/1.08])
                 reloadBtn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
                 reloadTxt = Write(round(size_w//100*2),"Reload",color1,[size_w/1.91,size_h/1.13])
 
@@ -4832,11 +4834,13 @@ class Course(pygame.sprite.Sprite):
                             index = SR_cords.index(cord)  
                             try:
                                 if cord.collidepoint(mouse_pos):
+                                    course.coursorMarked()
                                     if index==correctAnswers[iterator-1]:
-                                        iterator += 1
+                                        SR_holder += 1
                                         Write(round(size_w//100*8),"Correct",green,[size_w/1.94,size_h/2.09])
                                     else:
                                         Write(round(size_w//100*8),"Wrong",red,[size_w/1.94,size_h/2.09])
+                                    iterator += 1
                             except:
                                 print("correctAnswers out of range")
                     if reloadBtn.collidepoint(mouse_pos):
