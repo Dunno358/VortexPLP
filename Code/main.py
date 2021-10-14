@@ -4754,100 +4754,108 @@ class Course(pygame.sprite.Sprite):
                         errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
                 
 
-                wdth = size_w/3.12
-                for x in range(3):
-                    cord = screen.blit(SR_icons[0],[wdth,size_h/2.34]) 
-                    if cord not in SR_cords:
-                        SR_cords.append(cord)
-                    wdth += size_w/6
-
                 questions = [
                     "What is the instruction used to end while loop?",
-                    "Which is correct syntax?"
+                    "Which is correct syntax?",
+                    "Else can be bound to while loop",
+                    "Which instruction make loop return to beginning?"
                 ]
 
                 allAnswers = [
                     ["End","Break","Out"],
-                    ["While statement: action","While statement() action","While statement do action"]
+                    ["While statement: action","While statement() action","While statement do action"],
+                    ["True","False","Only if statement is True"],
+                    ["Return","Restart","Continue"]
                 ]
 
-                correctAnswers = [1,0] #0-A 1-B 2-C
+                correctAnswers = [1,0,0,2] #0-A 1-B 2-C
 
-                try:
-                    
-                    Write(round(size_w//100*2.1),questions[iterator-1],red,[size_w/1.89,size_h/3.96])
-                except:
-                    print("questions out of range",iterator)
+                print(iterator-1,"/",len(questions))
+                if iterator-1<len(questions):
+                    wdth = size_w/3.12
+                    for x in range(3):
+                        cord = screen.blit(SR_icons[0],[wdth,size_h/2.34]) 
+                        if cord not in SR_cords:
+                            SR_cords.append(cord)
+                        wdth += size_w/6
 
-                answersBckgr = pygame.draw.rect(screen, color2, [size_w/4.24,size_h/1.75,size_w/1.7,size_h/8], 0)
-
-                answers = ['A','B','C']
-                for cord in SR_cords:
-                    index = SR_cords.index(cord)
-                    txtwdth = cord[0]+cord[2]/2
-                    txthght = cord[1]+cord[3]/2
-                    WriteItalic(round(size_w//100*2.5),answers[index],logoBlue,[txtwdth,txthght])
                     try:
-                        Write(round(size_w//100*1.1),allAnswers[iterator-1][index],red,[txtwdth,txthght-size_h/12])
+                        
+                        Write(round(size_w//100*2.1),questions[iterator-1],red,[size_w/1.89,size_h/3.96])
                     except:
-                        print("allAnswers out of range")
+                        print("questions out of range",iterator)
 
-                if 20-SR_iterator > 0:
-                    color=green
-                else:
-                    color=red
+                    answersBckgr = pygame.draw.rect(screen, color2, [size_w/4.24,size_h/1.75,size_w/1.7,size_h/8], 0)
 
-                Write(round(size_w//100*1.5),f"Ammo: {20-SR_iterator}/20",color,[size_w/1.24,size_h/1.08])
-                Write(round(size_w//100*1.5),f"Points: {SR_holder}",green,[size_w/3.95,size_h/1.08])
-                reloadBtn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
-                reloadTxt = Write(round(size_w//100*2),"Reload",color1,[size_w/1.91,size_h/1.13])
-
-                #GUN BLITING
-                try:
-                    correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
-                    correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
-                    sight_rect = SR_icons[1].get_rect()
-                    if correctH and correctW:
-                        pygame.mouse.set_visible(False)
-                        screen.blit(SR_icons[1],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
-                    else:
-                        pygame.mouse.set_visible(True)
-                except:
-                    pass
-
-                if event.type == MOUSEMOTION:
+                    answers = ['A','B','C']
                     for cord in SR_cords:
-                        if cord.collidepoint(mouse_pos):
-                            index = SR_cords.index(cord)
-                    if reloadBtn.collidepoint(mouse_pos):
-                        reloadBtn = pygame.draw.rect(screen, logoBlue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
-                        reloadBtn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], size_w//200,size_w//250)
-                        reloadTxt = Write(round(size_w//100*2),"Reload",color3,[size_w/1.91,size_h/1.13]) 
-                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
-                    correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
+                        index = SR_cords.index(cord)
+                        txtwdth = cord[0]+cord[2]/2
+                        txthght = cord[1]+cord[3]/2
+                        WriteItalic(round(size_w//100*2.5),answers[index],logoBlue,[txtwdth,txthght])
+                        try:
+                            Write(round(size_w//100*1.1),allAnswers[iterator-1][index],red,[txtwdth,txthght-size_h/12])
+                        except:
+                            print("allAnswers out of range")
+
                     if 20-SR_iterator > 0:
-                        if correctW and correctH:
-                            screen.blit(SR_icons[2],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
-                            SR_iterator += 1
+                        color=green
+                    else:
+                        color=red
+
+                    Write(round(size_w//100*1.5),f"Ammo: {20-SR_iterator}/20",color,[size_w/1.24,size_h/1.08])
+                    Write(round(size_w//100*1.5),f"Points: {SR_holder}",green,[size_w/3.95,size_h/1.08])
+                    reloadBtn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
+                    reloadTxt = Write(round(size_w//100*2),"Reload",color1,[size_w/1.91,size_h/1.13])
+
+                    #GUN BLITING
+                    try:
+                        correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
+                        correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
+                        sight_rect = SR_icons[1].get_rect()
+                        if correctH and correctW:
+                            pygame.mouse.set_visible(False)
+                            screen.blit(SR_icons[1],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                        else:
+                            pygame.mouse.set_visible(True)
+                    except:
+                        pass
+
+                    if event.type == MOUSEMOTION:
                         for cord in SR_cords:
-                            index = SR_cords.index(cord)  
-                            try:
-                                if cord.collidepoint(mouse_pos):
-                                    course.coursorMarked()
-                                    if index==correctAnswers[iterator-1]:
-                                        SR_holder += 1
-                                        Write(round(size_w//100*8),"Correct",green,[size_w/1.94,size_h/2.09])
-                                    else:
-                                        Write(round(size_w//100*8),"Wrong",red,[size_w/1.94,size_h/2.09])
-                                    iterator += 1
-                            except:
-                                print("correctAnswers out of range")
-                    if reloadBtn.collidepoint(mouse_pos):
-                        SR_iterator = 0
-                elif event.type == KEYDOWN:
-                    if event.key == K_r:
-                        SR_iterator = 0
+                            if cord.collidepoint(mouse_pos):
+                                index = SR_cords.index(cord)
+                        if reloadBtn.collidepoint(mouse_pos):
+                            reloadBtn = pygame.draw.rect(screen, logoBlue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
+                            reloadBtn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], size_w//200,size_w//250)
+                            reloadTxt = Write(round(size_w//100*2),"Reload",color3,[size_w/1.91,size_h/1.13]) 
+                    elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                        correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
+                        correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
+                        if 20-SR_iterator > 0:
+                            if correctW and correctH:
+                                screen.blit(SR_icons[2],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                                SR_iterator += 1
+                            for cord in SR_cords:
+                                index = SR_cords.index(cord)  
+                                try:
+                                    if cord.collidepoint(mouse_pos):
+                                        course.coursorMarked()
+                                        if index==correctAnswers[iterator-1]:
+                                            SR_holder += 1
+                                            Write(round(size_w//100*8),"Correct",green,[size_w/1.94,size_h/2.09])
+                                        else:
+                                            Write(round(size_w//100*8),"Wrong",red,[size_w/1.94,size_h/2.09])
+                                        iterator += 1
+                                except:
+                                    print("correctAnswers out of range")
+                        if reloadBtn.collidepoint(mouse_pos):
+                            SR_iterator = 0
+                    elif event.type == KEYDOWN:
+                        if event.key == K_r:
+                            SR_iterator = 0
+                else:
+                    pygame.mouse.set_visible(True)
             elif courseLvl == 2:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
