@@ -4731,6 +4731,87 @@ class Course(pygame.sprite.Sprite):
             language = getLang()
 
             if courseLvl == 1:
+                if len(SR_icons)<1:
+                    try:
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/14.22),int(size_h/8)])
+                        SR_icons.append(shoot_shield)
+                    except:
+                        errorInit("Failed to load shoot_shield")      
+                    try:
+                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        SR_icons.append(iron_sight)
+                    except:
+                        errorInit("Failed to load iron_sight")
+                    try:
+                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        SR_icons.append(iron_sight)
+                    except:
+                        errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
+                
+
+                wdth = size_w/3.12
+                for x in range(3):
+                    cord = screen.blit(SR_icons[0],[wdth,size_h/8.08]) 
+                    if cord not in SR_cords:
+                        SR_cords.append(cord)
+                    wdth += size_w/6
+
+                questions = [
+                    "What is the instruction used to end while loop?",
+                    "TEST QUESTION"
+                ]
+
+                allAnswers = [
+                    ["End","Break","Out"]
+                ]
+
+                correctAnswers = [
+                    1
+                ] #0-A 1-B 2-C
+
+                try:
+                    Write(round(size_w//100*2.1),questions[iterator-1],red,[size_w/1.89,size_h/1.86])
+                except:
+                    print("questions out of range",iterator)
+
+                answersBckgr = pygame.draw.rect(screen, color2, [size_w/4.24,size_h/1.75,size_w/1.7,size_h/8], 0)
+
+                answers = ['A','B','C']
+                for cord in SR_cords:
+                    index = SR_cords.index(cord)
+                    txtwdth = cord[0]+cord[2]/2
+                    txthght = cord[1]+cord[3]/2
+                    WriteItalic(round(size_w//100*2.5),answers[index],logoBlue,[txtwdth,txthght])
+                    try:
+                        Write(round(size_w//100*2),allAnswers[iterator-1][index],red,[txtwdth,txthght+size_h/6])
+                    except:
+                        print("allAnswers out of range")
+
+
+
+                sight_rect=SR_icons[1].get_rect()
+                screen.blit(SR_icons[1],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+
+                if event.type == MOUSEMOTION:
+                    for cord in SR_cords:
+                        if cord.collidepoint(mouse_pos):
+                            index = SR_cords.index(cord)
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    for cord in SR_cords:
+                        index = SR_cords.index(cord)  
+                        try:
+                            if cord.collidepoint(mouse_pos):
+                                if index==correctAnswers[iterator-1]:
+                                    iterator += 1
+                                    Write(round(size_w//100*8),"Correct",green,[size_w/1.94,size_h/2.09])
+                                else:
+                                    Write(round(size_w//100*8),"Wrong",red,[size_w/1.94,size_h/2.09])
+                        except:
+                            print("correctAnswers out of range")
+            elif courseLvl == 2:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
                 course.dialogTop(6.41,"But first you have to understand some things","especially about WHILE loop and its dependencies",fontSize=1.3)  
@@ -5356,7 +5437,7 @@ class Settings(pygame.sprite.Sprite):
                 Write(size_w//100*2,"Chcesz coś zmienić {}?".format(getName()),color3,[size_w/1.8,size_h/8])
             isCorrectActivity()                   
     def resizing():
-        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,SR_icons
+        global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,SR_icons,SR_cords
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon
         global storedCords,storedItems
         if activities[2]:
@@ -5403,6 +5484,7 @@ class Settings(pygame.sprite.Sprite):
                             DG_icons = []
                             TD_icon = ""
                             SR_icons.clear()
+                            SR_cords.clear()
                             storedCords.clear()
                             storedItems.clear()
                             hp1 = size_w/2.66
