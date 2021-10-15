@@ -1,7 +1,8 @@
 [todo] entering settings while on Tower Defense Lvls need to adjust allowing events(KEYDOWN) to queue
 [todo: LESSON5 LVL4]
--syntax
--infinite loop
--break
--continue
--else bound to while
+-syntax QUIZ:OK LESSON:OK
+-infinite loop QUIZ:OK LESSON:OK
+-break QUIZ:OK LESSON:
+-continue QUIZ:OK LESSON:
+-else bound to while QUIZ:OK LESSON:OK
+-Difference in for and while loop QUIZ:OK LESSON:
