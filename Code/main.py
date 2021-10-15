@@ -27,6 +27,7 @@ lightThemeMainCol = (230,230,230)
 lightThemeSubCol = (190,190,190)
 lt_gray = (240,240,240)
 dark_gray = (120,120,120)
+darker_gray = (80,80,80)
 black = (0,0,0)
 red = (150,0,0)
 dark_red  = (90,0,0)
@@ -4756,19 +4757,29 @@ class Course(pygame.sprite.Sprite):
 
                 questions = [
                     "What is the instruction used to end while loop?",
+                    "While loop that runs forever is known as:",
                     "Which is correct syntax?",
                     "Else can be bound to while loop",
-                    "Which instruction make loop return to beginning?"
+                    "Which instruction makes loop return to beginning?",
+                    "Why infinite loop is called like that?",
+                    "Statement is:",
+                    "While loop statement ends with",
+                    "Output of while True {print('x')} is:"
                 ]
 
                 allAnswers = [
                     ["End","Break","Out"],
+                    ["Long Loop","Broken Loop","Infinite Loop"],
                     ["While statement: action","While statement() action","While statement do action"],
                     ["True","False","Only if statement is True"],
-                    ["Return","Restart","Continue"]
+                    ["Return","Restart","Continue"],
+                    ["Because of author's name","Statement is always True","We don't know why"],
+                    ["True or False","List","String"],
+                    [":","#","+"],
+                    ["Infinity of 'x'","Error","Infinity of x"]
                 ]
 
-                correctAnswers = [1,0,0,2] #0-A 1-B 2-C
+                correctAnswers = [1,2,0,0,2,1,0,0,1] #0-A 1-B 2-C
 
                 print(iterator-1,"/",len(questions))
                 if iterator-1<len(questions):
@@ -4797,6 +4808,9 @@ class Course(pygame.sprite.Sprite):
                             Write(round(size_w//100*1.1),allAnswers[iterator-1][index],red,[txtwdth,txthght-size_h/12])
                         except:
                             print("allAnswers out of range")
+
+                    for cord in storedCords:
+                        pygame.draw.circle(screen,darker_gray,cord,size_w//200)
 
                     if 20-SR_iterator > 0:
                         color=green
@@ -4841,6 +4855,7 @@ class Course(pygame.sprite.Sprite):
                                 try:
                                     if cord.collidepoint(mouse_pos):
                                         course.coursorMarked()
+                                        storedCords.append([mouse_pos[0],mouse_pos[1]])
                                         if index==correctAnswers[iterator-1]:
                                             SR_holder += 1
                                             Write(round(size_w//100*8),"Correct",green,[size_w/1.94,size_h/2.09])
