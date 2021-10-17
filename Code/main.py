@@ -214,6 +214,7 @@ SR_icons = []
 SR_cords = []
 SR_iterator = 0
 SR_holder = 0
+SR_holder2 = 0
 
 #PRIZE
 iconsUnlock = []
@@ -4720,8 +4721,8 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False                        
     def lesson5():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
-        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen
-        global SR_icons,SR_cords,SR_iterator,SR_holder
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+        global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson5",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed:
@@ -4735,6 +4736,8 @@ class Course(pygame.sprite.Sprite):
             if courseLvl == 1:
                 notBlocked = False
                 if len(SR_icons)<1:
+                    if isinstance(selected,str):
+                        selected = 1
                     try:
                         shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
                         shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/14.22),int(size_h/8)])
@@ -4742,17 +4745,37 @@ class Course(pygame.sprite.Sprite):
                     except:
                         errorInit("Failed to load shoot_shield")      
                     try:
-                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
-                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        if selected == 1:
+                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
+                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        elif selected == 2:
+                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
+                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)])
                         SR_icons.append(iron_sight)
                     except:
                         errorInit("Failed to load iron_sight")
                     try:
-                        iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
-                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        if selected == 1:
+                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
+                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        elif selected == 2:
+                            iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2_shoot.png".format(dirPath))
+                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)]) 
                         SR_icons.append(iron_sight)
                     except:
                         errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
+                    try:
+                        mini_iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
+                        mini_iron_sight = pygame.transform.scale(iron_sight, [int(size_w/42.68),int(size_h/24)])
+                        SR_icons.append(mini_iron_sight)
+                    except:
+                        errorInit("Failed to load 'mini_iron_sight.png'",fontSize=1.7)
+                    try:
+                        mini_iron_sight2 = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
+                        mini_iron_sight2 = pygame.transform.scale(mini_iron_sight2, [int(size_w/25),int(size_h/24)])
+                        SR_icons.append(mini_iron_sight2)
+                    except:
+                        errorInit("Failed to load mini_iron_sight2")
                 
 
                 questions = [
@@ -4781,7 +4804,6 @@ class Course(pygame.sprite.Sprite):
 
                 correctAnswers = [1,2,0,0,2,1,0,0,1] #0-A 1-B 2-C
 
-                print(iterator-1,"/",len(questions))
                 if iterator-1<len(questions):
                     wdth = size_w/3.12
                     for x in range(3):
@@ -4822,6 +4844,18 @@ class Course(pygame.sprite.Sprite):
                     reloadBtn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
                     reloadTxt = Write(round(size_w//100*2),"Reload",color1,[size_w/1.91,size_h/1.13])
 
+                    if selected == 1:
+                        circ_color1 = logoBlue
+                        circ_color2 = lt_gray
+                    else:
+                        circ_color1 = lt_gray
+                        circ_color2 = logoBlue
+
+                    circ1 = pygame.draw.circle(screen, circ_color1, [size_w/2.02,size_h/9.6], size_w//55, size_w//600)
+                    screen.blit(SR_icons[3],[circ1[0]+circ1[2]/6,circ1[1]+circ1[3]/8])
+                    circ2 = pygame.draw.circle(screen, circ_color2, [size_w/1.81,size_h/9.6], size_w//55, size_w//600)
+                    screen.blit(SR_icons[4],[circ2[0]-circ1[2]/20,circ2[1]+circ2[3]/8])
+
                     #GUN BLITING
                     try:
                         correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
@@ -4829,27 +4863,33 @@ class Course(pygame.sprite.Sprite):
                         sight_rect = SR_icons[1].get_rect()
                         if correctH and correctW:
                             pygame.mouse.set_visible(False)
-                            screen.blit(SR_icons[1],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                            if selected == 1:
+                                cords = [mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7]
+                            elif selected == 2:
+                                cords = [mouse_pos[0]-sight_rect[2]/2,mouse_pos[1]-sight_rect[3]/12]
+                            screen.blit(SR_icons[1],cords)
                         else:
                             pygame.mouse.set_visible(True)
                     except:
                         pass
 
                     if event.type == MOUSEMOTION:
-                        for cord in SR_cords:
-                            if cord.collidepoint(mouse_pos):
-                                index = SR_cords.index(cord)
                         if reloadBtn.collidepoint(mouse_pos):
                             reloadBtn = pygame.draw.rect(screen, logoBlue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
                             reloadBtn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], size_w//200,size_w//250)
                             reloadTxt = Write(round(size_w//100*2),"Reload",color3,[size_w/1.91,size_h/1.13]) 
                     elif event.type == MOUSEBUTTONDOWN and event.button == 1:
-                        correctH = mouse_pos[1]<size_h/1.75 and mouse_pos[1]>size_h/7.92
+                        correctH = mouse_pos[1]<size_h/1.87 and mouse_pos[1]>size_h/7.92
                         correctW = mouse_pos[0]<size_w/1.35 and mouse_pos[0]>size_w/3.07
                         if 20-SR_iterator > 0:
                             if correctW and correctH:
-                                screen.blit(SR_icons[2],[mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7])
+                                if selected == 1:
+                                    cords = [mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7]
+                                elif selected == 2:
+                                    cords = [mouse_pos[0]-sight_rect[2]/2,mouse_pos[1]-sight_rect[3]/12]
+                                screen.blit(SR_icons[2],cords)
                                 SR_iterator += 1
+                                SR_holder2 += 1
                             for cord in SR_cords:
                                 index = SR_cords.index(cord)  
                                 try:
@@ -4866,11 +4906,25 @@ class Course(pygame.sprite.Sprite):
                                     print("correctAnswers out of range")
                         if reloadBtn.collidepoint(mouse_pos):
                             SR_iterator = 0
+                        if circ1.collidepoint(mouse_pos):
+                            selected = 1
+                            SR_icons.clear()
+                        if circ2.collidepoint(mouse_pos):
+                            selected = 2
+                            SR_icons.clear()
                     elif event.type == KEYDOWN:
                         if event.key == K_r:
                             SR_iterator = 0
                 else:
                     pygame.mouse.set_visible(True)
+                    WriteItalic(round(size_w/100*2),f"Points: {SR_holder}/{len(questions)} - {int(SR_holder/len(questions)*100)}%",green,[size_w/1.82,size_h/3.13])
+                    WriteItalic(round(size_w/100*2),f"Accuracy: {round(iterator/SR_holder2*100,1)}%",green,[size_w/1.82,size_h/2.63])
+                    if SR_holder==len(questions):
+                        course.dialogTop(6.41,"That's a very nice score, actually the best I saw!","Go futher for new challenges, soldier",fontSize=1.3)
+                    elif SR_holder>len(questions)/2:
+                        course.dialogTop(6.41,"Not bad, not bad recruit, but you could do better.","Go futher for new challenges, soldier",fontSize=1.3)
+                    elif SR_holder<len(questions)/2:
+                        course.dialogTop(6.41,"I'm afraid that's bellow average I can accept,","I believe you can do better - try again!",fontSize=1.3)
             elif courseLvl == 2:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
