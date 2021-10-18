@@ -5267,6 +5267,7 @@ class Course(pygame.sprite.Sprite):
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],fontSize=1.6)
             elif courseLvl == 10:
                 test = True #TOPIC: BREAK
+                #MAKE LITTLE GREEN RECTS APPEARING UNTIL USER CLICK BREAK RECT
             elif courseLvl == 15:
                 questions = [
                     "What is the instruction used to end while loop?",
