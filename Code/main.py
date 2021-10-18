@@ -1752,7 +1752,7 @@ class Course(pygame.sprite.Sprite):
                 notBlocked = False
                 if len(SR_icons)<1:
                     if isinstance(selected,str):
-                        selected = 1
+                        selected = 2
                     try:
                         shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
                         shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/14.22),int(size_h/8)])
@@ -1911,7 +1911,7 @@ class Course(pygame.sprite.Sprite):
                         if event.key == K_r:
                             SR_iterator = 0
                 else:
-                    print(len(questions),SR_holder2)
+                    print(len(questions),SR_holder2+1)
                     pygame.mouse.set_visible(True)
                     WriteItalic(round(size_w/100*2),f"Points: {SR_holder}/{len(questions)}",green,[size_w/1.82,size_h/3.13])
                     WriteItalic(round(size_w/100*2),f"Score: {int(SR_holder/len(questions)*100)}%",green,[size_w/1.82,size_h/2.63])
