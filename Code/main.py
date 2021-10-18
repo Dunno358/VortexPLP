@@ -132,6 +132,8 @@ errorFontSize = 2
 #TIME
 wait = False
 storedTime = ""
+timer = ''
+storedTimeValue = 0
 
 #ACTIVE/INACTIVE
 activeMenu = True
@@ -1746,8 +1748,9 @@ class Course(pygame.sprite.Sprite):
     class shooting_range():
         class quiz():
             def start(questionsList,allAnswersList,correctAnswersIndexes):
-                global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
-                global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+                global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen,timer
+                global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime
+                global storedTimeValue
                 global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
                 notBlocked = False
                 if len(SR_icons)<1:
@@ -1800,6 +1803,9 @@ class Course(pygame.sprite.Sprite):
                 correctAnswers = correctAnswersIndexes #0-A 1-B 2-C
 
                 if iterator-1<len(questions):
+                    timer = round(float(time.process_time()) - storedTimeValue,2)
+                    print(timer)
+                    storedTime = timer
                     wdth = size_w/3.12
                     for x in range(3):
                         cord = screen.blit(SR_icons[0],[wdth,size_h/2.34]) 
@@ -1911,11 +1917,14 @@ class Course(pygame.sprite.Sprite):
                         if event.key == K_r:
                             SR_iterator = 0
                 else:
-                    print(len(questions),SR_holder2+1)
                     pygame.mouse.set_visible(True)
                     WriteItalic(round(size_w/100*2),f"Points: {SR_holder}/{len(questions)}",green,[size_w/1.82,size_h/3.13])
                     WriteItalic(round(size_w/100*2),f"Score: {int(SR_holder/len(questions)*100)}%",green,[size_w/1.82,size_h/2.63])
-                    WriteItalic(round(size_w/100*2),f"Accuracy: {int(len(questions)/SR_holder2*100)}%",green,[size_w/1.82,size_h/2.19])
+                    if int(len(questions)/SR_holder2*100)>100:
+                        WriteItalic(round(size_w/100*2),f"Accuracy: 100%",green,[size_w/1.82,size_h/2.19])
+                    else:
+                        WriteItalic(round(size_w/100*2),f"Accuracy: {int(len(questions)/SR_holder2*100)}%",green,[size_w/1.82,size_h/2.19])
+                    WriteItalic(round(size_w/100*2),f"Time: {storedTime}s",green,[size_w/1.82,size_h/1.89])
                     if SR_holder==len(questions):
                         course.dialogTop(6.41,"That's a very nice score, actually the best I saw!","Go futher for new challenges, soldier",fontSize=1.3)
                         nextBtn = course.centeredBtn(1.55,dark_green,"Next",adjustToDialog=True)
@@ -1943,6 +1952,14 @@ class Course(pygame.sprite.Sprite):
                         try:
                             if nextBtn.collidepoint(mouse_pos):
                                 courseLvl += 1
+                                iterator = 1
+                                SR_iterator = 0
+                                SR_holder = 0
+                                SR_holder2 = 0
+                                storedCords.clear()
+                                SR_icons.clear()
+                                storedTimeValue = 0
+                                storedTime = ""                                
                         except:
                             pass
                         try:
@@ -1953,6 +1970,8 @@ class Course(pygame.sprite.Sprite):
                                 SR_holder2 = 0
                                 storedCords.clear()
                                 SR_icons.clear()
+                                storedTimeValue += storedTime
+                                storedTime = ""
                         except:
                             pass           
     def startScreen():
@@ -4946,34 +4965,6 @@ class Course(pygame.sprite.Sprite):
             language = getLang()
 
             if courseLvl == 1:
-                questions = [
-                    "What is the instruction used to end while loop?",
-                    "While loop that runs forever is known as:",
-                    "Which is correct syntax?",
-                    "Else can be bound to while loop",
-                    "Which instruction makes loop return to beginning?",
-                    "Why infinite loop is called like that?",
-                    "Statement is:",
-                    "While loop statement ends with",
-                    "Output of while True {print('x')} is:"
-                ]
-
-                allAnswers = [
-                    ["End","Break","Out"],
-                    ["Long Loop","Broken Loop","Infinite Loop"],
-                    ["While statement: action","While statement() action","While statement do action"],
-                    ["True","False","Only if statement is True"],
-                    ["Return","Restart","Continue"],
-                    ["Because of author's name","Statement is always True","We don't know why"],
-                    ["True or False","List","String"],
-                    [":","#","+"],
-                    ["Infinity of 'x'","Error","Infinity of x"]
-                ]
-
-                correctAnswers = [1,2,0,0,2,1,0,0,1] #0-A 1-B 2-C
-
-                course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)
-            elif courseLvl == 2:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
                 course.dialogTop(6.41,"But first you have to understand some things","especially about WHILE loop and its dependencies",fontSize=1.3)  
@@ -5179,6 +5170,7 @@ class Course(pygame.sprite.Sprite):
                 course.dialogStandard(2.6,strs[0],strs[1],strs[2],strs[3],fontSize=1.5) 
             elif courseLvl == 7:
                 notBlocked = False
+                SR_icons.clear()
                 course.dialogTop(6.41,"The best way to learn is to","check a way how it's done in practic")
                 course.consoleExample("while statement:",left=True,hght=3.37)
                 course.consoleExample("spawn_enemy()",hght=2.21)
@@ -5273,7 +5265,35 @@ class Course(pygame.sprite.Sprite):
                     "even infinite one, it's called BREAK"
                 ]
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],fontSize=1.6)
-            elif courseLvl == 10:
+            elif courseLvl == 15:
+                questions = [
+                    "What is the instruction used to end while loop?",
+                    "While loop that runs forever is known as:",
+                    "Which is correct syntax?",
+                    "Else can be bound to while loop",
+                    "Which instruction makes loop return to beginning?",
+                    "Why infinite loop is called like that?",
+                    "Statement is:",
+                    "While loop statement ends with",
+                    "Output of while True {print('x')} is:"
+                ]
+
+                allAnswers = [
+                    ["End","Break","Out"],
+                    ["Long Loop","Broken Loop","Infinite Loop"],
+                    ["While statement: action","While statement() action","While statement do action"],
+                    ["True","False","Only if statement is True"],
+                    ["Return","Restart","Continue"],
+                    ["Because of author's name","Statement is always True","We don't know why"],
+                    ["True or False","List","String"],
+                    [":","#","+"],
+                    ["Infinity of 'x'","Error","Infinity of x"]
+                ]
+
+                correctAnswers = [1,2,0,0,2,1,0,0,1] #0-A 1-B 2-C
+
+                course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)
+            elif courseLvl == 16:
                 #Single Init
                 pygame.event.set_blocked(MOUSEWHEEL)
                 notBlocked = False
@@ -5353,7 +5373,7 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
                         SR_iterator = 0
-            elif courseLvl == 11:
+            elif courseLvl == 17:
                #Single Init
                 notBlocked = False
                 if len(SR_icons)<1:
@@ -5433,7 +5453,7 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
                         SR_iterator = 0     
-            elif courseLvl == 12:
+            elif courseLvl == 18:
                 pygame.mouse.set_visible(True)
     def lesson6():
         course.standardLessonEvents("lesson6",99)  
