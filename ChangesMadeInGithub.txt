@@ -6,3 +6,13 @@
 -continue QUIZ:OK LESSON:
 -else bound to while QUIZ:OK LESSON:OK
 -Difference in for and while loop QUIZ:OK LESSON:
+[Quiz Questions]
+  "What is the instruction used to end while loop?",
+  "While loop that runs forever is known as:",
+  "Which is correct syntax?",
+  "Else can be bound to while loop",
+  "Which instruction makes loop return to beginning?",
+  "Why infinite loop is called like that?",
+  "Statement is:",
+  "While loop statement ends with",
+  "Output of while True {print('x')} is:"
