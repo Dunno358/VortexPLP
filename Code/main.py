@@ -5265,6 +5265,8 @@ class Course(pygame.sprite.Sprite):
                     "even infinite one, it's called BREAK"
                 ]
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],fontSize=1.6)
+            elif courseLvl == 10:
+                test = True #TOPIC: BREAK
             elif courseLvl == 15:
                 questions = [
                     "What is the instruction used to end while loop?",
