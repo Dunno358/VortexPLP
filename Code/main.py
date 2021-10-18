@@ -1775,7 +1775,7 @@ class Course(pygame.sprite.Sprite):
                     try:
                         if selected == 1:
                             iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
-                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                            iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.09)])
                         elif selected == 2:
                             iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2_shoot.png".format(dirPath))
                             iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)]) 
@@ -5320,7 +5320,7 @@ class Course(pygame.sprite.Sprite):
 
                     try:
                         iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
-                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.09)])
                         SR_icons.append(iron_sight)
                     except:
                         errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
@@ -5385,7 +5385,7 @@ class Course(pygame.sprite.Sprite):
                         SR_cords.append([pointW,pointH])
                     try:
                         iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
-                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.19)])
+                        iron_sight = pygame.transform.scale(iron_sight, [int(size_w/2),int(size_h/2.3)])
                         SR_icons.append(iron_sight)
                     except:
                         errorInit("Failed to load iron_sight")
