@@ -1824,11 +1824,14 @@ class Course(pygame.sprite.Sprite):
                     answers = ['A','B','C']
                     for cord in SR_cords:
                         index = SR_cords.index(cord)
-                        txtwdth = cord[0]+cord[2]/2
-                        txthght = cord[1]+cord[3]/2
-                        WriteItalic(round(size_w//100*2.5),answers[index],logoBlue,[txtwdth,txthght])
                         try:
-                            Write(round(size_w//100*1.1),allAnswers[iterator-1][index],red,[txtwdth,txthght-size_h/12])
+                            txtwdth = cord[0]+cord[2]/2
+                            txthght = cord[1]+cord[3]/2
+                            WriteItalic(round(size_w//100*2.5),answers[index],logoBlue,[txtwdth,txthght])
+                        except:
+                            pass
+                        try:
+                            Write(round(size_w//100*0.95),allAnswers[iterator-1][index],red,[txtwdth,txthght-size_h/12])
                         except:
                             print("allAnswers out of range")
 
@@ -1920,10 +1923,13 @@ class Course(pygame.sprite.Sprite):
                     pygame.mouse.set_visible(True)
                     WriteItalic(round(size_w/100*2),f"Points: {SR_holder}/{len(questions)}",green,[size_w/1.82,size_h/3.13])
                     WriteItalic(round(size_w/100*2),f"Score: {int(SR_holder/len(questions)*100)}%",green,[size_w/1.82,size_h/2.63])
-                    if int(len(questions)/SR_holder2*100)>100:
-                        WriteItalic(round(size_w/100*2),f"Accuracy: 100%",green,[size_w/1.82,size_h/2.19])
-                    else:
-                        WriteItalic(round(size_w/100*2),f"Accuracy: {int(len(questions)/SR_holder2*100)}%",green,[size_w/1.82,size_h/2.19])
+                    try:
+                        if int(len(questions)/SR_holder2*100)>100:
+                            WriteItalic(round(size_w/100*2),f"Accuracy: 100%",green,[size_w/1.82,size_h/2.19])
+                        else:
+                            WriteItalic(round(size_w/100*2),f"Accuracy: {int(len(questions)/SR_holder2*100)}%",green,[size_w/1.82,size_h/2.19])
+                    except:
+                        pass
                     WriteItalic(round(size_w/100*2),f"Time: {storedTime}s",green,[size_w/1.82,size_h/1.89])
                     if SR_holder==len(questions):
                         course.dialogTop(6.41,"That's a very nice score, actually the best I saw!","Go futher for new challenges, soldier",fontSize=1.3)
@@ -1958,7 +1964,7 @@ class Course(pygame.sprite.Sprite):
                                 SR_holder2 = 0
                                 storedCords.clear()
                                 SR_icons.clear()
-                                storedTimeValue = 0
+                                storedTimeValue += storedTime
                                 storedTime = ""                                
                         except:
                             pass
@@ -1974,6 +1980,18 @@ class Course(pygame.sprite.Sprite):
                                 storedTime = ""
                         except:
                             pass           
+        def rects():
+            wdth = size_w/3.52
+            hght = size_h/4.18
+            timer = int(time.process_time())+10
+            print(timer)
+            if timer//10<15:
+                for x in range(timer//10):
+                    for x in range(15):
+                        pygame.draw.rect(screen,green,[wdth,hght,size_w/60,size_h/47],0)
+                        wdth += size_w/30
+                    hght += size_h/30
+                    wdth = size_w/3.52
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -5266,8 +5284,7 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],fontSize=1.6)
             elif courseLvl == 10:
-                test = True #TOPIC: BREAK
-                #MAKE LITTLE GREEN RECTS APPEARING UNTIL USER CLICK BREAK RECT
+                course.shooting_range.rects()
             elif courseLvl == 15:
                 questions = [
                     "What is the instruction used to end while loop?",
