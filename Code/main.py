@@ -1980,18 +1980,27 @@ class Course(pygame.sprite.Sprite):
                                 storedTime = ""
                         except:
                             pass           
-        def rects():
-            wdth = size_w/3.52
-            hght = size_h/4.18
-            timer = int(time.process_time())+10
-            print(timer)
-            if timer//10<15:
-                for x in range(timer//10):
-                    for x in range(15):
-                        pygame.draw.rect(screen,green,[wdth,hght,size_w/60,size_h/47],0)
-                        wdth += size_w/30
-                    hght += size_h/30
-                    wdth = size_w/3.52
+        def loopExample():
+            global held,courseLvl,iterator,activeMenu,chosen
+            global errorShowed,storedItems,storedCords,chosen,selected
+            if activities[0] :
+                if not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed and courseLvl==10:
+                    pygame.draw.rect(screen, color2, [size_w/3.05,size_h/1.43,size_w/7.6,size_h/20], 0)
+                    if selected == 1:
+                        if getActualSecond()%0.5==0:
+                            WriteItalic(round(size_w/100*2.2),"Working",green,[size_w/2.54,size_h/1.38])
+                        else:
+                            WriteItalic(round(size_w/100*2),"Working",dark_green,[size_w/2.54,size_h/1.38])
+                    else:
+                        WriteItalic(round(size_w/100*2),"Not Working",dark_red,[size_w/2.54,size_h/1.38])  
+                    pygame.draw.rect(screen, color2, [size_w/1.47,size_h/1.43,size_w/7.6,size_h/20], 0)
+                    if chosen == 1:
+                        if getActualSecond()%0.5==0:
+                            WriteItalic(round(size_w/100*2.2),"Working",green,[size_w/1.34,size_h/1.38])
+                        else:
+                            WriteItalic(round(size_w/100*2),"Working",dark_green,[size_w/1.34,size_h/1.38]) 
+                    else:
+                        WriteItalic(round(size_w/100*2),"Not Working",dark_red,[size_w/1.34,size_h/1.38])               
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -4969,7 +4978,7 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1 
                         bckgrMusicPlayed = False                        
     def lesson5():
-        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,chosen
+        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
         global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
         if activeMain and not errorShowed:
@@ -4981,7 +4990,6 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-
             if courseLvl == 1:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
@@ -5284,7 +5292,88 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],fontSize=1.6)
             elif courseLvl == 10:
-                course.shooting_range.rects()
+                if selected == 1 and chosen == 0:
+                    course.dialogTop(6.41,"As you see, statement can be","changed whenever you want")
+                elif selected == 0 and chosen == 1:
+                    course.dialogTop(6.41,"With break you're out of loop,","so you can't control it at the same time",fontSize=1.3)
+                else:
+                    course.dialogTop(6.41,"Name is pretty accurate because","it makes program break out of the loop")
+                
+                
+                Write(round(size_w/100*2),"Normal while loop",red,[size_w/2.75,size_h/2.99])
+                
+                WriteItalic(round(size_w/100*1.6),"Statement",lt_blue,[size_w/2.75,size_h/2.5])
+                
+                pygame.draw.rect(screen, dark_blue, [size_w/3.9,size_h/1.6,size_w/4.5,size_h/50], 0,size_w//150)
+                Write(round(size_w/100*1.4),"False",dark_blue,[size_w/3.59,size_h/1.77])
+                Write(round(size_w/100*1.4),"True",dark_blue,[size_w/2.18,size_h/1.77])
+                if held:
+                    mainCirc = pygame.draw.circle(screen, lt_blue, [mouse_pos[0],size_h/1.58], size_w/70, 0)
+                    pygame.draw.circle(screen, purple, [mouse_pos[0],size_h/1.58], size_w/90, 0)
+                else:
+                    if len(storedCords)<1:
+                        mainCirc = pygame.draw.circle(screen, lt_blue, [size_w/3.69,size_h/1.58], size_w/70, 0)
+                    else:
+                        mainCirc = pygame.draw.circle(screen, lt_blue, [storedCords[0],size_h/1.58], size_w/70, 0)
+
+                Write(round(size_w/100*2),"Status:",color3,[size_w/3.7,size_h/1.38])
+                
+                if event.type == MOUSEMOTION:
+                    if mainCirc.collidepoint(mouse_pos) and not held:
+                        if len(storedCords) < 1:
+                            pygame.draw.circle(screen, purple, [size_w/3.69,size_h/1.58], size_w/90, 0)
+                        else:
+                            pygame.draw.circle(screen, purple, [storedCords[0],size_h/1.58], size_w/90, 0)
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if mainCirc.collidepoint(mouse_pos):
+                        held = True
+                        storedCords.clear()
+                elif event.type == MOUSEBUTTONUP and held:
+                    held = False #2.73 polowa
+                    if mouse_pos[0] < size_w/2.73:
+                        storedCords.append(size_w/3.69)
+                        selected = 0
+                    else:
+                        storedCords.append(size_w/2.18) 
+                        selected = 1                       
+
+                if mouse_pos[0] < size_w/3.83 or mouse_pos[0] > size_w/2.09:
+                    held = False
+
+
+
+                pygame.draw.line(screen, color3, [size_w/1.86,size_h/3.4], [size_w/1.86,size_h/1.24], size_w//500)
+
+
+
+                Write(round(size_w/100*2),"While loop with break",red,[size_w/1.43,size_h/2.99])
+
+                if chosen == 1:
+                    startBtn = pygame.draw.rect(screen, green, [size_w/1.55,size_h/2.55,size_w/10,size_h/14],0,size_w//200)
+                else:
+                    startBtn = pygame.draw.rect(screen, dark_green, [size_w/1.55,size_h/2.55,size_w/10,size_h/14],0,size_w//200)
+                Write(round(size_w//100*1.4),"Start",color1,[size_w/1.44,size_h/2.31])
+
+                if chosen == 0:
+                    breakBtn = pygame.draw.rect(screen, red, [size_w/1.55,size_h/1.89,size_w/10,size_h/14],0,size_w//200)
+                else:
+                    breakBtn = pygame.draw.rect(screen, dark_red, [size_w/1.55,size_h/1.89,size_w/10,size_h/14],0,size_w//200)
+                Write(round(size_w//100*1.4),"Break",color1,[size_w/1.44,size_h/1.76])
+                
+                Write(round(size_w/100*2),"Status:",color3,[size_w/1.63,size_h/1.38])   
+
+                if event.type == MOUSEMOTION:
+                    if startBtn.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, green, [size_w/1.55,size_h/2.55,size_w/10,size_h/14],0,size_w//200)
+                        Write(round(size_w//100*1.4),"Start",color3,[size_w/1.44,size_h/2.31])      
+                    elif breakBtn.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, red, [size_w/1.55,size_h/1.89,size_w/10,size_h/14],0,size_w//200)
+                        Write(round(size_w//100*1.4),"Break",color3,[size_w/1.44,size_h/1.76])    
+                elif event.type == MOUSEBUTTONDOWN:
+                    if startBtn.collidepoint(mouse_pos) and chosen !=0:
+                        chosen = 1   
+                    elif breakBtn.collidepoint(mouse_pos):
+                        chosen = 0                                        
             elif courseLvl == 15:
                 questions = [
                     "What is the instruction used to end while loop?",
@@ -6157,5 +6246,6 @@ while running:
     course.tower_defence.enemiesPath(storedTime)
     course.tower_defence.targeting()
     course.tower_defence.handlingFinalLvl()
+    course.shooting_range.loopExample()
     if pygame.display.get_init():
         pygame.display.update()
