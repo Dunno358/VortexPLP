@@ -1034,11 +1034,12 @@ class Course(pygame.sprite.Sprite):
                             chosen = index
                             storedTime = getActualSecond()
                             loadingBar = True
-                            try:
-                                pygame.mixer.music.load(f"{dirPath}/Music/water_pouring.ogg")
-                                pygame.mixer.music.play(1)
-                            except:
-                                errorInit("Failed to load 'water_pouring.ogg' at makingGuards",fontSize=1.5)
+                            if soundEnabled:
+                                try:
+                                    pygame.mixer.music.load(f"{dirPath}/Music/water_pouring.ogg")
+                                    pygame.mixer.music.play(1)
+                                except:
+                                    errorInit("Failed to load 'water_pouring.ogg' at makingGuards",fontSize=1.5)
 
 
             correctWidth = mouse_pos[0] > size_w/4.93 and mouse_pos[0] < size_w/1.2
@@ -1835,8 +1836,11 @@ class Course(pygame.sprite.Sprite):
                         except:
                             print("allAnswers out of range")
 
-                    for cord in storedCords:
-                        pygame.draw.circle(screen,darker_gray,cord,size_w//200)
+                    try:
+                        for cord in storedCords:
+                            pygame.draw.circle(screen,darker_gray,cord,size_w//200)
+                    except:
+                        pass
 
                     if 20-SR_iterator > 0:
                         color=green
