@@ -1785,13 +1785,13 @@ class Course(pygame.sprite.Sprite):
                         errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
                     try:
                         mini_iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
-                        mini_iron_sight = pygame.transform.scale(mini_iron_sight, [int(size_w/42.68),int(size_h/24)])
+                        mini_iron_sight = pygame.transform.scale(mini_iron_sight, [int(size_w/28),int(size_h/24)])
                         SR_icons.append(mini_iron_sight)
                     except:
                         errorInit("Failed to load 'mini_iron_sight.png'",fontSize=1.7)
                     try:
                         mini_iron_sight2 = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
-                        mini_iron_sight2 = pygame.transform.scale(mini_iron_sight2, [int(size_w/25),int(size_h/24)])
+                        mini_iron_sight2 = pygame.transform.scale(mini_iron_sight2, [int(size_w/18),int(size_h/24)])
                         SR_icons.append(mini_iron_sight2)
                     except:
                         errorInit("Failed to load mini_iron_sight2")
@@ -1859,10 +1859,13 @@ class Course(pygame.sprite.Sprite):
                         circ_color1 = lt_gray
                         circ_color2 = logoBlue
 
-                    circ1 = pygame.draw.circle(screen, circ_color1, [size_w/2.02,size_h/9.6], size_w//55, size_w//600)
-                    screen.blit(SR_icons[3],[circ1[0]+circ1[2]/6,circ1[1]+circ1[3]/8])
-                    circ2 = pygame.draw.circle(screen, circ_color2, [size_w/1.81,size_h/9.6], size_w//55, size_w//600)
-                    screen.blit(SR_icons[4],[circ2[0]-circ1[2]/20,circ2[1]+circ2[3]/8])
+                    precirc1 = pygame.draw.circle(screen, color2, [size_w/2.08,size_h/9.6], size_w//35, size_w//600)
+                    screen.blit(SR_icons[3],[precirc1[0]+precirc1[2]/6,precirc1[1]+precirc1[3]/8])
+                    circ1 = pygame.draw.circle(screen, circ_color1, [size_w/2.08,size_h/9.6], size_w//35, size_w//600)
+                    
+                    precirc2 = pygame.draw.circle(screen, color2, [size_w/1.78,size_h/9.6], size_w//35, size_w//600)
+                    screen.blit(SR_icons[4],[precirc2[0]-precirc1[2]/20,precirc2[1]+precirc2[3]/8])
+                    circ2 = pygame.draw.circle(screen, circ_color2, [size_w/1.78,size_h/9.6], size_w//35, size_w//600)
 
                     #GUN BLITING
                     try:
