@@ -1805,7 +1805,6 @@ class Course(pygame.sprite.Sprite):
 
                 if iterator-1<len(questions):
                     timer = round(float(time.process_time()) - storedTimeValue,2)
-                    print(timer)
                     storedTime = timer
                     wdth = size_w/3.12
                     for x in range(3):
@@ -2008,6 +2007,22 @@ class Course(pygame.sprite.Sprite):
                             WriteItalic(round(size_w/100*2),"Working",dark_green,[size_w/1.34,size_h/1.38]) 
                     else:
                         WriteItalic(round(size_w/100*2),"Not Working",dark_red,[size_w/1.34,size_h/1.38])               
+        def continueTimer():
+            global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+            global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime
+            if activities[0]:
+                if not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed and courseLvl==13: 
+                    try:  
+                        if isinstance(selected,int):
+                            color = dark_green
+                        else:
+                            color = green
+                        timer = round(float(time.process_time()) - storedTime,1)
+                        pygame.draw.rect(screen, color2, [size_w/2.3,size_h/3.37,size_w/5,size_h/10], width=0)
+                        iterator = str(timer)[:-2]
+                        Write(round(size_w//100*2.5),f"Iterator: {iterator}",color,[size_w/1.85,size_h/2.82])  
+                    except:
+                        pass  
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -4985,8 +5000,8 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1 
                         bckgrMusicPlayed = False                        
     def lesson5():
-        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu
-        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime
         global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson5",99,condition=notBlocked)
@@ -5381,7 +5396,51 @@ class Course(pygame.sprite.Sprite):
                         chosen = 1   
                     elif breakBtn.collidepoint(mouse_pos):
                         chosen = 0                                        
-            elif courseLvl == 15:
+            elif courseLvl == 11:
+                storedCords.clear()
+                chosen = ''
+                selected = ''
+                held = False
+                txts = [
+                    "So if there's an instruction to end loop,",
+                    "is there one to restart loop? Sure it is!",
+                    "It's called CONTINUE and with use it makes",
+                    "loop to return to the begin, let's check it out!"
+                ]
+                course.dialogStandard(2.6,txts[0],txts[1],txts[2],txts[3],fontSize=1.4)
+            elif courseLvl == 12:
+                notBlocked = False
+                course.dialogTop(6.41,"Statement is True and iterator is 0")
+                course.consoleExample("While statement:",left=True,hght=3.61)
+                course.consoleExample("print(iterator)",hght=2.3)
+                course.consoleExample("iterator += 1",hght=1.7)
+                startBtn = course.centeredBtn(1.27,dark_green,"Start")
+                if event.type == MOUSEMOTION and startBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.27,green,"Start")
+                    course.centeredBtn(1.27,dark_green,"",border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and startBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+            elif courseLvl == 13:
+                if isinstance(selected,int):
+                    if selected == 1:
+                        notBlocked = True
+                        course.dialogTop(6.41,"As you see iterator value restarted to ","value from the beggining",fontSize=1.4)
+                        Write(round(size_w//100*3.5),"You can go futher",green,[size_w/1.95,size_h/1.22])
+                else:
+                    course.dialogTop(6.41,"Iterator will keep counting and button will","trigger continue function, test it!",fontSize=1.4)
+                contBtn = course.centeredBtn(2.09,purple,"Continue",adjustToDialog=True)
+                if not done:
+                    storedTime = round(float(time.process_time()),1)
+                    done = True
+                if event.type == MOUSEMOTION and contBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.09,lt_blue,"Continue",adjustToDialog=True)
+                    course.centeredBtn(2.09,logoBlue,"",adjustToDialog=True,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and contBtn.collidepoint(mouse_pos):
+                    storedTime = round(float(time.process_time()),1)
+                    selected = 1
+            elif courseLvl == 14:
+                test = True
+            elif courseLvl == 15: #QUIZ
                 questions = [
                     "What is the instruction used to end while loop?",
                     "While loop that runs forever is known as:",
@@ -6254,5 +6313,6 @@ while running:
     course.tower_defence.targeting()
     course.tower_defence.handlingFinalLvl()
     course.shooting_range.loopExample()
+    course.shooting_range.continueTimer()
     if pygame.display.get_init():
         pygame.display.update()
