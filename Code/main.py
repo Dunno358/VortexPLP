@@ -1785,13 +1785,13 @@ class Course(pygame.sprite.Sprite):
                         errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
                     try:
                         mini_iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
-                        mini_iron_sight = pygame.transform.scale(mini_iron_sight, [int(size_w/28),int(size_h/24)])
+                        mini_iron_sight = pygame.transform.scale(mini_iron_sight, [int(size_w/25),int(size_h/15)])
                         SR_icons.append(mini_iron_sight)
                     except:
                         errorInit("Failed to load 'mini_iron_sight.png'",fontSize=1.7)
                     try:
                         mini_iron_sight2 = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
-                        mini_iron_sight2 = pygame.transform.scale(mini_iron_sight2, [int(size_w/18),int(size_h/24)])
+                        mini_iron_sight2 = pygame.transform.scale(mini_iron_sight2, [int(size_w/16),int(size_h/15)])
                         SR_icons.append(mini_iron_sight2)
                     except:
                         errorInit("Failed to load mini_iron_sight2")
@@ -1858,13 +1858,13 @@ class Course(pygame.sprite.Sprite):
                         circ_color1 = lt_gray
                         circ_color2 = logoBlue
 
-                    precirc1 = pygame.draw.circle(screen, color2, [size_w/2.08,size_h/9.6], size_w//35, size_w//600)
+                    precirc1 = pygame.draw.circle(screen, color2, [size_w/2.08,size_h/6.86], size_w//35, size_w//600)
                     screen.blit(SR_icons[3],[precirc1[0]+precirc1[2]/6,precirc1[1]+precirc1[3]/8])
-                    circ1 = pygame.draw.circle(screen, circ_color1, [size_w/2.08,size_h/9.6], size_w//35, size_w//600)
+                    circ1 = pygame.draw.circle(screen, circ_color1, [size_w/2.08,size_h/6.86], size_w//35, size_w//600)
                     
-                    precirc2 = pygame.draw.circle(screen, color2, [size_w/1.78,size_h/9.6], size_w//35, size_w//600)
+                    precirc2 = pygame.draw.circle(screen, color2, [size_w/1.78,size_h/6.86], size_w//35, size_w//600)
                     screen.blit(SR_icons[4],[precirc2[0]-precirc1[2]/20,precirc2[1]+precirc2[3]/8])
-                    circ2 = pygame.draw.circle(screen, circ_color2, [size_w/1.78,size_h/9.6], size_w//35, size_w//600)
+                    circ2 = pygame.draw.circle(screen, circ_color2, [size_w/1.78,size_h/6.86], size_w//35, size_w//600)
 
                     #GUN BLITING
                     try:
@@ -5001,7 +5001,7 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False                        
     def lesson5():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
-        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
         global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson5",99,condition=notBlocked)
@@ -5028,10 +5028,14 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
                     hght += size_h/10
             elif courseLvl == 3:
-                if iterator < 4:
-                    notBlocked = False
+                if isinstance(iterator,int):
+                    if iterator < 4:
+                        notBlocked = False
+                    else:
+                        notBlocked = True
                 else:
                     notBlocked = True
+                    iterator = 1
                 course.dialogTop(6.41,"So yeah, shoot those shields to","check out some more facts")
                 strs = [
                     "You use while statement in your life daily",
@@ -5439,39 +5443,127 @@ class Course(pygame.sprite.Sprite):
                     storedTime = round(float(time.process_time()),1)
                     selected = 1
             elif courseLvl == 14:
-                test = True
+                selected = ''
+                done = False
+                storedTime = ''
+                txts = [
+                    "I think it's time to test what you've learned,",
+                    "go futher whenever you're ready soldier"
+                ]
+                course.dialogStandard(2.65,txts[0],txts[1],fontSize=1.4)
             elif courseLvl == 15: #QUIZ
-                questions = [
-                    "What is the instruction used to end while loop?",
-                    "While loop that runs forever is known as:",
-                    "Which is correct syntax?",
-                    "Else can be bound to while loop",
-                    "Which instruction makes loop return to beginning?",
-                    "Why infinite loop is called like that?",
-                    "Statement is:",
-                    "While loop statement ends with",
-                    "Output of while True {print('x')} is:"
-                ]
+                if not done:
+                    if isinstance(SR_holder,str):
+                        SR_holder = 0
+                    if isinstance(SR_holder2,str) or SR_holder2 == 0:
+                        SR_holder2 = 1
+                    course.dialogTop(6.41,"Oh right recruit, grab a gun","and show me what you've learned")
+                    if len(SR_icons)<1:
+                        m4 = pygame.image.load(r"{}/Images/Game/test/m4.png".format(dirPath))
+                        m4 = pygame.transform.scale(m4, [int(size_w/5),int(size_h/5)])
+                        SR_icons.append(m4)
+                        mp5 = pygame.image.load(r"{}/Images/Game/test/mp5.png".format(dirPath))
+                        mp5 = pygame.transform.scale(mp5, [int(size_w/6),int(size_h/8)])
+                        SR_icons.append(mp5)
+                        m4m = pygame.image.load(r"{}/Images/Game/test/m4marked.png".format(dirPath))
+                        m4m = pygame.transform.scale(m4m, [int(size_w/5),int(size_h/5)])
+                        SR_icons.append(m4m)
+                        mp5m = pygame.image.load(r"{}/Images/Game/test/mp5marked.png".format(dirPath))
+                        mp5m = pygame.transform.scale(mp5m, [int(size_w/6),int(size_h/8)])
+                        SR_icons.append(mp5m)
+                    try:
+                        gun1 = screen.blit(SR_icons[SR_holder],[size_w/3.41,size_h/2.54])
+                        gun2 = screen.blit(SR_icons[SR_holder2],[size_w/1.74,size_h/2.32])
+                    except:
+                        pass
+                    if isinstance(selected,int):
+                        nextBtn = course.centeredBtn(1.37,dark_green,"Go")
+                    try:
+                        if event.type == MOUSEMOTION and nextBtn.collidepoint(mouse_pos):
+                            course.centeredBtn(1.37,green,"Go")
+                            course.centeredBtn(1.37,dark_green,"",border=size_w//250)
+                    except:
+                        pass
+                    if event.type == MOUSEBUTTONDOWN and event.button==1:
+                        try:
+                            if gun1.collidepoint(mouse_pos):
+                                SR_holder = 2
+                                SR_holder2 = 1
+                                selected = 1
+                            elif gun2.collidepoint(mouse_pos):
+                                SR_holder = 0
+                                SR_holder2 = 3
+                                selected = 2
+                        except:
+                            pass    
+                        try:
+                            if nextBtn.collidepoint(mouse_pos):
+                                SR_icons.clear()       
+                                SR_holder = 0
+                                SR_holder2 = 0
+                                iterator = 1
+                                done = True
+                        except:
+                            pass              
+                        
+                else:
+                    questions = [
+                        "What is the instruction used to end while loop?",
+                        "While loop that runs forever is known as:",
+                        "Which is correct syntax?",
+                        "Else can be bound to while loop",
+                        "Which instruction makes loop return to beginning?",
+                        "Why infinite loop is called like that?",
+                        "Statement is:",
+                        "While loop statement ends with",
+                        "Output of while True {print('x')} is:"
+                    ]
+                    allAnswers = [
+                        ["End","Break","Out"],
+                        ["Long Loop","Broken Loop","Infinite Loop"],
+                        ["While statement: action","While statement() action","While statement do action"],
+                        ["True","False","Only if statement is True"],
+                        ["Return","Restart","Continue"],
+                        ["Because of author's name","Statement is always True","We don't know why"],
+                        ["True or False","List","String"],
+                        [":","#","+"],
+                        ["Infinity of 'x'","Error","Infinity of x"]
+                    ]
+                    correctAnswers = [1,2,0,0,2,1,0,0,1] #0-A 1-B 2-C
 
-                allAnswers = [
-                    ["End","Break","Out"],
-                    ["Long Loop","Broken Loop","Infinite Loop"],
-                    ["While statement: action","While statement() action","While statement do action"],
-                    ["True","False","Only if statement is True"],
-                    ["Return","Restart","Continue"],
-                    ["Because of author's name","Statement is always True","We don't know why"],
-                    ["True or False","List","String"],
-                    [":","#","+"],
-                    ["Infinity of 'x'","Error","Infinity of x"]
-                ]
-
-                correctAnswers = [1,2,0,0,2,1,0,0,1] #0-A 1-B 2-C
-
-                course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)
+                    course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)
             elif courseLvl == 16:
+                notBlocked = False
+                course.dialogTop(6.41,"Great job! Do you want to test your reflex","at shooting range?",fontSize=1.4)
+                playBtn=pygame.draw.rect(screen, dark_green, [size_w/2.77,size_h/2.16,size_w/8,size_h/10], 0,size_w//150)
+                Write(round(size_w//100*1.8),"Play",color1,[size_w/2.36,size_h/1.93])
+                skipBtn=pygame.draw.rect(screen, dark_green, [size_w/1.77,size_h/2.16,size_w/8,size_h/10], 0,size_w//150)
+                Write(round(size_w//100*1.8),"Skip",color1,[size_w/1.59,size_h/1.93])
+                if event.type == MOUSEMOTION:
+                    if playBtn.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, green, [size_w/2.77,size_h/2.16,size_w/8,size_h/10], 0,size_w//150)
+                        pygame.draw.rect(screen, dark_green, [size_w/2.77,size_h/2.16,size_w/8,size_h/10], size_w//250,size_w//150)
+                        Write(round(size_w//100*1.8),"Play",color3,[size_w/2.36,size_h/1.93])
+                    elif skipBtn.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, green, [size_w/1.77,size_h/2.16,size_w/8,size_h/10], 0,size_w//150)
+                        pygame.draw.rect(screen, dark_green, [size_w/1.77,size_h/2.16,size_w/8,size_h/10], size_w//250,size_w//150)
+                        Write(round(size_w//100*1.8),"Skip",color3,[size_w/1.59,size_h/1.93])   
+                elif event.type == MOUSEBUTTONDOWN:
+                    if playBtn.collidepoint(mouse_pos):
+                        courseLvl += 1
+                    elif skipBtn.collidepoint(mouse_pos):
+                        courseLvl = 20
+            elif courseLvl == 17:
                 #Single Init
                 pygame.event.set_blocked(MOUSEWHEEL)
                 notBlocked = False
+                storedTime = round(float(time.process_time())-storedTimeValue,1)
+                if 30-SR_iterator > 0:
+                    ammoColor = green
+                    course.dialogTop(6.41,"Shoot the targets!")
+                else:
+                    ammoColor = red
+                    course.dialogTop(6.41,"Mag empty, you need to reload!")
                 if len(SR_icons)<1:
                     for x in range(15):
                         pointW = uniform(size_w/3.02,size_w/1.59)
@@ -5499,7 +5591,7 @@ class Course(pygame.sprite.Sprite):
                         errorInit("Failed to load 'iron_sight_shoot.png'",fontSize=1.7)
 
                 #Bliting and Writing content
-                Write(round(size_w//100*1.5),f"Ammo: {30-SR_iterator}/30",color3,[size_w/1.24,size_h/1.08])
+                Write(round(size_w//100*1.5),f"Ammo: {30-SR_iterator}/30",ammoColor,[size_w/1.24,size_h/1.08])
                 reloadBtn = pygame.draw.rect(screen, purple, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], 0,size_w//250)
                 reloadTxt = Write(round(size_w//100*2),"Reload",color1,[size_w/1.91,size_h/1.13])
 
@@ -5548,9 +5640,13 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
                         SR_iterator = 0
-            elif courseLvl == 17:
+            elif courseLvl == 18:
                #Single Init
                 notBlocked = False
+                if 30-SR_iterator > 0:
+                    course.dialogTop(6.41,"Shoot the targets!")
+                else:
+                    course.dialogTop(6.41,"Mag empty, you need to reload!")
                 if len(SR_icons)<1:
                     for x in range(15):
                         pointW = uniform(size_w/3.02,size_w/1.59)
@@ -5607,9 +5703,9 @@ class Course(pygame.sprite.Sprite):
                         reloadBtn = pygame.draw.rect(screen, dark_blue, [size_w/2.38,size_h/1.19,size_w/5,size_h/12], size_w//200,size_w//250)
                         reloadTxt = Write(round(size_w//100*2),"Reload",color3,[size_w/1.91,size_h/1.13])   
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    print(event.button)
                     if 30-SR_iterator > 0:
                         if correctH and correctW:
+                            SR_holder += 1
                             try:
                                 SR_iterator += 1
                                 pygame.mouse.set_visible(False)
@@ -5621,6 +5717,7 @@ class Course(pygame.sprite.Sprite):
                         try:
                             if shield.collidepoint(mouse_pos):
                                 iterator += 1
+                                SR_holder2 += 1
                         except:
                             pass      
                     if reloadBtn.collidepoint(mouse_pos):
@@ -5628,7 +5725,14 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
                         SR_iterator = 0     
-            elif courseLvl == 18:
+            elif courseLvl == 19: #Shooting range Summary - NOT ENDED
+                pygame.mouse.set_visible(True)
+                course.dialogTop(6.41,"Here are your results recruit")
+                Write(round(size_w/100*3),f"Time: {storedTime}s",green,[size_w/1.83,size_h/2.9])
+                Write(round(size_w/100*3),f"Accuracy: {SR_holder2/SR_holder*100}%",green,[size_w/1.83,size_h/2.23])
+                Write(round(size_w/100*3),f"Shot down targets: {SR_holder2}",green,[size_w/1.83,size_h/1.86])
+                #Zrobic kategorie braz-srebro-zloto dla jakichs wynikow
+            elif courseLvl == 20: #Finish with reward - NOT ENDED
                 pygame.mouse.set_visible(True)
     def lesson6():
         course.standardLessonEvents("lesson6",99)  
@@ -6178,7 +6282,7 @@ class Prize(pygame.sprite.Sprite):
             wdth = size_w/3.34
             hght = size_h/2.13
             lvl = getCourseLvl() - 2
-            iterator = 0
+            iterator = 1
 
             for it in range(2):
                 for it2 in range(4):
