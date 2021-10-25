@@ -5004,7 +5004,7 @@ class Course(pygame.sprite.Sprite):
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
         global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
         if activeMain and not errorShowed:
-            course.standardLessonEvents("lesson5",99,condition=notBlocked)
+            course.standardLessonEvents("lesson5",20,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier6.png".format(dirPath))
@@ -5567,7 +5567,7 @@ class Course(pygame.sprite.Sprite):
                 if len(SR_icons)<1:
                     for x in range(15):
                         pointW = uniform(size_w/3.02,size_w/1.59)
-                        pointH = uniform(size_h/6.45,size_h/2.34)
+                        pointH = uniform(size_h/2.97,size_h/2.34)
                         SR_cords.append([pointW,pointH])
                     try:
                         iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
@@ -5622,6 +5622,7 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if 30-SR_iterator > 0:
                         if correctH and correctW:
+                            SR_holder += 1
                             try:
                                 SR_iterator += 1
                                 pygame.mouse.set_visible(False)
@@ -5633,6 +5634,7 @@ class Course(pygame.sprite.Sprite):
                         try:
                             if shield.collidepoint(mouse_pos):
                                 iterator += 1
+                                SR_holder2 += 1
                         except:
                             pass
                     if reloadBtn.collidepoint(mouse_pos):
@@ -5650,7 +5652,7 @@ class Course(pygame.sprite.Sprite):
                 if len(SR_icons)<1:
                     for x in range(15):
                         pointW = uniform(size_w/3.02,size_w/1.59)
-                        pointH = uniform(size_h/6.45,size_h/2.34)
+                        pointH = uniform(size_h/2.97,size_h/2.34)
                         SR_cords.append([pointW,pointH])
                     try:
                         iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight2.png".format(dirPath))
@@ -5725,15 +5727,63 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == KEYDOWN:
                     if event.key == K_r:
                         SR_iterator = 0     
-            elif courseLvl == 19: #Shooting range Summary - NOT ENDED
+            elif courseLvl == 19:
+                SR_icons.clear()
                 pygame.mouse.set_visible(True)
+                notBlocked = True
                 course.dialogTop(6.41,"Here are your results recruit")
+                try:
+                    accuracy = round(SR_holder2/SR_holder*100,2)
+                except:
+                    accuracy = 0
+                if accuracy>90.0 and storedTime<20:
+                    rank = "Gold"
+                    medalColor = gold
+                elif accuracy>75.0 and storedTime < 35:
+                    rank = "Silver"
+                    medalColor  = dark_gray
+                else:
+                    rank = "Bronze"
+                    medalColor  = lt_brown
+
                 Write(round(size_w/100*3),f"Time: {storedTime}s",green,[size_w/1.83,size_h/2.9])
-                Write(round(size_w/100*3),f"Accuracy: {SR_holder2/SR_holder*100}%",green,[size_w/1.83,size_h/2.23])
-                Write(round(size_w/100*3),f"Shot down targets: {SR_holder2}",green,[size_w/1.83,size_h/1.86])
-                #Zrobic kategorie braz-srebro-zloto dla jakichs wynikow
+                Write(round(size_w/100*3),f"Accuracy: {accuracy}%",green,[size_w/1.83,size_h/2.23])
+                Write(round(size_w/100*3),f"Missed shots: {SR_holder-SR_holder2}",green,[size_w/1.83,size_h/1.86])
+                Write(round(size_w/100*3),f"Rank:",green,[size_w/2.01,size_h/1.6])
+                Write(round(size_w/100*3),rank,medalColor,[size_w/1.58,size_h/1.6])
+
+                pygame.draw.polygon(screen, dark_red, [(size_w/2.21,size_h/1.37),(size_w/1.8,size_h/1.37),(size_w/1.98,size_h/1.18)], 0)
+                pygame.draw.circle(screen, medalColor, [size_w/1.98,size_h/1.18], size_w//25, 0)
             elif courseLvl == 20: #Finish with reward - NOT ENDED
                 pygame.mouse.set_visible(True)
+                if len(SR_icons)<1:
+                    try:
+                        medal = pygame.image.load(r"{}/Images/Game/medal.png".format(dirPath))
+                        medal = pygame.transform.scale(medal, [int(size_w/7),int(size_h/3)])
+                        SR_icons.append(medal)
+                    except:
+                        errorInit("Failed to load medal.png")
+                txts = [
+                    "Congratulations soldier! You've made it",
+                    "through my training program, see you at ",
+                    "next one, oh and take this as reward"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1],txts[2],fontSize=1.4)
+                screen.blit(SR_icons[0],[size_w/2.03,size_h/2.29])
+                finishBtn = course.centeredBtn(1.25,dark_green,"Finish",adjustToDialog=True)
+
+                if event.type == MOUSEMOTION:
+                    if finishBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.25,green,"Finish",adjustToDialog=True)
+                        course.centeredBtn(1.25,dark_green,"",border=size_w//250,adjustToDialog=True)
+                elif event.type == MOUSEBUTTONDOWN:
+                    if finishBtn.collidepoint(mouse_pos):
+                        if getCourseLvl() < 6:
+                            changeCourselvl(6)
+                        activeMenu = True
+                        courseLvl = 1  
+                        iterator = 1 
+                        bckgrMusicPlayed = False  
     def lesson6():
         course.standardLessonEvents("lesson6",99)  
     def lesson7():
@@ -6237,7 +6287,7 @@ class Prize(pygame.sprite.Sprite):
                     "Romo's axe",
                     "Magic potion",
                     "Book of spells",
-                    "None",
+                    "Graduate's medal",
                     "None",
                     "None",
                     "None",
@@ -6248,7 +6298,7 @@ class Prize(pygame.sprite.Sprite):
                     "Topór Romo",
                     "Magiczny eliksir",
                     "Księga zaklęć",
-                    "None",
+                    "Medal ukończenia",
                     "None",
                     "None",
                     "None",
@@ -6264,7 +6314,9 @@ class Prize(pygame.sprite.Sprite):
                     potionL = pygame.transform.scale(potionL, [int(size_w/14.6),int(size_h/6)]) 
                     bookL = pygame.image.load(r"{}/Images/Game/book_locked.png".format(dirPath))
                     bookL = pygame.transform.scale(bookL, [int(size_w/10.6),int(size_h/6)]) 
-                    iconsLocked = [cupL,axeL,potionL,bookL]
+                    medalL = pygame.image.load(r"{}/Images/Game/medal_locked.png".format(dirPath))
+                    medalL = pygame.transform.scale(medalL, [int(size_w/12),int(size_h/6)]) 
+                    iconsLocked = [cupL,axeL,potionL,bookL,medalL]
 
                 if len(iconsUnlock) < 1:
                     cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
@@ -6275,14 +6327,16 @@ class Prize(pygame.sprite.Sprite):
                     potion = pygame.transform.scale(potion, [int(size_w/14.6),int(size_h/6)]) 
                     book = pygame.image.load(r"{}/Images/Game/book.png".format(dirPath))
                     book = pygame.transform.scale(book, [int(size_w/10.6),int(size_h/6)]) 
-                    iconsUnlock = [cup,axe,potion,book]
+                    medal = pygame.image.load(r"{}/Images/Game/medal.png".format(dirPath))
+                    medal = pygame.transform.scale(medal, [int(size_w/12),int(size_h/6)]) 
+                    iconsUnlock = [cup,axe,potion,book,medal]
             except:
                 errorInit("Failed to load icons at prize.startScreen()",fontSize=1.7)
 
             wdth = size_w/3.34
             hght = size_h/2.13
             lvl = getCourseLvl() - 2
-            iterator = 1
+            iterator = 0
 
             for it in range(2):
                 for it2 in range(4):
