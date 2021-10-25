@@ -1,0 +1,6 @@
+Python by Microsoft
+Pylance by Microsoft
+Pygame Snippetss for Taiwo Kareem
+MySQL by cweijan
+Jupyter by Microsoft
+exe Runner by Brandow Fowler
