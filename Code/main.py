@@ -1368,7 +1368,7 @@ class Course(pygame.sprite.Sprite):
                                 else:
                                     if getActualSecond()%2==0:
                                         if TD_hp > 0:
-                                            TD_hp -= size_w/1000*len(TD_active)/1.5
+                                            TD_hp -= size_w/900*len(TD_active)/1.5
                                             lineColor = lt_blue
                                             try:
                                                 if soundEnabled:
@@ -1405,7 +1405,7 @@ class Course(pygame.sprite.Sprite):
                                 else:
                                     if getActualSecond()%2==0:
                                         if TD_hp2 > 0:
-                                            TD_hp2 -= size_w/700*len(TD_active2)
+                                            TD_hp2 -= TD_hp2/4*len(TD_active2)#size_w/550*len(TD_active2)
                                             lineColor = lt_blue
                                             pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
                                             pygame.mixer.music.play(1)
@@ -2388,6 +2388,7 @@ class Course(pygame.sprite.Sprite):
             wdth += size_w/8     
     def consoleGame(textToShow,goodAnswer,btnText="Attack",fontSize=2.5,textLen=23,multipleAnswers=False,answersList=[],fontSize2=2):
         global text,activeMain,iterator,keys
+        print(activeMain)
         pygame.draw.rect(screen, color2, [size_w/3.11,size_h/14,size_w/2.6,size_h/10], 0)
         Write(round(size_w//100*1.4),textToShow,color3,[size_w/1.94,size_h/8.99])
         rect = pygame.draw.rect(screen, color1, [size_w/3.11,size_h/6.3,size_w/2.6,size_h/6], 0,15)
@@ -2432,10 +2433,12 @@ class Course(pygame.sprite.Sprite):
                         if text.lower().replace(" ","") == answer.lower().replace(" ",""):
                             text = ""
                             iterator += 1
+                            activeMain = True
                 else:
                     if text.lower().replace(" ","") == goodAnswer.lower().replace(" ",""):
                         text = ""
                         iterator += 1
+                        activeMain = True
             elif len(text) < textLen and event.key!=K_BACKSPACE:
                 if keys[K_LSHIFT]:
                     if event.key==K_9:
@@ -5785,7 +5788,46 @@ class Course(pygame.sprite.Sprite):
                         iterator = 1 
                         bckgrMusicPlayed = False  
     def lesson6():
-        course.standardLessonEvents("lesson6",99)  
+        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
+        global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
+        if activeMain and not errorShowed:
+            course.standardLessonEvents("lesson6",99,condition=notBlocked)
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson6" and not errorShowed:
+            try:
+                mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier6.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
+            language = getLang()
+            if courseLvl == 1:
+                txts = [
+                    "Howdy recruit, it's me again!",
+                    "I've made another course for you and I'm sure",
+                    "you're damn happy about it, let's go"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1],txts[2],fontSize=1.4)
+                pygame.draw.rect(screen, dark_gray, [size_w/3.12,size_h/2.16,size_w/2.3,size_h/5], 0,size_w//150)
+                Write(round(size_w//100*8),"For Loop",black,[size_w/1.85,size_h/1.77])
+                Write(round(size_w//100*8.5),"For Loop",lt_gray,[size_w/1.85,size_h/1.77])
+                storedItems.clear()
+                SR_icons.clear()
+                SR_cords.clear()
+                SR_holder=0
+                SR_holder2=0
+            elif courseLvl == 2:
+                course.dialogTop(6.41,"Let's get some theory at first")
+                strs = [
+                    "while loop is a control flow statement for",
+                    "specifying iteration which allows code to be", 
+                    "be executed repeatedly"
+                ] 
+                pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
+                hght = size_h/2.09
+                Write(round(size_w//100*2.6),"Definition",red,[size_w/1.92,size_h/2.51])
+                for x in strs:
+                    Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
+                    hght += size_h/10
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
