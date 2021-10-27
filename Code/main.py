@@ -2023,6 +2023,18 @@ class Course(pygame.sprite.Sprite):
                         Write(round(size_w//100*2.5),f"Iterator: {iterator}",color,[size_w/1.85,size_h/2.82])  
                     except:
                         pass  
+        def drawingCircles():
+            global storedTime,activities,activeLesson,errorShowed,courseLvl,storedTimeValue,storedCords,iterator
+            if activities[0]:
+                if not activeMenu and str(activeLesson)[17:-23]=="lesson6" and not errorShowed:
+                    if courseLvl == 7:
+                    cords = [
+                        [size_w/2.73,size_h/2.27],
+                        [size_w/2.24,size_h/2.27],
+                        [size_w/1.7,size_h/2.27],
+                        [size_w/1.35,size_h/2.27]
+                    ]
+                    storedTime = round(float(time.process_time())-storedTimeValue,1)
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -5506,6 +5518,7 @@ class Course(pygame.sprite.Sprite):
                                 SR_holder2 = 0
                                 iterator = 1
                                 done = True
+                                storedTimeValue = round(float(time.process_time()),2)
                         except:
                             pass              
                         
@@ -5757,7 +5770,7 @@ class Course(pygame.sprite.Sprite):
 
                 pygame.draw.polygon(screen, dark_red, [(size_w/2.21,size_h/1.37),(size_w/1.8,size_h/1.37),(size_w/1.98,size_h/1.18)], 0)
                 pygame.draw.circle(screen, medalColor, [size_w/1.98,size_h/1.18], size_w//25, 0)
-            elif courseLvl == 20: #Finish with reward - NOT ENDED
+            elif courseLvl == 20: 
                 pygame.mouse.set_visible(True)
                 if len(SR_icons)<1:
                     try:
@@ -5828,6 +5841,67 @@ class Course(pygame.sprite.Sprite):
                 for x in strs:
                     Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
                     hght += size_h/10
+            elif courseLvl == 3:
+                notBlocked = False
+                txts = [
+                    "Important things first, let's check",
+                    "how the syntax looks like"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1])
+                course.consoleExample("For x in object:",hght=3,left=True)
+                course.consoleExample("instrucions",hght=2.02)
+                analiseBtn = course.centeredBtn(1.44,purple,"Analyze")
+
+                if event.type == MOUSEMOTION and analiseBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.44,lt_blue,"Analyze")
+                    course.centeredBtn(1.44,dark_blue,"",border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and analiseBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+            elif courseLvl == 4:
+                notBlocked = True
+                hght = size_h/4.99
+                syntaxList = ['For','x','in','object','instructions']
+                desc = [
+                    "Main keyword added at the beggining",
+                    "iterator holding value from iteration",
+                    "keyword to iterate 'x' as objects from object",
+                    "Object like function,list or string",
+                    "instructions to be made with iteration"
+                ]
+                for x in range(5):
+                    pygame.draw.rect(screen, color1, [size_w/4.45,hght,size_w/11,size_h/11], 0,size_w//150)
+                    if x == 4:
+                        Write(round(size_w//100*0.9),syntaxList[x],color3,[size_w/4.45+(size_w/11)/2,hght+(size_h/11)/2])
+                    else:
+                        Write(round(size_w//100*1.1),syntaxList[x],color3,[size_w/4.45+(size_w/11)/2,hght+(size_h/11)/2])
+                    WriteItalic(round(size_w//100*2),'-',color3,[size_w/2.94,hght+(size_h/11)/2])
+                    Write(round(size_w//100*1.8),desc[x],color3,[size_w/1.7,hght+(size_h/11)/2])
+                    hght += size_h/8
+            elif courseLvl == 5:
+                txts = [
+                    "Let's take an 'Object' element to",
+                    "check what can it be and how it works"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1],fontSize=1.6)
+                course.consoleExample("Object can be:",3.46)
+                course.consoleExample("List/Set/Tupple",2.23,left=True)
+                course.consoleExample("String",1.65,left=True)
+                course.consoleExample("Range() function",1.31,left=True)
+            elif courseLvl == 6:
+                notBlocked = False
+                course.dialogTop(6.41,"Object as list:")
+                course.consoleExample("circles = [green,orange,red,purple]",3.62,fontSize=1.9)
+                course.consoleExample("for circle in circles:",2.32,left=True)
+                course.consoleExample("draw_circle()",1.69)
+                execBtn = course.centeredBtn(1.25,dark_green,"Execute")
+                if event.type == MOUSEMOTION and execBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.25,green,"Execute")
+                    course.centeredBtn(1.25,dark_green,"",border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and execBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+                    storedTimeValue = round(float(time.process_time()),1)
+            elif courseLvl == 7:
+                Write(round(size_w//100*2),storedTime,green,[size_w/2,size_h/2])
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
@@ -6514,5 +6588,6 @@ while running:
     course.tower_defence.handlingFinalLvl()
     course.shooting_range.loopExample()
     course.shooting_range.continueTimer()
+    course.shooting_range.drawingCircles()
     if pygame.display.get_init():
         pygame.display.update()
