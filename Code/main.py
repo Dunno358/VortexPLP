@@ -686,7 +686,9 @@ class Start(pygame.sprite.Sprite):
            
             logoSize = size_w//50*3
             logoTxt1 = WriteItalic(logoSize,logoName,logoBlue,[size_w/2,size_h/2.3])
-            logoTxt1 = WriteItalic(logoSize-logoSize//3,"PLP",red,[size_w/1.63,size_h/2.5])
+            logoRect1 = logoTxt1.get_rect()
+            wdth = logoRect1[0]+logoRect1[2]+size_w/25
+            logoTxt1 = WriteItalic(logoSize-logoSize//3,"PLP",red,[wdth,size_h/2.5])
             #logoTxt1 = WriteItalic(logoSize-logoSize//3,"PLP",red,[size_w/2+(size_w//50*3*len(logoName)/2.65),size_h/2.5])
             if event.type == MOUSEMOTION:
                 if guideBtn.collidepoint(mouse_pos):
@@ -2024,17 +2026,47 @@ class Course(pygame.sprite.Sprite):
                     except:
                         pass  
         def drawingCircles():
-            global storedTime,activities,activeLesson,errorShowed,courseLvl,storedTimeValue,storedCords,iterator
+            global storedTime,activities,activeLesson,errorShowed,courseLvl,storedTimeValue,storedCords
+            global iterator,done,notBlocked
             if activities[0]:
                 if not activeMenu and str(activeLesson)[17:-23]=="lesson6" and not errorShowed:
                     if courseLvl == 7:
-                    cords = [
-                        [size_w/2.73,size_h/2.27],
-                        [size_w/2.24,size_h/2.27],
-                        [size_w/1.7,size_h/2.27],
-                        [size_w/1.35,size_h/2.27]
-                    ]
-                    storedTime = round(float(time.process_time())-storedTimeValue,1)
+                        cords = [
+                            [size_w/2.73,size_h/1.64],
+                            [size_w/2.09,size_h/1.64],
+                            [size_w/1.7,size_h/1.64],
+                            [size_w/1.47,size_h/1.64]
+                        ]
+                        circColor = [green,orange,red,purple]
+                        if not done:
+                            storedTimeValue = round(float(time.process_time()),1)
+                            done = True
+                        storedTime = round(float(time.process_time())-storedTimeValue,1)
+
+                        if storedTime>0.5:
+                            iterator = 0
+                            pygame.draw.circle(screen, circColor[0], cords[0], size_w//30, width=0)
+                        if storedTime>1:
+                            iterator = 1
+                            pygame.draw.circle(screen, circColor[1], cords[1], size_w//30, width=0)
+                        if storedTime>1.5:
+                            iterator = 2
+                            pygame.draw.circle(screen, circColor[2], cords[2], size_w//30, width=0)
+                        if storedTime>2:
+                            iterator = 3
+                            pygame.draw.circle(screen, circColor[3], cords[3], size_w//30, width=0)
+                            notBlocked = True
+                        if storedTime>0.5 and storedTime < 2.2:
+                            Write(round(size_w//100*3),"circle",color3,[cords[iterator][0],size_h/1.39])
+                        if storedTime < 2.2:
+                            pygame.event.post(pygame.event.Event(pygame.KEYDOWN))  
+        def clearVars():
+            global SR_cords,SR_holder,SR_holder2,SR_icons,SR_iterator
+            SR_cords.clear()
+            SR_icons.clear()
+            SR_holder = 0
+            SR_holder2 = 0
+            SR_iterator = 0
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -2165,6 +2197,7 @@ class Course(pygame.sprite.Sprite):
     def standardLessonEvents(lesson,maxLvl,condition=True,bckgr=True,standard=True,customCol=""):
         global activeMenu,courseLvl,activeLesson,selected,chosen,inFight,notBlocked,loadingBar
         global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs,bckgrMusicPlayed,SR_icons
+        global iterator,done
         actualLesson = str(activeLesson)[17:-23]
         if not activeMenu and activities[0] and actualLesson==lesson:
             bckgrMusicPlayed = True
@@ -2224,9 +2257,12 @@ class Course(pygame.sprite.Sprite):
                     inFight = False 
                     loadingBar = False
                     notBlocked = True
+                    done = False
                     hp1 = size_w/2.66
                     hp2 = size_w/6
+                    iterator = 1
                     storedCords = []
+                    course.shooting_range.clearVars()
                     course.tower_defence.reset()
                     course.tower_defence.clearAdminTools()
                     course.eventsReset()
@@ -5899,9 +5935,115 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(1.25,dark_green,"",border=size_w//250)
                 elif event.type == MOUSEBUTTONDOWN and execBtn.collidepoint(mouse_pos):
                     courseLvl += 1
-                    storedTimeValue = round(float(time.process_time()),1)
+                    done = False
             elif courseLvl == 7:
-                Write(round(size_w//100*2),storedTime,green,[size_w/2,size_h/2])
+                txts = [
+                    "As you can see this for loop will iterate",
+                    "through given list with it's every element",
+                    "and do given instructions with it"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1],txts[2],fontSize=1.4)
+                if notBlocked:
+                    Write(round(size_w//100*2.5),"Done!",green,[size_w/1.93,size_h/1.18])
+            elif courseLvl == 8:
+                notBlocked = True
+                txts = [
+                    "So yeah, this is how iterating through lists",
+                    "works, every element of the list is taken and",
+                    "held as list's iterator until instructions with",
+                    "this element are done, then iterator has new value",
+                    "from this list which is just next one element of it,",
+                    "when all elements have been iterated loop ends"
+                ]
+                course.dialogStandard(2.6,txts[0],txts[1],txts[2],txts[3],txts[4],txts[5],fontSize=1.3)
+            elif courseLvl == 9:
+                course.dialogTop(6.41,"So you've learned about lists, time","for next object for iterations which","is string variable")
+                Write(round(size_w//100*4),'"Example of string"',orange,[size_w/1.87,size_h/1.71])
+            elif courseLvl == 10:
+                notBlocked = False
+                iterator = 1
+                txts = [
+                    "Iterating through strings works the same way",
+                    "as in lists, but in this situation string is",
+                    "treated as list and evenry character in string",
+                    "is treated like an element of a list"
+                ]
+                course.dialogTop(5.8,txts[0],txts[1],txts[2],txts[3],fontSize=1.4)
+                nextBtn = course.centeredBtn(1.76,purple,"Show example",adjustToDialog=True,fontSize=1.4)
+                
+                if event.type == MOUSEMOTION and nextBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.76,lt_blue,"Show example",adjustToDialog=True,fontSize=1.4)
+                    course.centeredBtn(1.76,dark_blue,"",adjustToDialog=True,fontSize=1.4,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and nextBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+            elif courseLvl == 11:
+                if iterator == 5:
+                    notBlocked = True
+                word = '"World"'
+                course.consoleExample(f'For x in {word}:',10.11,left=True)
+                course.consoleExample('print(x)',3.9)
+                Write(round(size_w//100*3),"x is:",red,[size_w/1.94,size_h/1.94])
+                Write(round(size_w//100*1.6),f"iteration round: {iterator}",red,[size_w/1.38,size_h/1.94])
+
+                Write(round(size_w//100*3),f'"{word[iterator]}"',orange,[size_w/1.94,size_h/1.61])
+
+                next = Write(round(size_w//100*3),f'>',lt_blue,[size_w/1.59,size_h/1.61])
+                back = Write(round(size_w//100*3),f'<',lt_blue,[size_w/2.47,size_h/1.61])
+
+                Write(round(size_w//100*2,5),f'"World"[{iterator-1}]',lt_blue,[size_w/1.94,size_h/1.32])
+
+                if event.type == MOUSEMOTION:
+                    if next.get_rect().collidepoint(mouse_pos):
+                        Write(round(size_w//100*3),f'>',logoBlue,[size_w/1.59,size_h/1.61])
+                    elif back.get_rect().collidepoint(mouse_pos):
+                        Write(round(size_w//100*3),f'<',logoBlue,[size_w/2.47,size_h/1.61])
+                elif event.type == MOUSEBUTTONDOWN:
+                    if next.get_rect().collidepoint(mouse_pos):
+                        if iterator < 5:
+                            iterator += 1
+                        else:
+                            Write(round(size_w//100*3),f'>',red,[size_w/1.59,size_h/1.61])
+                    elif back.get_rect().collidepoint(mouse_pos): 
+                        if iterator > 1:
+                            iterator -= 1  
+                        else:
+                            Write(round(size_w//100*3),f'<',red,[size_w/2.47,size_h/1.61])                  
+            elif courseLvl == 12:
+                notBlocked = True
+                done = False
+                txts = [
+                    "The next object is range() function",
+                    "that takes two arguments(range(start,end))",
+                    "e.g. range(2,5), but you can also only give one",
+                    "argument like range(5), then end is",
+                    "5(as given) and start is by default 0,",
+                    "so the same as range(0,5)"
+                ]
+                course.dialogStandard(2.6,txts[0],txts[1],txts[2],txts[3],txts[4],txts[5],fontSize=1.4)
+            elif courseLvl == 13:
+                txts = [
+                    "It's worth to mention that range()",
+                    "'end' value is not included to iteration"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1])
+                course.consoleExample("For x in range(2,8):",3.32,left=True)
+                course.consoleExample("print(x)",2.18)
+
+                if not done:
+                    startBtn = course.centeredBtn(1.5,dark_green,"Check")
+                else:
+                    Write(round(size_w//100*2,5),"x results:",red,[size_w/1.93,size_h/1.45])
+                    Write(round(size_w//100*3),"2    3    4   5   6   7",color3,[size_w/1.93,size_h/1.29])
+
+                try:
+                    if event.type == MOUSEMOTION and startBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.5,green,"Check")
+                        course.centeredBtn(1.5,dark_green,"",border=size_w//250)
+                    elif event.type == MOUSEBUTTONDOWN and startBtn.collidepoint(mouse_pos):
+                        done = True
+                except:
+                    pass
+
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
