@@ -6,7 +6,7 @@
 -✓ Syntax 
 -✓ lists
 -✓ strings
-- range(start,stop)
+-✓ range(start,stop)
 - range(start,stop,jump)
 - else
 - break
