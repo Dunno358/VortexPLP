@@ -5,7 +5,7 @@
 [Lesson6 lvls list]
 -✓ Syntax 
 -✓ lists
-- strings
+-✓ strings
 - range(start,stop)
 - range(start,stop,jump)
 - else
