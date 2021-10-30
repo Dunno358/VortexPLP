@@ -4,7 +4,7 @@
 [todo-TD] enemies and friends are moving too slow
 [Lesson6 lvls list]
 -✓ Syntax 
-- lists
+-✓ lists
 - strings
 - range(start,stop)
 - range(start,stop,jump)
