@@ -6021,6 +6021,10 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.6,txts[0],txts[1],txts[2],txts[3],txts[4],txts[5],fontSize=1.4)
             elif courseLvl == 13:
+                if not done:
+                    notBlocked = False
+                else:
+                    notBlocked = True
                 txts = [
                     "It's worth to mention that range()",
                     "'end' value is not included to iteration"
@@ -6041,9 +6045,114 @@ class Course(pygame.sprite.Sprite):
                         course.centeredBtn(1.5,dark_green,"",border=size_w//250)
                     elif event.type == MOUSEBUTTONDOWN and startBtn.collidepoint(mouse_pos):
                         done = True
+                        pygame.event.post(pygame.event.Event(pygame.KEYDOWN))
                 except:
                     pass
+            elif courseLvl == 14:
+                notBlocked = False
+                txts = [
+                    "Okay, let's do something more interesting,",
+                    "we will use range() function with",
+                    "single argument to accomplish that",
+                ]
+                course.dialogTop(6.41,txts[0],txts[1],txts[2],fontSize=1.4)
+                course.consoleExample("For x in range(5):",2.59,left=True)
+                course.consoleExample("spawn_enemy()",1.83)
+                execBtn = course.centeredBtn(1.32,purple,"Execute")
 
+                if event.type == MOUSEMOTION and execBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.32,lt_blue,"Execute")
+                    course.centeredBtn(1.32,dark_blue,"",border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and execBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+                    done = False
+            elif courseLvl == 15:
+                if len(SR_icons) < 1:
+                    map = pygame.image.load(r"{}/Images/Game/test/garage.jpg".format(dirPath))
+                    map = pygame.transform.scale(map, [int(size_w/1.6),int(size_h/1.8)])
+                    SR_icons.append(map)
+                    iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
+                    iron_sight = pygame.transform.scale(iron_sight, [int(size_w/3.90),int(size_h/2.19)])
+                    SR_icons.append(iron_sight)
+                    iron_sight_shoot = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
+                    iron_sight_shoot = pygame.transform.scale(iron_sight_shoot, [int(size_w/3.90),int(size_h/2.09)])
+                    SR_icons.append(iron_sight_shoot)
+                    enemy1 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy1.png")
+                    enemy1 = pygame.transform.scale(enemy1, [int(size_w/12),int(size_h/6)])
+                    SR_icons.append(enemy1)
+                    enemy2 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy2.png")
+                    enemy2 = pygame.transform.scale(enemy2, [int(size_w/30),int(size_h/14)])
+                    SR_icons.append(enemy2)
+                    enemy3 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy3.png")
+                    enemy3 = pygame.transform.scale(enemy3, [int(size_w/30),int(size_h/14)])
+                    SR_icons.append(enemy3)
+                mapJPG = screen.blit(SR_icons[0],[size_w/4.57,size_h/5.57])
+                if isinstance(SR_holder2,int):
+                    SR_holder2 = []
+                if 1 not in SR_holder2:
+                    enemy1 = screen.blit(SR_icons[3],[size_w/1.54,size_h/2.27])
+                if 2 not in SR_holder2:
+                    enemy2 = screen.blit(SR_icons[4],[size_w/2.5,size_h/2])
+                if 3 not in SR_holder2:
+                    enemy3 = screen.blit(pygame.transform.flip(SR_icons[4], True, False),[size_w/1.58,size_h/2])
+                if 4 not in SR_holder2:
+                    enemy4 = screen.blit(SR_icons[5],[size_w/2.27,size_h/2.04])
+                if 5 not in SR_holder2:
+                    enemy5 = screen.blit(pygame.transform.flip(SR_icons[3], True, False),[size_w/1.9,size_h/2.27])
+                
+                SR_holder2.sort()
+                if SR_holder2 == [1,2,3,4,5]:
+                    course.dialogTop(6.41,"Good job recruit!","I hope I taught you how","this works, you can go futher",bckgr=True)
+                    notBlocked = True
+                else:
+                    course.dialogTop(6.41,"Oh damn, that was not the best idea!","Shoot them!",bckgr=True)
+                    notBlocked = False
+
+                correctH = mouse_pos[1]<size_h/1.74
+                correctW = size_w/1.34 > mouse_pos[0] > size_w/3.06                
+                if correctW and correctH and SR_holder == 1:
+                    pygame.mouse.set_visible(False)
+                    sight_rect=SR_icons[1].get_rect()
+                    cords = [mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7]
+                    screen.blit(SR_icons[1],cords)
+                correctH = size_h/3.25 < mouse_pos[1] < size_h/1.74
+                correctW = size_w/1.34 > mouse_pos[0] > size_w/3.06
+                if event.type == MOUSEMOTION:
+                    if mapJPG.collidepoint(mouse_pos) and correctW and correctH:
+                        SR_holder = 1
+                    else:
+                        pygame.mouse.set_visible(True)
+                        SR_holder = 0
+                elif event.type == MOUSEBUTTONDOWN and correctH and correctW:
+                    sight_rect = SR_icons[1].get_rect()
+                    cords = [mouse_pos[0]-sight_rect[2]/2.1,mouse_pos[1]-sight_rect[3]/7]
+                    screen.blit(SR_icons[2],cords)
+                    pygame.mouse.set_pos([mouse_pos[0], mouse_pos[1]-size_h//100])
+                    try:
+                        if enemy1.collidepoint(mouse_pos):
+                            SR_holder2.append(1)
+                    except:
+                        pass
+                    try:
+                        if enemy2.collidepoint(mouse_pos):
+                            SR_holder2.append(2)
+                    except:
+                        pass
+                    try:
+                        if enemy3.collidepoint(mouse_pos):
+                            SR_holder2.append(3)
+                    except:
+                        pass
+                    try:
+                        if enemy4.collidepoint(mouse_pos):
+                            SR_holder2.append(4)
+                    except:
+                        pass
+                    try:
+                        if enemy5.collidepoint(mouse_pos):
+                            SR_holder2.append(5)   
+                    except:
+                        pass
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
