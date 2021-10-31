@@ -9,7 +9,7 @@
 -✓ lists
 -✓ strings
 -✓ range(start,stop)
-- range(start,stop,jump)
+-✓ range(start,stop,jump)
 - else
 - break
 - continue
