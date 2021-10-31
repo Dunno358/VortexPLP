@@ -3,6 +3,7 @@
 [todo-TD] change damage to getting 1/3 of start hp(give start hp to another variable and use it)
 [todo-TD] enemies and friends are moving too slow
 [IDEA] when user is not in admin mode make in place of changingLvl: line or bar with graphiccaly shown percentage of accomplishing course
+[IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 [Lesson6 lvls list]
 -✓ Syntax 
 -✓ lists
