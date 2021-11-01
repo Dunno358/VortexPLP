@@ -2614,6 +2614,8 @@ class Course(pygame.sprite.Sprite):
         pygame.draw.rect(screen, color3, [size_w/3,size_h/hght+size_h/44.1,size_w/2.8,size_h/8], size_w//450,15) 
         if not left:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/1.95,size_h/hght+size_h/11.15])
+        elif left=='mega':
+            WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.47,size_h/hght+size_h/11.15])
         else:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
     def lesson1():
@@ -6232,7 +6234,32 @@ class Course(pygame.sprite.Sprite):
                     pygame.draw.line(screen, color3, [size_w/1.8,size_h/3.21], [size_w/1.8,size_h/1.2], size_w//1000)
                     pygame.draw.line(screen, color3, [size_w/2.9,size_h/1.8], [size_w/1.33,size_h/1.8], size_w//1000)
             elif courseLvl == 17:
-                test = True #else
+                notBlocked = False
+                course.dialogTop(6.41,"Similar to while, for loop also has","possiblity to attach else keyword")
+                course.consoleExample("for x in range(5):",3.49,left=True)
+                course.consoleExample("print(x)",2.27)
+                course.consoleExample("else:",1.68,left='mega')
+                course.consoleExample('print("Ended")',1.34)
+
+                resultBtn = pygame.draw.rect(screen, dark_green, [size_w/1.38,size_h/1.92,size_w/9,size_h/10],0,size_w//250)
+                Write(round(size_w//100*1.5),"See results",color1,[size_w/1.28,size_h/1.75])
+
+                if event.type == MOUSEMOTION and resultBtn.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, green, [size_w/1.38,size_h/1.92,size_w/9,size_h/10],0,size_w//250)
+                    pygame.draw.rect(screen, dark_green, [size_w/1.38,size_h/1.92,size_w/9,size_h/10],size_w//250,size_w//250)
+                    Write(round(size_w//100*1.5),"See results",color3,[size_w/1.28,size_h/1.75])
+                elif event.type == MOUSEBUTTONDOWN and resultBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+            elif courseLvl == 18:
+                course.dialogTop(6.41,"So else is executed only once and","that happens when for loop is done")
+                Write(round(size_w//100*3),"Results",red,[size_w/1.83,size_h/3.08])
+                results = ["0","1","2","3","4",'"Ended"']
+                hght = size_h/2.5
+                for result in results:
+                    Write(round(size_w//100*3),result,color3,[size_w/1.83,hght])
+                    hght += size_h/15
+            elif courseLvl == 19:
+                test = True #break
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
