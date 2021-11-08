@@ -1492,7 +1492,7 @@ class Course(pygame.sprite.Sprite):
             if pygame.event.get_blocked(MOUSEMOTION):
                 pygame.event.set_allowed(MOUSEMOTION)
         def reset():
-            global iterator,TD_wdthStart,TD_hghtStart,TD_firstDone,TD_guardRects,eventsBlocked
+            global iterator,TD_wdthStart,TD_hghtStart,TD_firstDone,TD_guardRects,eventsBlocked,activeMenu
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
             global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
@@ -1529,7 +1529,8 @@ class Course(pygame.sprite.Sprite):
             TD_hp = size_w/19 
             TD_hp2 = size_w/19 
             TD_consoleShown = False
-            course.tower_defence.drawMap()
+            if not activeMenu:
+                course.tower_defence.drawMap()
         def console():
             global TD_consoleShown
 
@@ -2131,8 +2132,8 @@ class Course(pygame.sprite.Sprite):
         def counting():
             global iterator,activities,errorShowed,activeMain,activeMenu,done,storedTimeValue
             if activities[0] and not errorShowed and not activeMenu:
-                if str(activeLesson)[17:-23]=="lesson6" and courseLvl == 20: 
-                    if done: 
+                if str(activeLesson)[17:-23]=="lesson6" and (courseLvl in [20,22]): 
+                    if done or courseLvl == 22: 
                         iterator = int(float(time.process_time())-storedTimeValue)
                         pygame.draw.rect(screen, color2, [size_w/2.02,size_h/1.93,size_w/20,size_h/20], 0)
                         Write(round(size_w//100*2.5),iterator,red,[size_w/1.92,size_h/1.82])
@@ -5922,7 +5923,7 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 111:
+            if courseLvl == 1:
                 txts = [
                     "Howdy recruit, it's me again!",
                     "I've made another course for you and I'm sure",
@@ -6301,6 +6302,39 @@ class Course(pygame.sprite.Sprite):
                         done = False
                 except:
                     pass
+            elif courseLvl == 21:
+                notBlocked = False
+                course.dialogTop(6.41,"As you can guess there's also continue","instruction that you know from while loops",fontSize=1.4)
+                checkBtn = course.centeredBtn(2.69,dark_green,"Check",adjustToDialog=True)
+
+                if event.type == MOUSEMOTION and checkBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.69,green,"Check",adjustToDialog=True)
+                    course.centeredBtn(2.69,dark_green,"",adjustToDialog=True,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and checkBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+                    storedTimeValue = round(float(time.process_time()),1)
+                    done = True
+            elif courseLvl == 22:
+                course.consoleExample("For x in range(50):",12.19,left=True)
+                course.consoleExample("print(x)",4.13,left=False)
+
+
+                if not done:
+                    notBlocked = True
+                contBtn = course.centeredBtn(1.55,purple,"Continue")
+
+                try:
+                    if event.type == MOUSEMOTION and contBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.55,lt_blue,"Continue")
+                        course.centeredBtn(1.55,dark_blue,"",border=size_w//250)
+                    elif event.type == MOUSEBUTTONDOWN and contBtn.collidepoint(mouse_pos):
+                        storedTimeValue = round(float(time.process_time()),1)
+                        done = False
+                        Write(round(size_w//100*5),"Reset!",green,[size_w/1.93,size_h/1.18])
+                except:
+                    pass                
+            elif courseLvl == 23:
+                test = True #double for loop
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
