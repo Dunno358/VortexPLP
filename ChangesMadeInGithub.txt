@@ -11,7 +11,7 @@
 -✓ strings
 -✓ range(start,stop)
 -✓ range(start,stop,jump)
-- else
+-✓ else
 - break
 - continue
 - double for loop
