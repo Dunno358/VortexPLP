@@ -2128,6 +2128,16 @@ class Course(pygame.sprite.Sprite):
                             wdth = size_w/1.73
                             hght += size_h/20
                         notBlocked = True
+        def counting():
+            global iterator,activities,errorShowed,activeMain,activeMenu,done,storedTimeValue
+            if activities[0] and not errorShowed and not activeMenu:
+                if str(activeLesson)[17:-23]=="lesson6" and courseLvl == 20: 
+                    if done: 
+                        iterator = int(float(time.process_time())-storedTimeValue)
+                        pygame.draw.rect(screen, color2, [size_w/2.02,size_h/1.93,size_w/20,size_h/20], 0)
+                        Write(round(size_w//100*2.5),iterator,red,[size_w/1.92,size_h/1.82])
+                        if iterator%51==0 and iterator > 49:
+                            storedTimeValue = round(float(time.process_time()),1)
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -5912,7 +5922,7 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 1:
+            if courseLvl == 111:
                 txts = [
                     "Howdy recruit, it's me again!",
                     "I've made another course for you and I'm sure",
@@ -6251,6 +6261,7 @@ class Course(pygame.sprite.Sprite):
                 elif event.type == MOUSEBUTTONDOWN and resultBtn.collidepoint(mouse_pos):
                     courseLvl += 1
             elif courseLvl == 18:
+                notBlocked = True
                 course.dialogTop(6.41,"So else is executed only once and","that happens when for loop is done")
                 Write(round(size_w//100*3),"Results",red,[size_w/1.83,size_h/3.08])
                 results = ["0","1","2","3","4",'"Ended"']
@@ -6259,7 +6270,37 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*3),result,color3,[size_w/1.83,hght])
                     hght += size_h/15
             elif courseLvl == 19:
-                test = True #break
+                notBlocked = False
+                course.dialogTop(6.41,"Similar to while loop, there's also a break","instruction - it works the same way",fontSize=1.4)
+                checkBtn = course.centeredBtn(2.69,dark_green,"Check",adjustToDialog=True)
+
+                if event.type == MOUSEMOTION and checkBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.69,green,"Check",adjustToDialog=True)
+                    course.centeredBtn(2.69,dark_green,"",adjustToDialog=True,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and checkBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+                    storedTimeValue = round(float(time.process_time()),1)
+                    done = True
+            elif courseLvl == 20:
+                course.consoleExample("For x in range(50):",12.19,left=True)
+                course.consoleExample("print(x)",4.13,left=False)
+
+
+                if not done:
+                    Write(round(size_w//100*2.2),"Ended by break instruction",red,[size_w/1.92,size_h/1.82])
+                    Write(round(size_w//100*2.2),"You can go further",green,[size_w/1.91,size_h/1.45])
+                    notBlocked = True
+                else:
+                    breakBtn = course.centeredBtn(1.55,dark_red,"Break")
+
+                try:
+                    if event.type == MOUSEMOTION and breakBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.55,red,"Break")
+                        course.centeredBtn(1.55,dark_red,"",border=size_w//250)
+                    elif event.type == MOUSEBUTTONDOWN and breakBtn.collidepoint(mouse_pos):
+                        done = False
+                except:
+                    pass
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
@@ -6948,5 +6989,6 @@ while running:
     course.shooting_range.continueTimer()
     course.shooting_range.drawingCircles()
     course.shooting_range.rangeOfRects()
+    course.shooting_range.counting()
     if pygame.display.get_init():
         pygame.display.update()
