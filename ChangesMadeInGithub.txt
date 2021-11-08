@@ -12,7 +12,7 @@
 -✓ range(start,stop)
 -✓ range(start,stop,jump)
 -✓ else
-- break
+-✓ break
 - continue
 - double for loop
 - pass
