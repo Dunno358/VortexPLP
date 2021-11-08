@@ -13,6 +13,6 @@
 -✓ range(start,stop,jump)
 -✓ else
 -✓ break
-- continue
+-✓ continue
 - double for loop
 - pass
