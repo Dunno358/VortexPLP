@@ -698,6 +698,19 @@ class Start(pygame.sprite.Sprite):
                 else:
                     guideBtn = pygame.draw.rect(screen, dark_green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],0,10)
                     guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.78,size_h/1.24]) 
+    def finishBar():
+        global admin
+        if not admin:
+            startPoint = [size_w/1.07,size_h/6.51]
+            endPoint = [size_w/1.07,size_h/1.15]
+            fullH = size_h/1.15-size_h/6.51
+            actualPercent = getCourseLvl()/10
+            customEndPoint = [size_w/1.07,size_h/1.15-actualPercent*fullH]
+            pygame.draw.rect(screen, color1, [size_w/1.12,size_h/7.6,size_w/12,size_h/1.2], 0)
+            pygame.draw.line(screen, dark_gray, startPoint, endPoint, size_w//500)
+            pygame.draw.line(screen, green, endPoint, customEndPoint, size_w//500)
+            pygame.draw.circle(screen, green, [size_w/1.069,size_h/1.15-actualPercent*fullH], size_w//200, 0)
+            Write(round(size_w//100*2),f"{int(actualPercent*100)}%",green,[size_w/1.07,size_h/1.08])
     class adminTools(pygame.sprite.Sprite):
         global admin
         def iterators():
@@ -5577,6 +5590,7 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.65,txts[0],txts[1],fontSize=1.4)
             elif courseLvl == 15: #QUIZ
+                notBlocked = False
                 if not done:
                     if isinstance(SR_holder,str):
                         SR_holder = 0
@@ -6334,7 +6348,16 @@ class Course(pygame.sprite.Sprite):
                 except:
                     pass                
             elif courseLvl == 23:
-                test = True #double for loop
+                txts = [
+                    "Next thing I prepared for you is double for",
+                    "loop, which is simply a loop inside a loop,",
+                    "but this one have a nice specific use"
+                ]
+                course.dialogStandard(2.6,txts[0],txts[1],txts[2],fontSize=1.5)
+                #Draw a rect with timer line after line(as it would work with drawing rect with double for loop)
+                #for x in range(5):
+                #   for x in range(5):
+                #       draw_rect()
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
@@ -7024,5 +7047,6 @@ while running:
     course.shooting_range.drawingCircles()
     course.shooting_range.rangeOfRects()
     course.shooting_range.counting()
+    start.finishBar()
     if pygame.display.get_init():
         pygame.display.update()
