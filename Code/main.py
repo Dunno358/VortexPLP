@@ -2152,6 +2152,53 @@ class Course(pygame.sprite.Sprite):
                         Write(round(size_w//100*2.5),iterator,red,[size_w/1.92,size_h/1.82])
                         if iterator%51==0 and iterator > 49:
                             storedTimeValue = round(float(time.process_time()),1)
+        def doubleForRectDraw():
+            global activities,activeMenu,activeLesson,errorShowed,courseLvl,storedTimeValue,notBlocked
+            global SR_holder,SR_holder2
+            if activities[0]: 
+                if not activeMenu and str(activeLesson)[17:-23]=="lesson6" and not errorShowed:
+                    if courseLvl == 24:
+                        if not isinstance(SR_holder,int):
+                            SR_holder = 0
+                        if not isinstance(SR_holder2,int):
+                            SR_holder2 = 0
+
+                        if SR_holder2 > 4 and SR_holder2%5==0:
+                            storedTimeValue = round(float(time.process_time()),1)
+                            if SR_holder <= 4:
+                                SR_holder += 1
+                        
+                        if SR_holder <= 4:
+                            SR_holder2 = int(float(time.process_time())-storedTimeValue)
+
+                        pygame.draw.rect(screen, color2, [size_w/1.38,size_h/2.15,size_w/8,size_h/10], 0)
+                        pygame.draw.rect(screen, color2, [size_w/1.38,size_h/1.57,size_w/8,size_h/10], 0)
+                        if SR_holder <= 4:
+                            Write(round(size_w//100*2.2),f"Round: {SR_holder}",red,[size_w/1.27,size_h/1.92])
+                            Write(round(size_w//100*2.2),f"Round: {SR_holder2}",red,[size_w/1.27,size_h/1.45])
+                            notBlocked = False
+                        else:
+                            Write(round(size_w//100*2.2),"Ended",red,[size_w/1.27,size_h/1.92])
+                            Write(round(size_w//100*2.2),"Ended",red,[size_w/1.27,size_h/1.45]) 
+                            notBlocked = True                       
+                        
+                        wdth = size_w/2.18
+                        hght = size_h/5.49
+                        for x in range(SR_holder+1):
+                            if x == 5:
+                                for x in range(5):
+                                    pygame.draw.rect(screen, color2, [wdth,hght,size_w/45,size_h/30], 0)
+                                    wdth += size_w/35                            
+                            elif x<SR_holder:
+                                for x in range(5):
+                                    pygame.draw.rect(screen, green, [wdth,hght,size_w/45,size_h/30], 0)
+                                    wdth += size_w/35
+                            else:
+                                for x in range(SR_holder2):
+                                    pygame.draw.rect(screen, green, [wdth,hght,size_w/45,size_h/30], 0)
+                                    wdth += size_w/35
+                            wdth = size_w/2.18
+                            hght += size_h/25
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -6354,10 +6401,22 @@ class Course(pygame.sprite.Sprite):
                     "but this one have a nice specific use"
                 ]
                 course.dialogStandard(2.6,txts[0],txts[1],txts[2],fontSize=1.5)
-                #Draw a rect with timer line after line(as it would work with drawing rect with double for loop)
-                #for x in range(5):
-                #   for x in range(5):
-                #       draw_rect()
+            elif courseLvl == 24:
+                if iterator < 2:
+                    storedTimeValue = round(float(time.process_time()),1)
+                    iterator = 2
+                course.consoleExample("for x in range(5):",2.27,left=True)
+                course.consoleExample("for x in range(5):",1.68,left=False)
+                course.consoleExample("draw_rect()",1.33,left=False)
+                skipBtn = pygame.draw.rect(screen, purple, [size_w/1.45,size_h/5.02,size_w/8,size_h/10], 0,15)
+                Write(round(size_w//100*2.5),"Skip",color1,[size_w/1.33,size_h/3.96])
+
+                if event.type == MOUSEMOTION and skipBtn.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, lt_blue, [size_w/1.45,size_h/5.02,size_w/8,size_h/10], 0,15)
+                    pygame.draw.rect(screen, purple, [size_w/1.45,size_h/5.02,size_w/8,size_h/10], size_w//250,15)
+                    Write(round(size_w//100*2.5),"Skip",color3,[size_w/1.33,size_h/3.96])
+                elif event.type == MOUSEBUTTONDOWN and skipBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
@@ -7047,6 +7106,7 @@ while running:
     course.shooting_range.drawingCircles()
     course.shooting_range.rangeOfRects()
     course.shooting_range.counting()
+    course.shooting_range.doubleForRectDraw()
     start.finishBar()
     if pygame.display.get_init():
         pygame.display.update()
