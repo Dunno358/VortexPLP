@@ -13,7 +13,7 @@
 -✓ else
 -✓ break
 -✓ continue
-- double for loop
+-✓ double for loop
 - pass
 -quiz
 
