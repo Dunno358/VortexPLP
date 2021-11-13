@@ -2344,7 +2344,7 @@ class Course(pygame.sprite.Sprite):
     def standardLessonEvents(lesson,maxLvl,condition=True,bckgr=True,standard=True,customCol=""):
         global activeMenu,courseLvl,activeLesson,selected,chosen,inFight,notBlocked,loadingBar
         global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs,bckgrMusicPlayed,SR_icons
-        global iterator,done,maxCourseLvl
+        global iterator,done,maxCourseLvl,admin
         actualLesson = str(activeLesson)[17:-23]
         if not activeMenu and activities[0] and actualLesson==lesson:
             maxCourseLvl = maxLvl
@@ -2373,7 +2373,8 @@ class Course(pygame.sprite.Sprite):
                 else:
                     backBtn = pygame.draw.rect(screen, customCol, [size_w/4.56,size_h/1.25,size_w/8,size_h/8], 0,30)
                 backArrow = Write(size_w//100*4,"<-",color3,[size_w/3.59,size_h/1.16]) 
-            lvlTxt = Write(round(size_w//100*1.5),"{}/{}".format(courseLvl,maxLvl),color3,[size_w/1.19,size_h/11.53])
+            if admin:
+                Write(round(size_w//100*1.5),"{}/{}".format(courseLvl,maxLvl),color3,[size_w/1.19,size_h/11.53])
 
 
             if event.type == MOUSEMOTION:
