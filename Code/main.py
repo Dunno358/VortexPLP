@@ -6449,7 +6449,7 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(2.83,purple,"",adjustToDialog=True,border=size_w//250)
                 elif event.type == MOUSEBUTTONDOWN and readyBtn.collidepoint(mouse_pos):
                     courseLvl += 1
-            elif courseLvl == 28: #QUIZ - NOT DONE
+            elif courseLvl == 1: #QUIZ - NOT DONE(Find more questions)
                 notBlocked = False
                 if not done:
                     if isinstance(SR_holder,str):
@@ -6508,28 +6508,30 @@ class Course(pygame.sprite.Sprite):
                         
                 else:
                     questions = [
-                        "For loop question",
-                        "For loop question",
-                        "For loop question",
-                        "For loop question",
-                        "For loop question",
-                        "For loop question",
-                        "For loop question",
-                        "For loop question",
-                        "For loop question"
+                        "Which is correct object?",
+                        "Which is correct for list iteration?",
+                        "At range(1,10,3) 3 is:",
+                        "Which one gives output: 0 1 2 3 4",
+                        "Else is executed:",
+                        "What is break used for?",
+                        "Which instruction is used to restart loop:",
+                        "Output of for x in range(0,8,2): print(x)",
+                        "Double for loop is good for:",
+                        "Which one can be iterated by for loop?"
                     ]
                     allAnswers = [
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"],
-                        ["answer","answer","answer"]
+                        ["True/False","15.093","Range(5)"],
+                        ["for x at list:","for x in list:","for x by list:"],
+                        ["Jump value","End value","Start value"],
+                        ["for x in range(4): print(x)","for x in range(5): print(x)","for x in range(0,4): print(x)"],
+                        ["Every iteration","There's no else at for loop","Once"],
+                        ["Breaking loop","Restarting loop","Leaving none instruction"],
+                        ["Restart","Continue","Refresh"],
+                        ["Error","1 3 5 7","0 2 4 6"],
+                        ["Drawing figures","It has no use","You can't make double for loop"],
+                        ["Float","Integer","String"]
                     ]
-                    correctAnswers = [0,0,0,0,0,0,0,0,0] #0-A 1-B 2-C
+                    correctAnswers = [2,1,0,1,2,0,1,2,0,2] #0-A 1-B 2-C
 
                     course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)                
     def lesson7():
