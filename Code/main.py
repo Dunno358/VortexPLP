@@ -5984,7 +5984,7 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 1:
+            if courseLvl == 111:
                 txts = [
                     "Howdy recruit, it's me again!",
                     "I've made another course for you and I'm sure",
@@ -6100,7 +6100,7 @@ class Course(pygame.sprite.Sprite):
                 txts = [
                     "Iterating through strings works the same way",
                     "as in lists, but in this situation string is",
-                    "treated as list and evenry character in string",
+                    "treated as list and every character in string",
                     "is treated like an element of a list"
                 ]
                 course.dialogTop(5.8,txts[0],txts[1],txts[2],txts[3],fontSize=1.4)
@@ -6417,6 +6417,121 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*2.5),"Skip",color3,[size_w/1.33,size_h/3.96])
                 elif event.type == MOUSEBUTTONDOWN and skipBtn.collidepoint(mouse_pos):
                     courseLvl += 1
+            elif courseLvl == 25:
+                txts = [
+                    "Last, but not least is pass instruction - ",
+                    "it is a keyword to leave instruction as",
+                    "none action, lemme show you an example"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1],txts[2],fontSize=1.4)
+                course.consoleExample("for x in range(10):",2.38,left=True)
+                course.consoleExample("pass",1.73)
+            elif courseLvl == 26:
+                course.dialogTop(6.41,"This will return nothing as pass is a way","to 'cheat' and leave empty instruction",fontSize=1.4)
+                strs = [
+                    "for loops cannot be empty, but if you for some", 
+                    "reason have a for loop with no content, put in", 
+                    "the pass statement to avoid getting an error."
+                ] 
+                pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
+                hght = size_h/2.09
+                Write(round(size_w//100*2.6),"Pass ~ W3Schools",red,[size_w/1.92,size_h/2.51])
+                for x in strs:
+                    Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
+                    hght += size_h/10
+                course.shooting_range.clearVars()
+            elif courseLvl == 27:
+                course.dialogTop(6.41,"Oh right, time to test your","abilities, are you ready recruit?")
+                readyBtn = course.centeredBtn(2.83,purple,"Ready",adjustToDialog=True)
+
+                if event.type == MOUSEMOTION and readyBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.83,lt_blue,"Ready",adjustToDialog=True)
+                    course.centeredBtn(2.83,purple,"",adjustToDialog=True,border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN and readyBtn.collidepoint(mouse_pos):
+                    courseLvl += 1
+            elif courseLvl == 28: #QUIZ - NOT DONE
+                notBlocked = False
+                if not done:
+                    if isinstance(SR_holder,str):
+                        SR_holder = 0
+                    if isinstance(SR_holder2,str) or SR_holder2 == 0:
+                        SR_holder2 = 1
+                    course.dialogTop(6.41,"Oh right recruit, grab a gun","and show me what you've learned")
+                    if len(SR_icons)<1:
+                        m4 = pygame.image.load(r"{}/Images/Game/test/m4.png".format(dirPath))
+                        m4 = pygame.transform.scale(m4, [int(size_w/5),int(size_h/5)])
+                        SR_icons.append(m4)
+                        mp5 = pygame.image.load(r"{}/Images/Game/test/mp5.png".format(dirPath))
+                        mp5 = pygame.transform.scale(mp5, [int(size_w/6),int(size_h/8)])
+                        SR_icons.append(mp5)
+                        m4m = pygame.image.load(r"{}/Images/Game/test/m4marked.png".format(dirPath))
+                        m4m = pygame.transform.scale(m4m, [int(size_w/5),int(size_h/5)])
+                        SR_icons.append(m4m)
+                        mp5m = pygame.image.load(r"{}/Images/Game/test/mp5marked.png".format(dirPath))
+                        mp5m = pygame.transform.scale(mp5m, [int(size_w/6),int(size_h/8)])
+                        SR_icons.append(mp5m)
+                    try:
+                        gun1 = screen.blit(SR_icons[SR_holder],[size_w/3.41,size_h/2.54])
+                        gun2 = screen.blit(SR_icons[SR_holder2],[size_w/1.74,size_h/2.32])
+                    except:
+                        pass
+                    if isinstance(selected,int):
+                        nextBtn = course.centeredBtn(1.37,dark_green,"Go")
+                    try:
+                        if event.type == MOUSEMOTION and nextBtn.collidepoint(mouse_pos):
+                            course.centeredBtn(1.37,green,"Go")
+                            course.centeredBtn(1.37,dark_green,"",border=size_w//250)
+                    except:
+                        pass
+                    if event.type == MOUSEBUTTONDOWN and event.button==1:
+                        try:
+                            if gun1.collidepoint(mouse_pos):
+                                SR_holder = 2
+                                SR_holder2 = 1
+                                selected = 1
+                            elif gun2.collidepoint(mouse_pos):
+                                SR_holder = 0
+                                SR_holder2 = 3
+                                selected = 2
+                        except:
+                            pass    
+                        try:
+                            if nextBtn.collidepoint(mouse_pos):
+                                SR_icons.clear()       
+                                SR_holder = 0
+                                SR_holder2 = 0
+                                iterator = 1
+                                done = True
+                                storedTimeValue = round(float(time.process_time()),2)
+                        except:
+                            pass              
+                        
+                else:
+                    questions = [
+                        "For loop question",
+                        "For loop question",
+                        "For loop question",
+                        "For loop question",
+                        "For loop question",
+                        "For loop question",
+                        "For loop question",
+                        "For loop question",
+                        "For loop question"
+                    ]
+                    allAnswers = [
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"],
+                        ["answer","answer","answer"]
+                    ]
+                    correctAnswers = [0,0,0,0,0,0,0,0,0] #0-A 1-B 2-C
+
+                    course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)                
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
