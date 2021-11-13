@@ -96,7 +96,7 @@ clock = pygame.time.Clock()
 
 #ADMIN
 #admin = False
-admin = True
+admin = False
 
 #ACTIVITIES
 activeAny = False
@@ -114,6 +114,7 @@ exiting = False
 
 #LEVELS
 courseLvl = 1
+maxCourseLvl = 0
 iterator = 1
 
 #TEXTS
@@ -711,6 +712,20 @@ class Start(pygame.sprite.Sprite):
             pygame.draw.line(screen, green, endPoint, customEndPoint, size_w//500)
             pygame.draw.circle(screen, green, [size_w/1.069,size_h/1.15-actualPercent*fullH], size_w//200, 0)
             Write(round(size_w//100*2),f"{int(actualPercent*100)}%",green,[size_w/1.07,size_h/1.08])
+    def courseLvlBar():
+        global admin,activeMenu,maxCourseLvl,courseLvl
+        if not admin:
+            if not activeMenu:
+                pygame.draw.rect(screen, color1, [size_w/8.13,size_h/16,size_w/16,size_h/1.1], 0,size_w//450)
+                startPoint = [size_w/6.5,size_h/6.51]
+                endPoint = [size_w/6.5,size_h/1.15]
+                fullH = size_h/1.15-size_h/6.51
+                actualPercent = courseLvl/maxCourseLvl
+                customEndPoint = [size_w/6.5,size_h/1.15-actualPercent*fullH]
+                pygame.draw.line(screen, dark_gray, startPoint, endPoint, size_w//500)
+                pygame.draw.line(screen, logoBlue, endPoint, customEndPoint, size_w//500)
+                pygame.draw.circle(screen, logoBlue, [size_w/6.47,size_h/1.15-actualPercent*fullH], size_w//200, 0)
+                Write(round(size_w//100*2),f"{int(actualPercent*100)}%",lt_blue,[size_w/6.5,size_h/1.08])
     class adminTools(pygame.sprite.Sprite):
         global admin
         def iterators():
@@ -2329,9 +2344,10 @@ class Course(pygame.sprite.Sprite):
     def standardLessonEvents(lesson,maxLvl,condition=True,bckgr=True,standard=True,customCol=""):
         global activeMenu,courseLvl,activeLesson,selected,chosen,inFight,notBlocked,loadingBar
         global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs,bckgrMusicPlayed,SR_icons
-        global iterator,done
+        global iterator,done,maxCourseLvl
         actualLesson = str(activeLesson)[17:-23]
         if not activeMenu and activities[0] and actualLesson==lesson:
+            maxCourseLvl = maxLvl
             bckgrMusicPlayed = True
             if bckgr:
                 if loadingBar:
@@ -5984,7 +6000,7 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 111:
+            if courseLvl == 1:
                 txts = [
                     "Howdy recruit, it's me again!",
                     "I've made another course for you and I'm sure",
@@ -6417,6 +6433,7 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*2.5),"Skip",color3,[size_w/1.33,size_h/3.96])
                 elif event.type == MOUSEBUTTONDOWN and skipBtn.collidepoint(mouse_pos):
                     courseLvl += 1
+                    notBlocked = True
             elif courseLvl == 25:
                 txts = [
                     "Last, but not least is pass instruction - ",
@@ -6441,6 +6458,7 @@ class Course(pygame.sprite.Sprite):
                     hght += size_h/10
                 course.shooting_range.clearVars()
             elif courseLvl == 27:
+                notBlocked = False
                 course.dialogTop(6.41,"Oh right, time to test your","abilities, are you ready recruit?")
                 readyBtn = course.centeredBtn(2.83,purple,"Ready",adjustToDialog=True)
 
@@ -6449,7 +6467,7 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(2.83,purple,"",adjustToDialog=True,border=size_w//250)
                 elif event.type == MOUSEBUTTONDOWN and readyBtn.collidepoint(mouse_pos):
                     courseLvl += 1
-            elif courseLvl == 1: #QUIZ - NOT DONE(Find more questions)
+            elif courseLvl == 28: #QUIZ
                 notBlocked = False
                 if not done:
                     if isinstance(SR_holder,str):
@@ -6517,7 +6535,10 @@ class Course(pygame.sprite.Sprite):
                         "Which instruction is used to restart loop:",
                         "Output of for x in range(0,8,2): print(x)",
                         "Double for loop is good for:",
-                        "Which one can be iterated by for loop?"
+                        "Which one can be iterated by for loop?",
+                        "Which is start value for range(10)?",
+                        "Which one gives all the numbers from 1 to 10?",
+                        "For can iterate through set, tupple and list"
                     ]
                     allAnswers = [
                         ["True/False","15.093","Range(5)"],
@@ -6529,11 +6550,16 @@ class Course(pygame.sprite.Sprite):
                         ["Restart","Continue","Refresh"],
                         ["Error","1 3 5 7","0 2 4 6"],
                         ["Drawing figures","It has no use","You can't make double for loop"],
-                        ["Float","Integer","String"]
+                        ["Float","Integer","String"],
+                        ["10","0","None"],
+                        ["range(1,10)","range(11)","range(1,11)"],
+                        ["Yes","No","Only list"]
                     ]
-                    correctAnswers = [2,1,0,1,2,0,1,2,0,2] #0-A 1-B 2-C
+                    correctAnswers = [2,1,0,1,2,0,1,2,0,2,1,2,0] #0-A 1-B 2-C
 
                     course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)                
+            elif courseLvl == 29:
+                test = True #Finish
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
@@ -7225,5 +7251,6 @@ while running:
     course.shooting_range.counting()
     course.shooting_range.doubleForRectDraw()
     start.finishBar()
+    start.courseLvlBar()
     if pygame.display.get_init():
         pygame.display.update()
