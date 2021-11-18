@@ -1,6 +1,7 @@
 from typing import Type
 import pygame
 from pygame import Surface, rect
+from pygame import font
 from pygame.event import get_blocked, post
 from pygame.locals import *
 import os
@@ -96,7 +97,7 @@ clock = pygame.time.Clock()
 
 #ADMIN
 #admin = False
-admin = False
+admin = True
 
 #ACTIVITIES
 activeAny = False
@@ -5217,6 +5218,7 @@ class Course(pygame.sprite.Sprite):
             if courseLvl == 1:
                 course.dialogStandard(2.6,"What's up private? I'm leutienant Davies","from NAVY SEALs and I made a nice","training course for you, get ready man",fontSize=1.5)   
             elif courseLvl == 2:
+                storedItems.clear()
                 course.dialogTop(6.41,"But first you have to understand some things","especially about WHILE loop and its dependencies",fontSize=1.3)  
                 strs = [
                     "while loop is a control flow statement that",
@@ -5993,7 +5995,7 @@ class Course(pygame.sprite.Sprite):
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
         global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
         if activeMain and not errorShowed:
-            course.standardLessonEvents("lesson6",99,condition=notBlocked)
+            course.standardLessonEvents("lesson6",29,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson6" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier6.png".format(dirPath))
@@ -6470,6 +6472,8 @@ class Course(pygame.sprite.Sprite):
                     courseLvl += 1
             elif courseLvl == 28: #QUIZ
                 notBlocked = False
+                if isinstance(SR_holder,float):
+                    SR_holder = 0
                 if not done:
                     if isinstance(SR_holder,str):
                         SR_holder = 0
@@ -6560,7 +6564,35 @@ class Course(pygame.sprite.Sprite):
 
                     course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)                
             elif courseLvl == 29:
-                test = True #Finish
+                if len(SR_icons)<1:
+                    reward = pygame.image.load(r"{}/Images/Game/test/dogtag1.png".format(dirPath))
+                    reward = pygame.transform.scale(reward, [int(size_w/3.90),int(size_h/2.19)])
+                    reward = pygame.transform.rotate(reward, 60.0)
+                    SR_icons.append(reward)
+                if SR_holder==0:
+                    SR_holder = 1
+                screen.blit(SR_icons[0],[size_w/3.16,size_h/3])
+                name = WriteItalic(round(size_w//100*SR_holder),getName(),darker_gray,[size_w/1.81,size_h/1.63])
+                nameRect = name.get_rect()
+                if (nameRect[0]+nameRect[2])<size_w/1.66:
+                    SR_holder += 2/len(getName())
+                    pygame.event.post(pygame.event.Event(pygame.KEYDOWN))
+                course.dialogTop(6.41,"You've finished my course recruit!","I'm proud, there's your reward so","you can remember what you achieved",fontSize=1.4)
+
+                finishBtn = course.centeredBtn(1.22,dark_green,"Finish")
+
+                if event.type == MOUSEMOTION and finishBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.22,green,"Finish")
+                    course.centeredBtn(1.22,dark_green,"",border=size_w//250)
+                elif event.type == MOUSEBUTTONDOWN:
+                    if finishBtn.collidepoint(mouse_pos):
+                        if getCourseLvl() < 7:
+                            changeCourselvl(7)
+                        activeMenu = True
+                        courseLvl = 1  
+                        iterator = 1 
+                        course.shooting_range.clearVars()
+                        bckgrMusicPlayed = False
     def lesson7():
         course.standardLessonEvents("lesson7",99)
     def lesson8():
@@ -7063,7 +7095,7 @@ class Prize(pygame.sprite.Sprite):
                     "Magic potion",
                     "Book of spells",
                     "Graduate's medal",
-                    "None",
+                    "Dogtag",
                     "None",
                     "None",
                 ]
@@ -7074,7 +7106,7 @@ class Prize(pygame.sprite.Sprite):
                     "Magiczny eliksir",
                     "Księga zaklęć",
                     "Medal ukończenia",
-                    "None",
+                    "Nieśmiertelnik",
                     "None",
                     "None",
                 ]
@@ -7091,7 +7123,9 @@ class Prize(pygame.sprite.Sprite):
                     bookL = pygame.transform.scale(bookL, [int(size_w/10.6),int(size_h/6)]) 
                     medalL = pygame.image.load(r"{}/Images/Game/medal_locked.png".format(dirPath))
                     medalL = pygame.transform.scale(medalL, [int(size_w/12),int(size_h/6)]) 
-                    iconsLocked = [cupL,axeL,potionL,bookL,medalL]
+                    dogtagL = pygame.image.load(r"{}/Images/Game/test/dogtag1_locked.png".format(dirPath))
+                    dogtagL = pygame.transform.scale(dogtagL, [int(size_w/10.6),int(size_h/6)]) 
+                    iconsLocked = [cupL,axeL,potionL,bookL,medalL,dogtagL]
 
                 if len(iconsUnlock) < 1:
                     cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
@@ -7104,7 +7138,9 @@ class Prize(pygame.sprite.Sprite):
                     book = pygame.transform.scale(book, [int(size_w/10.6),int(size_h/6)]) 
                     medal = pygame.image.load(r"{}/Images/Game/medal.png".format(dirPath))
                     medal = pygame.transform.scale(medal, [int(size_w/12),int(size_h/6)]) 
-                    iconsUnlock = [cup,axe,potion,book,medal]
+                    dogtag = pygame.image.load(r"{}/Images/Game/test/dogtag1.png".format(dirPath))
+                    dogtag = pygame.transform.scale(dogtag, [int(size_w/10.6),int(size_h/6)])
+                    iconsUnlock = [cup,axe,potion,book,medal,dogtag]
             except:
                 errorInit("Failed to load icons at prize.startScreen()",fontSize=1.7)
 
