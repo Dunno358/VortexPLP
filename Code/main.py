@@ -130,6 +130,7 @@ errorShowed = False
 storedItems = []
 errorText = ''
 errorFontSize = 2
+storedValue = ''
 
 #TIME
 wait = False
@@ -200,6 +201,7 @@ TD_consoleTxts = ["","","",""]
 TD_enemies = []
 TD_friends = []
 TD_iterator = 1
+TD_iterator2 = 0
 TD_round = 1
 TD_count = 0
 TD_toDefeat = 0
@@ -909,10 +911,11 @@ class Course(pygame.sprite.Sprite):
                                 if chosen == 0:
                                     pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.ogg")
                                 else:
-                                    pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
+                                    pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
                                 pygame.mixer.music.play(1)
                             except:
                                 errorInit("Failed to load sounds: singleUnitClickEvent",fontSize=1.5)
+                        print("CLICK",iterator)
                         iterator += 1  
                 if fightBtn.collidepoint(mouse_pos) and not inFight:
                     inFight = True
@@ -1308,14 +1311,19 @@ class Course(pygame.sprite.Sprite):
                     enemy = [0,0]
                     enemy2 = [0,0]
         def targeting():
-            global TD_consoleShown,TD_count,TD_Lvls,TD_excludeLvls,courseLvl,TD_excludedLvls
+            global TD_consoleShown,TD_count,TD_Lvls,TD_excludeLvls,courseLvl,TD_excludedLvls,TD_subDone
             lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:] and courseLvl not in TD_excludedLvls
             if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson4" and lvlOk and not TD_consoleShown:
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
-                global TD_added,TD_added2,TD_toDefeat,TD_unitsPassed,TD_friendsLvl
+                global TD_added,TD_added2,TD_toDefeat,TD_unitsPassed,TD_friendsLvl,TD_iterator2,TD_lvlType
+                print(TD_hp,(size_w/19)/3)
                 if not TD_done:
-                    if TD_hp2<=0:
+                    if TD_lvlType == "mixed":
+                        TD_iterator2 = (size_w/19)/25
+                    else:
+                        TD_iterator2 = (size_w/19)/60
+                    if TD_hp2<=5:
                         course.tower_defence.reset()
                     pygame.event.set_blocked(MOUSEMOTION)
                     pygame.event.set_blocked(KEYDOWN)
@@ -1399,24 +1407,24 @@ class Course(pygame.sprite.Sprite):
                                 else:
                                     if getActualSecond()%2==0:
                                         if TD_hp > 0:
-                                            TD_hp -= size_w/900*len(TD_active)/1.5
+                                            TD_hp -= TD_iterator2*len(TD_active) #TD_hp/4*len(TD_active) | size_w/900*len(TD_active)/1.5
                                             lineColor = lt_blue
                                             try:
                                                 if soundEnabled:
-                                                    pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
+                                                    pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
                                                     pygame.mixer.music.play(1)
                                             except:
                                                 if language == "ENG":
-                                                    errorInit("Failed to load 'punch.ogg'")
+                                                    errorInit("Failed to load 'ouch.ogg'")
                                                 else:
-                                                    errorInit("Błąd wczytywania 'punch.ogg'")
+                                                    errorInit("Błąd wczytywania 'ouch.ogg'")
                                         else:
                                             #course.tower_defence.drawMap()
                                             pygame.event.post(KEYUP)
                                     wdthStart = circ[0] + circ[2]/2
                                     hghtStart = circ[1] + circ[3]/2
                                     pygame.draw.line(screen, lineColor, [wdthStart,hghtStart], TD_enemy, 3) 
-                            elif circ.collidepoint(TD_enemy2) and TD_hp2>0 and circ not in TD_active2:
+                            elif circ.collidepoint(TD_enemy2) and TD_hp2>5 and circ not in TD_active2:
                                 if index not in TD_active2:
                                     TD_active2.append(index)
                                 try:
@@ -1436,10 +1444,11 @@ class Course(pygame.sprite.Sprite):
                                 else:
                                     if getActualSecond()%2==0:
                                         if TD_hp2 > 0:
-                                            TD_hp2 -= TD_hp2/4*len(TD_active2)#size_w/550*len(TD_active2)
+                                            TD_hp2 -= TD_iterator2*len(TD_active2) #TD_hp2/4*len(TD_active2) | size_w/550*len(TD_active2)
                                             lineColor = lt_blue
-                                            pygame.mixer.music.load(f"{dirPath}/Music/punch.ogg")
-                                            pygame.mixer.music.play(1)
+                                            if soundEnabled:
+                                                pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
+                                                pygame.mixer.music.play(1)
                                         else:
                                             course.tower_defence.drawMap()
                                             course.tower_defence.reset()
@@ -1460,11 +1469,12 @@ class Course(pygame.sprite.Sprite):
                                     pass      
                         except:
                             pass
-                    if TD_hp<=0 and not TD_added:
+                    #ADDING
+                    if TD_hp<=5 and not TD_added:
                         TD_count += 1
                         TD_added = True
                         course.tower_defence.drawMap()
-                    if TD_hp2<=0 and not TD_added2:
+                    if TD_hp2<=5 and not TD_added2:
                         TD_count += 1
                         TD_added2 = True
                         course.tower_defence.drawMap()
@@ -1557,6 +1567,7 @@ class Course(pygame.sprite.Sprite):
             TD_round = 1
             TD_hp = size_w/19 
             TD_hp2 = size_w/19 
+            print("-------------------",TD_hp,TD_hp2)
             TD_consoleShown = False
             if not activeMenu:
                 course.tower_defence.drawMap()
@@ -1654,6 +1665,7 @@ class Course(pygame.sprite.Sprite):
             btnL = pygame.draw.rect(screen, btnColor, [size_w/5,size_h/3.73,size_w/50,size_h/6], 0)
             btnR = pygame.draw.rect(screen, btnColor, [size_w/4.78,size_h/3.73,size_w/50,size_h/6], 0,size_w//450)
             Write(round(size_w//100*2),">",txtColor,[size_w/4.71,size_h/2.83])
+              
 
             if event.type == MOUSEMOTION:
                 try:
@@ -2535,9 +2547,11 @@ class Course(pygame.sprite.Sprite):
                 except:
                     pass
     def gameQuestion(question,answers,goodAnswerIndex,fontSize=2):
-        global activeMain,hp2,iterator,storedTime,soundEnabled
+        global activeMain,hp2,iterator,storedTime,soundEnabled,storedValue
         pygame.draw.rect(screen, color1, [size_w/3.7,size_h/4.05,size_w/2,size_h/2], 0,10)
         pygame.draw.rect(screen, color2, [size_w/1.62,size_h/1.24,size_w/5.5,size_h/15], width=0)
+        confirmBtn = pygame.draw.rect(screen, dark_green, [size_w/1.53,size_h/1.6,size_w/12,size_h/13],0,size_w//150)
+        Write(round(size_w//100*1.3),"Confirm",color1,[size_w/1.44,size_h/1.5])
         dmg = int((size_w/50)/hp2*100)
         if getLang() == "ENG":
             Write(round(size_w//100*1),f"Attack will take {dmg}% of your HP",red,[size_w/1.41,size_h/1.21])
@@ -2553,10 +2567,17 @@ class Course(pygame.sprite.Sprite):
         rects = []
         wdths = []
         for answer in answers:
+            index = answers.index(answer)
             rect = pygame.draw.rect(screen, color2, [rectWdth,size_h/1.98,size_w/9,size_h/15],0,15)
             rects.append(rect)
             wdths.append(wdth)
-            Write(round(size_w//100*1.5),answer,color1,[wdth,size_h/1.85])
+            if isinstance(storedValue,int):
+                if storedValue == index:
+                    Write(round(size_w//100*1.5),answer,color3,[wdth,size_h/1.85])
+                else:
+                    Write(round(size_w//100*1.5),answer,color1,[wdth,size_h/1.85])
+            else:
+                Write(round(size_w//100*1.5),answer,color1,[wdth,size_h/1.85])
             wdth += size_w/8
             rectWdth += size_w/8
         wdth = size_w/2.59
@@ -2565,28 +2586,40 @@ class Course(pygame.sprite.Sprite):
                 index = rects.index(rect)
                 if rect.collidepoint(mouse_pos):
                     Write(round(size_w//100*1.5),answers[index],color3,[wdths[index],size_h/1.85])
+            if confirmBtn.collidepoint(mouse_pos):
+                pygame.draw.rect(screen, green, [size_w/1.53,size_h/1.6,size_w/12,size_h/13],0,size_w//150)
+                pygame.draw.rect(screen, dark_green, [size_w/1.53,size_h/1.6,size_w/12,size_h/13],size_w//250,size_w//150)
+                Write(round(size_w//100*1.3),"Confirm",color3,[size_w/1.44,size_h/1.5])
             wdth += size_w/8  
         if event.type == MOUSEBUTTONDOWN:
             for rect in rects:
                 index = rects.index(rect)
                 if rect.collidepoint(mouse_pos):
-                    if index == goodAnswerIndex:
+                    storedValue = index
+                    print(storedValue)
+            if confirmBtn.collidepoint(mouse_pos):
+                try:
+                    if storedValue == goodAnswerIndex:
                         activeMain = True
                         iterator += 1
+                        storedValue = ''
                         if soundEnabled:
                             pygame.mixer.music.load(f"{dirPath}/Music/shield_impact.ogg")
                             pygame.mixer.music.play(1)
-                    elif index != goodAnswerIndex:
+                    elif storedValue != goodAnswerIndex:
                         hp2 -= size_w/50
                         activeMain = True
                         iterator += 1
+                        print("TEST")
+                        storedValue = ''
                         if soundEnabled:
                             pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
                             pygame.mixer.music.play(1)
+                except:
+                    pass
             wdth += size_w/8     
     def consoleGame(textToShow,goodAnswer,btnText="Attack",fontSize=2.5,textLen=23,multipleAnswers=False,answersList=[],fontSize2=2):
         global text,activeMain,iterator,keys
-        print(activeMain)
         pygame.draw.rect(screen, color2, [size_w/3.11,size_h/14,size_w/2.6,size_h/10], 0)
         Write(round(size_w//100*1.4),textToShow,color3,[size_w/1.94,size_h/8.99])
         rect = pygame.draw.rect(screen, color1, [size_w/3.11,size_h/6.3,size_w/2.6,size_h/6], 0,15)
@@ -3036,8 +3069,8 @@ class Course(pygame.sprite.Sprite):
                         courseLvl = 1
                         bckgrMusicPlayed = False
     def lesson2():
-        global activeMenu,courseLvl,mentorIcon,wait,storedTime,activeMain,type,chosen,inFight,notBlocked,theme
-        global hp1,hp2,iterator,activeMain,rectCenter,langugage,bckgrMusicPlayed,errorShowed
+        global activeMenu,courseLvl,mentorIcon,wait,storedTime,activeMain,type,chosen,inFight,notBlocked
+        global hp1,hp2,iterator,activeMain,rectCenter,language,bckgrMusicPlayed,errorShowed,storedItems
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson2",16,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson2" and not errorShowed:
@@ -3594,12 +3627,15 @@ class Course(pygame.sprite.Sprite):
                         iterator = 2
                         notBlocked = True
             elif courseLvl == 14:
-                dragonMR = pygame.image.load(r"{}/Images/Game/dragonMarkedRed.png".format(dirPath))  
-                dragonMR = pygame.transform.scale(dragonMR, [int(size_w/2.132),int(size_h/2.4)])    
-                dragon = pygame.image.load(r"{}/Images/Game/dragon.png".format(dirPath))
-                dragon = pygame.transform.scale(dragon,[int(size_w/2.132),int(size_h/2.4)])           
-                screen.blit(dragon,[size_w/3.47,size_h/2.5])
-                dragonRect = dragon.get_rect(center=[size_w/1.96,size_h/1.51])
+                if len(storedItems)<1:
+                    dragonMR = pygame.image.load(r"{}/Images/Game/dragonMarkedRed.png".format(dirPath))  
+                    dragonMR = pygame.transform.scale(dragonMR, [int(size_w/2.132),int(size_h/2.4)])   
+                    storedItems.append(dragonMR) 
+                    dragon = pygame.image.load(r"{}/Images/Game/dragon.png".format(dirPath))
+                    dragon = pygame.transform.scale(dragon,[int(size_w/2.132),int(size_h/2.4)]) 
+                    storedItems.append(dragon)          
+                screen.blit(storedItems[1],[size_w/3.47,size_h/2.5])
+                dragonRect = storedItems[1].get_rect(center=[size_w/1.96,size_h/1.51])
                 cords = [
                     [size_w/2.3,size_h/1.7,size_w/6,size_h/8],
                     [size_w/2.1,size_h/1.4,size_w/8,size_h/8],
@@ -3612,7 +3648,7 @@ class Course(pygame.sprite.Sprite):
                 for cord in cords:
                     rect = pygame.draw.rect(screen, color2, cord, 1)
                     rects.append(rect)
-                screen.blit(dragon,[size_w/3.47,size_h/2.5])
+                screen.blit(storedItems[1],[size_w/3.47,size_h/2.5])
                 if language == "ENG":
                     commandsList = [
                         "Declare integer \"damage\" with value of 8",
@@ -3654,9 +3690,10 @@ class Course(pygame.sprite.Sprite):
                 if event.type == MOUSEBUTTONDOWN:
                     for rect in rects:
                         if rect.collidepoint(mouse_pos):
-                            screen.blit(dragonMR,[size_w/3.47,size_h/2.5])  
+                            screen.blit(storedItems[0],[size_w/3.47,size_h/2.5])  
                             course.coursorMarked() 
             elif courseLvl == 15:
+                storedItems.clear()
                 if iterator == 6:
                     notBlocked = True
                 if language == "ENG":
@@ -6595,17 +6632,19 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False
     def lesson7():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
-        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
-        global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+        global storedTime,storedTimeValue
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson7",29,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
             try:
-                mentorIcon = pygame.image.load(r"{}/Images/Game/sr/soldier6.png".format(dirPath))
+                mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
                 mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
+            if courseLvl == 1: #FUNCTIONS
+                course.dialogTop(6.41,"TEST")
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
@@ -6788,10 +6827,10 @@ class Settings(pygame.sprite.Sprite):
                         Write(size_w//100*2,"1200:700",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc2.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/2,size_h/1.7], size_w//60, 0)
-                        Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
+                        Write(size_w//100*2,"1366:768",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc3.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/1.65,size_h/1.7], size_w//60, 0)
-                        Write(size_w//100*2,"X:Y",color3,[size_w/1.8,size_h/1.5])
+                        Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc4.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/1.4,size_h/1.7], size_w//60, 0)
                         if language == "ENG":
