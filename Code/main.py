@@ -6777,10 +6777,10 @@ class Settings(pygame.sprite.Sprite):
                         Write(size_w//100*2,"1200:700",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc2.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/2,size_h/1.7], size_w//60, 0)
-                        Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
+                        Write(size_w//100*2,"1366:768",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc3.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/1.65,size_h/1.7], size_w//60, 0)
-                        Write(size_w//100*2,"X:Y",color3,[size_w/1.8,size_h/1.5])
+                        Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc4.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/1.4,size_h/1.7], size_w//60, 0)
                         if language == "ENG":
@@ -6788,8 +6788,8 @@ class Settings(pygame.sprite.Sprite):
                         else:
                             Write(size_w//100*2,"Domyślne",color3,[size_w/1.8,size_h/1.5]) 
                 elif event.type==MOUSEBUTTONDOWN and activeMain:
-                    resCircs = [resCirc1,resCirc2,resCirc4]
-                    res = [[1200,700],[1600,900],[displaySize.current_w,displaySize.current_h]]
+                    resCircs = [resCirc1,resCirc2,resCirc3,resCirc4]
+                    res = [[1200,700],[1366,768],[1600,900],[displaySize.current_w,displaySize.current_h]]
                     for resCirc in resCircs:
                         if resCirc.collidepoint(mouse_pos):
                             index = resCircs.index(resCirc)
