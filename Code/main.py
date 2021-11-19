@@ -1790,7 +1790,7 @@ class Course(pygame.sprite.Sprite):
                     if isinstance(selected,str):
                         selected = 2
                     try:
-                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/sr/shoot_shield.png".format(dirPath))
                         shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/14.22),int(size_h/8)])
                         SR_icons.append(shoot_shield)
                     except:
@@ -5210,7 +5210,7 @@ class Course(pygame.sprite.Sprite):
             course.standardLessonEvents("lesson5",20,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson5" and not errorShowed:
             try:
-                mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier6.png".format(dirPath))
+                mentorIcon = pygame.image.load(r"{}/Images/Game/sr/soldier6.png".format(dirPath))
                 mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
@@ -5248,7 +5248,7 @@ class Course(pygame.sprite.Sprite):
                 ]
                 if(len(SR_icons)<1):
                     try:
-                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/sr/shoot_shield.png".format(dirPath))
                         shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/14.22),int(size_h/8)])
                         SR_icons.append(shoot_shield)
                     except:
@@ -5455,13 +5455,13 @@ class Course(pygame.sprite.Sprite):
 
                 if(len(SR_icons)) < 1:
                     try:
-                        enemy1 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy1.png")
+                        enemy1 = pygame.image.load(f"{dirPath}/Images/Game/sr/enemy1.png")
                         enemy1 = pygame.transform.scale(enemy1, [int(size_w/10.6),int(size_h/6)])
                         SR_icons.append(enemy1)
-                        enemy2 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy2.png")
+                        enemy2 = pygame.image.load(f"{dirPath}/Images/Game/sr/enemy2.png")
                         enemy2 = pygame.transform.scale(enemy2, [int(size_w/16),int(size_h/7)])
                         SR_icons.append(enemy2)
-                        enemy3 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy3.png")
+                        enemy3 = pygame.image.load(f"{dirPath}/Images/Game/sr/enemy3.png")
                         enemy3 = pygame.transform.scale(enemy3, [int(size_w/10.6),int(size_h/6)])
                         SR_icons.append(enemy3)
                     except:
@@ -5664,16 +5664,16 @@ class Course(pygame.sprite.Sprite):
                         SR_holder2 = 1
                     course.dialogTop(6.41,"Oh right recruit, grab a gun","and show me what you've learned")
                     if len(SR_icons)<1:
-                        m4 = pygame.image.load(r"{}/Images/Game/test/m4.png".format(dirPath))
+                        m4 = pygame.image.load(r"{}/Images/Game/sr/m4.png".format(dirPath))
                         m4 = pygame.transform.scale(m4, [int(size_w/5),int(size_h/5)])
                         SR_icons.append(m4)
-                        mp5 = pygame.image.load(r"{}/Images/Game/test/mp5.png".format(dirPath))
+                        mp5 = pygame.image.load(r"{}/Images/Game/sr/mp5.png".format(dirPath))
                         mp5 = pygame.transform.scale(mp5, [int(size_w/6),int(size_h/8)])
                         SR_icons.append(mp5)
-                        m4m = pygame.image.load(r"{}/Images/Game/test/m4marked.png".format(dirPath))
+                        m4m = pygame.image.load(r"{}/Images/Game/sr/m4marked.png".format(dirPath))
                         m4m = pygame.transform.scale(m4m, [int(size_w/5),int(size_h/5)])
                         SR_icons.append(m4m)
-                        mp5m = pygame.image.load(r"{}/Images/Game/test/mp5marked.png".format(dirPath))
+                        mp5m = pygame.image.load(r"{}/Images/Game/sr/mp5marked.png".format(dirPath))
                         mp5m = pygame.transform.scale(mp5m, [int(size_w/6),int(size_h/8)])
                         SR_icons.append(mp5m)
                     try:
@@ -5783,7 +5783,7 @@ class Course(pygame.sprite.Sprite):
                         errorInit("Failed to load iron_sight")
 
                     try:
-                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/sr/shoot_shield.png".format(dirPath))
                         shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/21.34),int(size_h/12)])
                         SR_icons.append(shoot_shield)
                     except:
@@ -5868,7 +5868,7 @@ class Course(pygame.sprite.Sprite):
                         errorInit("Failed to load iron_sight")
 
                     try:
-                        shoot_shield = pygame.image.load(r"{}/Images/Game/test/shoot_shield.png".format(dirPath))
+                        shoot_shield = pygame.image.load(r"{}/Images/Game/sr/shoot_shield.png".format(dirPath))
                         shoot_shield = pygame.transform.scale(shoot_shield, [int(size_w/21.34),int(size_h/12)])
                         SR_icons.append(shoot_shield)
                     except:
@@ -5998,7 +5998,7 @@ class Course(pygame.sprite.Sprite):
             course.standardLessonEvents("lesson6",29,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson6" and not errorShowed:
             try:
-                mentorIcon = pygame.image.load(r"{}/Images/Game/test/soldier6.png".format(dirPath))
+                mentorIcon = pygame.image.load(r"{}/Images/Game/sr/soldier6.png".format(dirPath))
                 mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
@@ -6222,7 +6222,7 @@ class Course(pygame.sprite.Sprite):
                     done = False
             elif courseLvl == 15:
                 if len(SR_icons) < 1:
-                    map = pygame.image.load(r"{}/Images/Game/test/garage.jpg".format(dirPath))
+                    map = pygame.image.load(r"{}/Images/Game/sr/garage.jpg".format(dirPath))
                     map = pygame.transform.scale(map, [int(size_w/1.6),int(size_h/1.8)])
                     SR_icons.append(map)
                     iron_sight = pygame.image.load(r"{}/Images/Game/iron_sight.png".format(dirPath))
@@ -6231,13 +6231,13 @@ class Course(pygame.sprite.Sprite):
                     iron_sight_shoot = pygame.image.load(r"{}/Images/Game/iron_sight_shoot.png".format(dirPath))
                     iron_sight_shoot = pygame.transform.scale(iron_sight_shoot, [int(size_w/3.90),int(size_h/2.09)])
                     SR_icons.append(iron_sight_shoot)
-                    enemy1 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy1.png")
+                    enemy1 = pygame.image.load(f"{dirPath}/Images/Game/sr/enemy1.png")
                     enemy1 = pygame.transform.scale(enemy1, [int(size_w/12),int(size_h/6)])
                     SR_icons.append(enemy1)
-                    enemy2 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy2.png")
+                    enemy2 = pygame.image.load(f"{dirPath}/Images/Game/sr/enemy2.png")
                     enemy2 = pygame.transform.scale(enemy2, [int(size_w/30),int(size_h/14)])
                     SR_icons.append(enemy2)
-                    enemy3 = pygame.image.load(f"{dirPath}/Images/Game/test/enemy3.png")
+                    enemy3 = pygame.image.load(f"{dirPath}/Images/Game/sr/enemy3.png")
                     enemy3 = pygame.transform.scale(enemy3, [int(size_w/30),int(size_h/14)])
                     SR_icons.append(enemy3)
                 mapJPG = screen.blit(SR_icons[0],[size_w/4.57,size_h/5.57])
@@ -6481,16 +6481,16 @@ class Course(pygame.sprite.Sprite):
                         SR_holder2 = 1
                     course.dialogTop(6.41,"Oh right recruit, grab a gun","and show me what you've learned")
                     if len(SR_icons)<1:
-                        m4 = pygame.image.load(r"{}/Images/Game/test/m4.png".format(dirPath))
+                        m4 = pygame.image.load(r"{}/Images/Game/sr/m4.png".format(dirPath))
                         m4 = pygame.transform.scale(m4, [int(size_w/5),int(size_h/5)])
                         SR_icons.append(m4)
-                        mp5 = pygame.image.load(r"{}/Images/Game/test/mp5.png".format(dirPath))
+                        mp5 = pygame.image.load(r"{}/Images/Game/sr/mp5.png".format(dirPath))
                         mp5 = pygame.transform.scale(mp5, [int(size_w/6),int(size_h/8)])
                         SR_icons.append(mp5)
-                        m4m = pygame.image.load(r"{}/Images/Game/test/m4marked.png".format(dirPath))
+                        m4m = pygame.image.load(r"{}/Images/Game/sr/m4marked.png".format(dirPath))
                         m4m = pygame.transform.scale(m4m, [int(size_w/5),int(size_h/5)])
                         SR_icons.append(m4m)
-                        mp5m = pygame.image.load(r"{}/Images/Game/test/mp5marked.png".format(dirPath))
+                        mp5m = pygame.image.load(r"{}/Images/Game/sr/mp5marked.png".format(dirPath))
                         mp5m = pygame.transform.scale(mp5m, [int(size_w/6),int(size_h/8)])
                         SR_icons.append(mp5m)
                     try:
@@ -6565,7 +6565,7 @@ class Course(pygame.sprite.Sprite):
                     course.shooting_range.quiz.start(questions,allAnswers,correctAnswers)                
             elif courseLvl == 29:
                 if len(SR_icons)<1:
-                    reward = pygame.image.load(r"{}/Images/Game/test/dogtag1.png".format(dirPath))
+                    reward = pygame.image.load(r"{}/Images/Game/sr/dogtag1.png".format(dirPath))
                     reward = pygame.transform.scale(reward, [int(size_w/3.90),int(size_h/2.19)])
                     reward = pygame.transform.rotate(reward, 60.0)
                     SR_icons.append(reward)
@@ -6594,7 +6594,18 @@ class Course(pygame.sprite.Sprite):
                         course.shooting_range.clearVars()
                         bckgrMusicPlayed = False
     def lesson7():
-        course.standardLessonEvents("lesson7",99)
+        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
+        global SR_icons,SR_cords,SR_iterator,SR_holder,SR_holder2
+        if activeMain and not errorShowed:
+            course.standardLessonEvents("lesson7",29,condition=notBlocked)
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
+            try:
+                mentorIcon = pygame.image.load(r"{}/Images/Game/sr/soldier6.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
+            language = getLang()
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
@@ -6777,10 +6788,10 @@ class Settings(pygame.sprite.Sprite):
                         Write(size_w//100*2,"1200:700",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc2.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/2,size_h/1.7], size_w//60, 0)
-                        Write(size_w//100*2,"1366:768",color3,[size_w/1.8,size_h/1.5])
+                        Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc3.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/1.65,size_h/1.7], size_w//60, 0)
-                        Write(size_w//100*2,"1600:900",color3,[size_w/1.8,size_h/1.5])
+                        Write(size_w//100*2,"X:Y",color3,[size_w/1.8,size_h/1.5])
                     elif resCirc4.collidepoint(mouse_pos):
                         pygame.draw.circle(screen, dark_blue, [size_w/1.4,size_h/1.7], size_w//60, 0)
                         if language == "ENG":
@@ -7123,7 +7134,7 @@ class Prize(pygame.sprite.Sprite):
                     bookL = pygame.transform.scale(bookL, [int(size_w/10.6),int(size_h/6)]) 
                     medalL = pygame.image.load(r"{}/Images/Game/medal_locked.png".format(dirPath))
                     medalL = pygame.transform.scale(medalL, [int(size_w/12),int(size_h/6)]) 
-                    dogtagL = pygame.image.load(r"{}/Images/Game/test/dogtag1_locked.png".format(dirPath))
+                    dogtagL = pygame.image.load(r"{}/Images/Game/sr/dogtag1_locked.png".format(dirPath))
                     dogtagL = pygame.transform.scale(dogtagL, [int(size_w/10.6),int(size_h/6)]) 
                     iconsLocked = [cupL,axeL,potionL,bookL,medalL,dogtagL]
 
@@ -7138,7 +7149,7 @@ class Prize(pygame.sprite.Sprite):
                     book = pygame.transform.scale(book, [int(size_w/10.6),int(size_h/6)]) 
                     medal = pygame.image.load(r"{}/Images/Game/medal.png".format(dirPath))
                     medal = pygame.transform.scale(medal, [int(size_w/12),int(size_h/6)]) 
-                    dogtag = pygame.image.load(r"{}/Images/Game/test/dogtag1.png".format(dirPath))
+                    dogtag = pygame.image.load(r"{}/Images/Game/sr/dogtag1.png".format(dirPath))
                     dogtag = pygame.transform.scale(dogtag, [int(size_w/10.6),int(size_h/6)])
                     iconsUnlock = [cup,axe,potion,book,medal,dogtag]
             except:
