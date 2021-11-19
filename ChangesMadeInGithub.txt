@@ -1,7 +1,4 @@
 [todo-DUNGEON] entering settings while on Tower Defense Lvls need to adjust allowing events(KEYDOWN) to queue
-[todo-TD] change loading pounch sound at tower_defence to load once and play instead of when statement is true
-[todo-TD] change damage to getting 1/3 of start hp(give start hp to another variable and use it)
-[todo-TD] enemies and friends are moving too slow
 [todo-PRIZE/SETTINGS] name can be too long to fit at Prize and Settings
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 
