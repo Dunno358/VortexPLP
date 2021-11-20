@@ -6635,7 +6635,7 @@ class Course(pygame.sprite.Sprite):
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
         global storedTime,storedTimeValue
         if activeMain and not errorShowed:
-            course.standardLessonEvents("lesson7",29,condition=notBlocked)
+            course.standardLessonEvents("lesson7",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
@@ -6644,7 +6644,12 @@ class Course(pygame.sprite.Sprite):
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
             if courseLvl == 1: #FUNCTIONS
-                course.dialogTop(6.41,"TEST")
+                txts = [
+                    "Hello there! I'm Kigam Yntorwdo,",
+                    "Lieutenant of Greezo's Army and",
+                    "leader of 'teaching newbies' program"
+                    ]
+                course.dialogStandard(2.6,txts[0],txts[1],txts[2],fontSize=1.5)
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
