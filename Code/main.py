@@ -185,7 +185,7 @@ TD_hghtStart2 = size_h/1.63
 TD_hp = size_w/19
 TD_hp2 = size_w/19
 TD_firstDone = False
-TD_firstDone2 = False
+TD_secondDone = False
 TD_done = False
 TD_enemy = None
 TD_enemy2 = None
@@ -1131,7 +1131,7 @@ class Course(pygame.sprite.Sprite):
             global iterator,TD_wdthStart,TD_hghtStart,TD_firstDone,TD_guardRects,eventsBlocked
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards,TD_unitsPassed
             global TD_time,TD_active,TD_iterator,TD_hp,TD_consoleShown,TD_friends,TD_enemies
-            global TD_actualEnemy,TD_actualEnemy2,TD_wdthStart2,TD_hghtStart2,TD_enemy2,TD_firstDone2
+            global TD_actualEnemy,TD_actualEnemy2,TD_wdthStart2,TD_hghtStart2,TD_enemy2,TD_secondDone
             global TD_hp2,TD_queue,TD_lvlType,TD_Lvls,TD_excludeLvls,TD_excludedLvls,TD_friendsLvl
             lessonOk = str(activeLesson)[17:-23]=="lesson4"
             lvlOk = courseLvl in TD_Lvls[TD_excludeLvls:] and courseLvl not in TD_excludedLvls
@@ -1247,14 +1247,14 @@ class Course(pygame.sprite.Sprite):
                             TD_unitsPassed += 1
                             TD_iterator = 2
                     if secondGo:
-                        if TD_wdthStart2<size_w/2.36 and not TD_firstDone2:
+                        if TD_wdthStart2<size_w/2.36 and not TD_secondDone:
                             course.tower_defence.drawPath()
                             TD_wdthStart2 += size_w/1000*TD_iterator
-                        elif TD_hghtStart2>size_h/2.76 and not TD_firstDone2:
+                        elif TD_hghtStart2>size_h/2.76 and not TD_secondDone:
                             course.tower_defence.drawPath()
                             TD_hghtStart2 -= size_h/700*TD_iterator
                         elif TD_wdthStart2<size_w/1.52:
-                            TD_firstDone2 = True
+                            TD_secondDone = True
                             course.tower_defence.drawPath()
                             TD_wdthStart2 += size_w/1000*TD_iterator
                         elif TD_hghtStart2<size_h/1.63:
@@ -1535,7 +1535,7 @@ class Course(pygame.sprite.Sprite):
             global TD_guardSubRects,TD_enemy,TD_done,admin,TD_circs,TD_pathCords,TD_guards
             global TD_time,TD_active,TD_iterator,TD_hp,TD_round,TD_consoleShown,TD_consoleRects
             global TD_consoleActiveRect,TD_consoleTxts,TD_enemies,TD_friends,TD_hghtStart2,TD_wdthStart2
-            global TD_actualEnemy2,TD_hp2,TD_firstDone2,TD_enemy2,TD_queue,TD_lvlType,TD_active2
+            global TD_actualEnemy2,TD_hp2,TD_secondDone,TD_enemy2,TD_queue,TD_lvlType,TD_active2
             global TD_subDone,TD_added,TD_added2
             TD_circs = []
             TD_queue = []
@@ -1555,7 +1555,7 @@ class Course(pygame.sprite.Sprite):
             TD_wdthStart2 = size_w/4.9
             TD_hghtStart2 = size_h/1.63
             TD_firstDone = False
-            TD_firstDone2 = False
+            TD_secondDone = False
             TD_done = False
             TD_subDone = False
             TD_enemy = None
@@ -2740,6 +2740,13 @@ class Course(pygame.sprite.Sprite):
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.47,size_h/hght+size_h/11.15])
         else:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
+    def definition(strAsList,title="Definition",hghtPoint=2.09,titleFontSize=2.6,txtFontSize=2):
+        pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
+        hght = size_h/hghtPoint
+        Write(round(size_w//100*titleFontSize),title,red,[size_w/1.92,size_h/2.51])
+        for x in strAsList:
+            Write(round(size_w//100*txtFontSize),x,color3,[size_w/1.92,hght])
+            hght += size_h/10
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
         global bckgrMusicPlayed,soundEnabled,errorShowed
@@ -5262,12 +5269,7 @@ class Course(pygame.sprite.Sprite):
                     "allows code to be executed repeatedly based", 
                     "on a given Boolean condition"
                 ] 
-                pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
-                hght = size_h/2.09
-                Write(round(size_w//100*2.6),"Definition",red,[size_w/1.92,size_h/2.51])
-                for x in strs:
-                    Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
-                    hght += size_h/10
+                course.definition(strs)
             elif courseLvl == 3:
                 if isinstance(iterator,int):
                     if iterator < 4:
@@ -6062,12 +6064,7 @@ class Course(pygame.sprite.Sprite):
                     "specifying iteration which allows code to be", 
                     "be executed repeatedly"
                 ] 
-                pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
-                hght = size_h/2.09
-                Write(round(size_w//100*2.6),"Definition",red,[size_w/1.92,size_h/2.51])
-                for x in strs:
-                    Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
-                    hght += size_h/10
+                course.definition(strs)
             elif courseLvl == 3:
                 notBlocked = False
                 txts = [
@@ -6490,12 +6487,7 @@ class Course(pygame.sprite.Sprite):
                     "reason have a for loop with no content, put in", 
                     "the pass statement to avoid getting an error."
                 ] 
-                pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
-                hght = size_h/2.09
-                Write(round(size_w//100*2.6),"Pass ~ W3Schools",red,[size_w/1.92,size_h/2.51])
-                for x in strs:
-                    Write(round(size_w//100*2),x,color3,[size_w/1.92,hght])
-                    hght += size_h/10
+                course.definition(strs,title="Pass ~ W3Schools",)
                 course.shooting_range.clearVars()
             elif courseLvl == 27:
                 notBlocked = False
@@ -6650,6 +6642,12 @@ class Course(pygame.sprite.Sprite):
                     "leader of 'teaching newbies' program"
                     ]
                 course.dialogStandard(2.6,txts[0],txts[1],txts[2],fontSize=1.5)
+            elif courseLvl == 2:
+                strs = ["A function is a block of code which only runs when",
+                "it is called. You can pass data, known as parameters, into",
+                "a function. A function can return data as a result."]
+                course.dialogTop(6.41,"Are you wondering what will you learn?","We will go throught Python function",fontSize=1.4)
+                course.definition(strs,txtFontSize=1.8)
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
