@@ -2,8 +2,8 @@
 [todo-PRIZE/SETTINGS] name can be too long to fit at Prize and Settings
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 
-[Function lesson]
--Definition
+[Function lesson] ✓
+-✓Definition
 -Syntax
 -Calling a function
 -Arguments
