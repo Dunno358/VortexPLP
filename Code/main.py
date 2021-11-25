@@ -6687,7 +6687,11 @@ class Course(pygame.sprite.Sprite):
                 for x in range(3000):
                     starW = uniform(size_w/4.01,size_w/1.22)
                     starH = uniform(size_h/4.57,size_h/1.46)
-                    pygame.draw.circle(screen, lter_blue, [starW,starH], size_w//950, 0)   
+                    if x%2==0:
+                        color = lter_blue
+                    else:
+                        color = dark_blue
+                    pygame.draw.circle(screen, color, [starW,starH], size_w//950, 0)   
 
                 target = "None"
                 if "SHIP1" not in SF_holder2:
