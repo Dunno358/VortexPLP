@@ -6669,6 +6669,9 @@ class Course(pygame.sprite.Sprite):
                         fighter1 = pygame.image.load(r"{}/Images/Game/sf/fighter1.png".format(dirPath))
                         fighter1 = pygame.transform.scale(fighter1, [int(size_w/14.22),int(size_h/12)])
                         SF_icons.append(fighter1)
+                        fire = pygame.image.load(r"{}/Images/Game/sf/fire.jpg".format(dirPath))
+                        fire = pygame.transform.scale(fire, [int(size_w/200),int(size_h/100)])
+                        SF_icons.append(fire)
                 except:
                     errorInit("Failed to load ships")
                 """try:
@@ -6688,7 +6691,7 @@ class Course(pygame.sprite.Sprite):
                     starW = uniform(size_w/4.01,size_w/1.22)
                     starH = uniform(size_h/4.57,size_h/1.46)
                     if x%2==0:
-                        color = lter_blue
+                        color = dark_blue
                     else:
                         color = dark_blue
                     pygame.draw.circle(screen, color, [starW,starH], size_w//950, 0)   
@@ -6708,7 +6711,8 @@ class Course(pygame.sprite.Sprite):
                     ship3 = None
                 for cord in SF_cords:
                     index = SF_cords.index(cord)
-                    pygame.draw.circle(screen, orange, cord, size_w//250, 0)  
+                    #pygame.draw.circle(screen, orange, cord, size_w//250, 0)  
+                    screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
 
                 if bckgr.collidepoint(mouse_pos):
                     pygame.mouse.set_visible(False)
