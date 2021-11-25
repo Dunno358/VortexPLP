@@ -6646,7 +6646,8 @@ class Course(pygame.sprite.Sprite):
                 strs = ["A function is a block of code which only runs when",
                 "it is called. You can pass data, known as parameters, into",
                 "a function. A function can return data as a result."]
-                course.dialogTop(6.41,"Are you wondering what will you learn?","We will go throught Python function",fontSize=1.4)
+#                                                                            .                                       .
+                course.dialogTop(6.41,"According to my calculations, my mission here is","to teach you about functions, so let's get started!",fontSize=1.2)
                 course.definition(strs,txtFontSize=1.8)
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
