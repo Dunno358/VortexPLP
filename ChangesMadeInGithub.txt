@@ -6,7 +6,7 @@
 [Function lesson] 
 -✓Definition
 -✓Syntax
--Calling a function
+-✓Calling a function
 -Arguments
 -Multiple arguments
 -*args
