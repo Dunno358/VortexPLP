@@ -6693,7 +6693,28 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(1.27,lt_blue,"Done")
                     course.centeredBtn(1.27,dark_blue,"",size_w//250)
                     if event.type == MOUSEBUTTONDOWN:
-                        courseLvl += 1                           
+                        courseLvl += 1            
+            elif courseLvl == 7:
+                course.dialogTop(6.41,"So let's suppose you have written a","function, how to call it now then?")               
+                questionMark = Write(round(size_w/100*6),"?",lt_blue,[size_w/1.82,size_h/2.2])
+                questRect = questionMark.get_rect()
+                if questRect.collidepoint(mouse_pos):
+                    Write(round(size_w/100*6),"?",logoBlue,[size_w/1.82,size_h/2.2])
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 8:
+                notBlocked = True
+                course.dialogStandard(2.6,"It can't be simplier! Let's suppose","your function name is func5, so you","can call it by typing func5() - That's all!",fontSize=1.4)
+            elif courseLvl == 9:    
+                course.consoleGame("Call a function named func3","func3()","Check")
+                if iterator > 1:
+                    notBlocked = True
+                    Write(round(size_w//100*3),"That's right! Go further",green,[size_w/1.91,size_h/1.84])
+                else:
+                    notBlocked = False
+                    Write(round(size_w//100*2.7),"Type correct answer in the box",lt_blue,[size_w/1.91,size_h/1.84])
+            elif courseLvl == 10:
+                topic = "arguments"
             elif courseLvl==15: #MINIGAME
                 try:
                     if len(SF_icons)<1:
