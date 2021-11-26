@@ -5,7 +5,7 @@
 
 [Function lesson] 
 -✓Definition
--Syntax
+-Syntax[WORKING ON]
 -Calling a function
 -Arguments
 -Multiple arguments
