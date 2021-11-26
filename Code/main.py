@@ -6656,8 +6656,34 @@ class Course(pygame.sprite.Sprite):
                 "it is called. You can pass data, known as parameters, into",
                 "a function. A function can return data as a result."]
                 course.dialogTop(6.41,"According to my calculations, my mission here is","to teach you about functions, so let's get started!",fontSize=1.2)
-                course.definition(strs,txtFontSize=1.8)
+                course.definition(strs,txtFontSize=1.7)
             elif courseLvl==3:
+                course.dialogTop(6.41,"Let's start with functions syntax") 
+                course.consoleExample("def name():",3.08,left=True)
+                course.consoleExample("instructions",2.06)
+            elif courseLvl == 4:
+                notBlocked = False
+                course.dialogTop(6.41,"Let's analyze it one by one")
+                course.definition(["it's a keyword starting function","iterpretation and it always have","to be at the beggining"],"Def")
+                nextBtn = course.centeredBtn(1.27,dark_green,"Next")
+
+                if nextBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.27,green,"Next")
+                    course.centeredBtn(1.27,dark_green,"",size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 5:
+                notBlocked = False
+                course.dialogTop(6.41,"Now the important thing")
+                course.definition(["name can be whatever you want(if not","forbidden by syntax) and it will be needed","if you want to call this function"],"name():")
+                nextBtn = course.centeredBtn(1.27,dark_green,"Next")
+
+                if nextBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.27,green,"Next")
+                    course.centeredBtn(1.27,dark_green,"",size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1                
+            elif courseLvl==20: #MINIGAME
                 try:
                     if len(SF_icons)<1:
                         destroyer = pygame.image.load(r"{}/Images/Game/sf/Destroyer.png".format(dirPath))
@@ -6697,17 +6723,22 @@ class Course(pygame.sprite.Sprite):
                     pygame.draw.circle(screen, color, [starW,starH], size_w//950, 0)   
 
                 target = "None"
-                if "SHIP1" not in SF_holder2:
-                    ship1 = screen.blit(SF_icons[1],[size_w/3.39,size_h/4.57]) 
-                else:
+                try:
+                    if "SHIP1" not in SF_holder2:
+                        ship1 = screen.blit(SF_icons[1],[size_w/3.39,size_h/4.57]) 
+                    else:
+                        ship1 = None
+                    if "SHIP2" not in SF_holder2:
+                        ship2 = screen.blit(SF_icons[1],[size_w/2.04,size_h/2.7]) 
+                    else:
+                        ship2 = None
+                    if "SHIP3" not in SF_holder2:
+                        ship3 = screen.blit(SF_icons[1],[size_w/2.78,size_h/1.9]) 
+                    else:
+                        ship3 = None
+                except:
                     ship1 = None
-                if "SHIP2" not in SF_holder2:
-                    ship2 = screen.blit(SF_icons[1],[size_w/2.04,size_h/2.7]) 
-                else:
                     ship2 = None
-                if "SHIP3" not in SF_holder2:
-                    ship3 = screen.blit(SF_icons[1],[size_w/2.78,size_h/1.9]) 
-                else:
                     ship3 = None
                 for cord in SF_cords:
                     index = SF_cords.index(cord)
