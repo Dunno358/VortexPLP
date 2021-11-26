@@ -2234,7 +2234,7 @@ class Course(pygame.sprite.Sprite):
                                     pygame.draw.rect(screen, green, [wdth,hght,size_w/45,size_h/30], 0)
                                     wdth += size_w/35
                             wdth = size_w/2.18
-                            hght += size_h/25
+                            hght += size_h/25               
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -6682,8 +6682,19 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(1.27,green,"Next")
                     course.centeredBtn(1.27,dark_green,"",size_w//250)
                     if event.type == MOUSEBUTTONDOWN:
-                        courseLvl += 1                
-            elif courseLvl==20: #MINIGAME
+                        courseLvl += 1       
+            elif courseLvl == 6:
+                notBlocked = False
+                course.dialogTop(6.41,"And for the end!","Also remember about '()' and ':'")
+                course.definition(["Block of code instructions that","will be executed when function","is called"],"instructions")
+                nextBtn = course.centeredBtn(1.27,purple,"Done")
+
+                if nextBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.27,lt_blue,"Done")
+                    course.centeredBtn(1.27,dark_blue,"",size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1                           
+            elif courseLvl==15: #MINIGAME
                 try:
                     if len(SF_icons)<1:
                         destroyer = pygame.image.load(r"{}/Images/Game/sf/Destroyer.png".format(dirPath))
@@ -6700,15 +6711,10 @@ class Course(pygame.sprite.Sprite):
                         SF_icons.append(fire)
                 except:
                     errorInit("Failed to load ships")
-                """try:
-                    screen.blit(SF_icons[0],[size_w/3.39,size_h/5.86])
-                    screen.blit(SF_icons[1],[size_w/3.39,size_h/2.61])
-                except:
-                    errorInit("Failed to blit ships")"""
                 bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], 0,size_w//200)
                 pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], size_w//300,size_w//200)
                 
-                
+                #HERE
                 pygame.draw.rect(screen, lter_blue, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], 0,size_w//200)
                 pygame.draw.rect(screen, color1, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], size_w//110,size_w//200)
 
@@ -6742,12 +6748,10 @@ class Course(pygame.sprite.Sprite):
                     ship3 = None
                 for cord in SF_cords:
                     index = SF_cords.index(cord)
-                    #pygame.draw.circle(screen, orange, cord, size_w//250, 0)  
                     screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
 
                 if bckgr.collidepoint(mouse_pos):
                     pygame.mouse.set_visible(False)
-                    #pygame.draw.circle(screen, logoBlue, [mouse_pos[0],mouse_pos[1]], size_w//50, size_w//400)
                     pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//650, 0)     
                     pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//150, size_w//550) 
                     try:
@@ -6770,6 +6774,7 @@ class Course(pygame.sprite.Sprite):
                         ship3 = pygame.draw.rect(screen, color2, [size_w/2.26,size_h/9.72,1,1], width=0)
                     if event.type == MOUSEBUTTONDOWN and any([ship1.collidepoint(mouse_pos),ship2.collidepoint(mouse_pos),ship3.collidepoint(mouse_pos)]):
                         pygame.draw.circle(screen, orange, mouse_pos, size_w//200, 0)
+                        course.coursorMarked()
                         SF_cords.append(mouse_pos)
                         try:
                             if ship1.collidepoint(mouse_pos): 
