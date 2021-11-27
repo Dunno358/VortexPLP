@@ -226,6 +226,8 @@ SR_holder2 = 0
 #SCI-FI
 SF_icons = []
 SF_cords = []
+SF_cords2 = []
+SF_cords3 = []
 SF_holder = []
 SF_holder2 = []
 SF_item = 0
@@ -2486,13 +2488,13 @@ class Course(pygame.sprite.Sprite):
                 for arg in args:  
                     WriteItalic(round(size_w//100*fontSize),arg,color3,[size_w/1.82,height]) 
                     height += hMinus
-    def coursorMarked():
+    def coursorMarked(color=red):
         mw = mouse_pos[0]
         mh = mouse_pos[1]          
-        pygame.draw.line(screen, red, [mw+size_w/200,mh+size_h/200], [mw+size_w/100,mh+size_h/100], size_w//500)    
-        pygame.draw.line(screen, red, [mw-size_w/200,mh+size_h/200], [mw-size_w/100,mh+size_h/100], size_w//500) 
-        pygame.draw.line(screen, red, [mw+size_w/200,mh-size_h/200], [mw+size_w/100,mh-size_h/100], size_w//500) 
-        pygame.draw.line(screen, red, [mw-size_w/200,mh-size_h/200], [mw-size_w/100,mh-size_h/100], size_w//500)   
+        pygame.draw.line(screen, color, [mw+size_w/200,mh+size_h/200], [mw+size_w/100,mh+size_h/100], size_w//500)    
+        pygame.draw.line(screen, color, [mw-size_w/200,mh+size_h/200], [mw-size_w/100,mh+size_h/100], size_w//500) 
+        pygame.draw.line(screen, color, [mw+size_w/200,mh-size_h/200], [mw+size_w/100,mh-size_h/100], size_w//500) 
+        pygame.draw.line(screen, color, [mw-size_w/200,mh-size_h/200], [mw-size_w/100,mh-size_h/100], size_w//500)   
     def itemChooseGame(text,iconsList,valueName,valueList,goodIndex):
         global selected,iterator
         Write(round(size_w//100*1.5),text,color3,[size_w/1.8,size_h/7])
@@ -2740,7 +2742,7 @@ class Course(pygame.sprite.Sprite):
             if pygame.event.get_blocked(event):
                 pygame.event.set_allowed(event)
     def consoleExample(text,hght=1.51,fontSize=2.5,left=False):
-        pygame.draw.rect(screen, color1, [size_w/3.11,size_h/hght,size_w/2.6,size_h/6], 0,15)
+        bckgr = pygame.draw.rect(screen, color1, [size_w/3.11,size_h/hght,size_w/2.6,size_h/6], 0,15)
         pygame.draw.rect(screen, color3, [size_w/3,size_h/hght+size_h/44.1,size_w/2.8,size_h/8], size_w//450,15) 
         if not left:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/1.95,size_h/hght+size_h/11.15])
@@ -2748,6 +2750,7 @@ class Course(pygame.sprite.Sprite):
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.47,size_h/hght+size_h/11.15])
         else:
             WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
+        return bckgr
     def definition(strAsList,title="Definition",hghtPoint=2.09,titleFontSize=2.6,txtFontSize=2):
         pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
         hght = size_h/hghtPoint
@@ -6634,7 +6637,7 @@ class Course(pygame.sprite.Sprite):
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
         global storedTime,storedTimeValue
-        global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2
+        global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson7",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
@@ -6644,7 +6647,7 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 1: #FUNCTIONS
+            if courseLvl == 111: #FUNCTIONS
                 txts = [
                     "Hello there! I'm Kigam Yntorwdo,",
                     "Lieutenant of Greezo's Army and",
@@ -6714,8 +6717,50 @@ class Course(pygame.sprite.Sprite):
                     notBlocked = False
                     Write(round(size_w//100*2.7),"Type correct answer in the box",lt_blue,[size_w/1.91,size_h/1.84])
             elif courseLvl == 10:
-                topic = "arguments"
-            elif courseLvl==15: #MINIGAME
+                notBlocked = False
+                txts = [
+                    "You already know that functions are kind of",
+                    "templates, but they can be editable and that's",
+                    "what we use arguments for, let's check it in practic"
+                ]
+                course.dialogTop(6.41,txts[0],txts[1],txts[2],fontSize=1.2)
+                goBtn = course.centeredBtn(2.45,purple,"Go",adjustToDialog=True)
+                if goBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.45,lt_blue,"Go",adjustToDialog=True)
+                    course.centeredBtn(2.45,dark_blue,"",adjustToDialog=True,border=size_w//250)
+                    if event.type==MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 11:
+                course.dialogTop(6.41,"Here's a defined function, let's add arguments",fontSize=1.3)
+                course.consoleExample("def build_ship():",3.71,left=True)
+                course.consoleExample("add_body()",2.33)
+                course.consoleExample("add_cockpit()",1.71)
+                course.consoleExample("add_wings(2)",1.35)
+                nextBtn = pygame.draw.rect(screen, dark_green, [size_w/1.35,size_h/2.97,size_w/15,size_h/2], 0,size_w//250)
+                Write(round(size_w//100*5),">",color1,[size_w/1.29,size_h/1.72])
+
+                if nextBtn.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, green, [size_w/1.35,size_h/2.97,size_w/15,size_h/2], 0,size_w//250)
+                    Write(round(size_w//100*5),">",color3,[size_w/1.29,size_h/1.72])
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 12:
+                notBlocked = False
+                course.dialogTop(6.41,"So we want to add 4 wings instead of 2",fontSize=1.3)
+                course.consoleExample("def build_ship(amount):",3.71,left=True,fontSize=2)
+                course.consoleExample("add_body()",2.33)
+                course.consoleExample("add_cockpit()",1.71)
+                course.consoleExample("add_wings(amount)",1.35)  
+
+                nextBtn = pygame.draw.rect(screen, dark_green, [size_w/1.35,size_h/2.97,size_w/15,size_h/2], 0,size_w//250)
+                Write(round(size_w//100*5),">",color1,[size_w/1.29,size_h/1.72])
+
+                if nextBtn.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, green, [size_w/1.35,size_h/2.97,size_w/15,size_h/2], 0,size_w//250)
+                    Write(round(size_w//100*5),">",color3,[size_w/1.29,size_h/1.72])
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1              
+            elif courseLvl==15: #MINIGAME(ALSO HACKING MINIGAME MIGHT BE INTERESTING)
                 try:
                     if len(SF_icons)<1:
                         destroyer = pygame.image.load(r"{}/Images/Game/sf/Destroyer.png".format(dirPath))
@@ -6732,6 +6777,7 @@ class Course(pygame.sprite.Sprite):
                         SF_icons.append(fire)
                 except:
                     errorInit("Failed to load ships")
+
                 bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], 0,size_w//200)
                 pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], size_w//300,size_w//200)
                 
@@ -6740,14 +6786,14 @@ class Course(pygame.sprite.Sprite):
                 pygame.draw.rect(screen, color1, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], size_w//110,size_w//200)
 
 
-                for x in range(3000):
+                for x in range(200):
                     starW = uniform(size_w/4.01,size_w/1.22)
                     starH = uniform(size_h/4.57,size_h/1.46)
                     if x%2==0:
                         color = dark_blue
                     else:
                         color = dark_blue
-                    pygame.draw.circle(screen, color, [starW,starH], size_w//950, 0)   
+                    pygame.draw.line(screen, color,[starW,size_h/4.71],[starW,size_h/1.44], size_w//800)
 
                 target = "None"
                 try:
@@ -6770,11 +6816,18 @@ class Course(pygame.sprite.Sprite):
                 for cord in SF_cords:
                     index = SF_cords.index(cord)
                     screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
+                for cord in SF_cords2:
+                    index = SF_cords2.index(cord)
+                    screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
+                for cord in SF_cords3:
+                    index = SF_cords3.index(cord)
+                    screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
 
                 if bckgr.collidepoint(mouse_pos):
                     pygame.mouse.set_visible(False)
                     pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//650, 0)     
                     pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//150, size_w//550) 
+                    course.coursorMarked(logoBlue)
                     try:
                         if ship1.collidepoint(mouse_pos): 
                             target = "Sneereses Cruiser SBIAHT-H1"
@@ -6796,24 +6849,38 @@ class Course(pygame.sprite.Sprite):
                     if event.type == MOUSEBUTTONDOWN and any([ship1.collidepoint(mouse_pos),ship2.collidepoint(mouse_pos),ship3.collidepoint(mouse_pos)]):
                         pygame.draw.circle(screen, orange, mouse_pos, size_w//200, 0)
                         course.coursorMarked()
-                        SF_cords.append(mouse_pos)
                         try:
                             if ship1.collidepoint(mouse_pos): 
                                 SF_holder.append("SHIP1")
+                                SF_cords.append(mouse_pos)
                         except:
                             ship1 = None
                         try:
                             if ship2.collidepoint(mouse_pos): 
                                 SF_holder.append("SHIP2")
+                                SF_cords2.append(mouse_pos)
+
                         except:
                             ship2=None
                         try:
                             if ship3.collidepoint(mouse_pos):
                                 SF_holder.append("SHIP3")
+                                SF_cords3.append(mouse_pos)
+
                         except:
                             ship3 = None
                 else:
                     pygame.mouse.set_visible(True)
+
+                ships = [ship1,ship2,ship3]
+
+                try:
+                    if ships[0][3]==1 and ships[1][3]==1 and ships[2][3]==1:
+                        notBlocked = True
+                    else:
+                        notBlocked = False
+                except:
+                    notBlocked = True
 
                 Write(round(size_w//100*2),"Target:",dark_red,[size_w/1.89,size_h/1.26])
                 Write(round(size_w//100*1.5),target,logoBlue,[size_w/1.89,size_h/1.15])
@@ -6829,12 +6896,17 @@ class Course(pygame.sprite.Sprite):
                         if item.lower()==SF_item.lower():
                             index = SF_holder2.index(item)
                             try:
-                                del SF_cords[index]
-                                pygame.event.post(pygame.event.Event(pygame.KEYDOWN))
+                                if SF_item.lower()=="ship1":
+                                    SF_cords.clear()
+                                if SF_item.lower()=="ship2":
+                                    SF_cords2.clear()
+                                if SF_item.lower()=="ship3":
+                                    SF_cords3.clear()
                             except:
                                 pass
                     if SF_item not in SF_holder2:
                         SF_holder2.append(SF_item)
+                        pygame.draw.circle(screen, orange, mouse_pos, size_w//10, width=0)
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
