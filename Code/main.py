@@ -6998,7 +6998,10 @@ class Course(pygame.sprite.Sprite):
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1
             elif courseLvl==17: #MINIGAME(ALSO HACKING MINIGAME MIGHT BE INTERESTING)
-                course.scifi.shooting_ships(3,"Shoot those fighters!")
+                if "SHIP1" in SF_holder2 and "SHIP2" in SF_holder2 and "SHIP3" in SF_holder2:
+                    course.dialogTop(6.41,"Seems like you can operate a","fighter, good for you")
+                else:    
+                    course.scifi.shooting_ships(3,"Shoot those fighters!")
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
