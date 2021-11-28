@@ -2237,7 +2237,7 @@ class Course(pygame.sprite.Sprite):
                             wdth = size_w/2.18
                             hght += size_h/25               
     class scifi():
-        def shooting_ships(indexOfShip):
+        def shooting_ships(indexOfShip,text):
             if True:
                 global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
                 global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
@@ -2276,10 +2276,10 @@ class Course(pygame.sprite.Sprite):
                 bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], 0,size_w//200)
                 pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], size_w//300,size_w//200)
                 
-                #HERE
                 pygame.draw.rect(screen, lter_blue, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], 0,size_w//200)
                 pygame.draw.rect(screen, color1, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], size_w//110,size_w//200)
                 
+                Write(round(size_w//100*2.8),text,lt_blue,[size_w/1.88,size_h/6.8])
 
                 for x in range(100):
                     starW = uniform(size_w/4.01,size_w/1.22)
@@ -6829,24 +6829,46 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 111: #FUNCTIONS
+            if courseLvl == 1: #FUNCTIONS
                 txts = [
                     "Hello there! I'm Kigam Yntorwdo,",
                     "Lieutenant of Greezo's Army and",
-                    "leader of 'teaching newbies' program"
+                    "leader of 'teaching newbies' program,",
+                    "welcome on the frigate GMM-F-3!"
                     ]
-                course.dialogStandard(2.6,txts[0],txts[1],txts[2],fontSize=1.5)
+                course.dialogStandard(2.6,txts[0],txts[1],txts[2],txts[3],fontSize=1.5)
             elif courseLvl == 2:
+                if len(SF_icons)<1:
+                    planet = pygame.image.load(r"{}/Images/Game/sf/planet.png".format(dirPath))
+                    planet = pygame.transform.scale(planet, [int(size_w/5.33),int(size_h/3)])
+                    SF_icons.append(planet)    
+                                     
+                course.dialogTop(6.41,"Nice view, isn't it? This planet is called Fallon,","our ally's world, but let's get to the point",fontSize=1.3)
+                bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/3.38,size_w/1.7,size_h/2], 0,size_w//20)
+                pygame.draw.rect(screen, dark_gray, [size_w/4.14,size_h/3.38,size_w/1.7,size_h/2], size_w//150,size_w//20)
+            
+                if len(SF_cords)<1:
+                    for x in range(500):
+                        wdth = uniform(size_w/3.99,size_w/1.22)
+                        hght = uniform(size_h/3.17,size_h/1.29)
+                        SF_cords.append([wdth,hght])
+
+                for cord in SF_cords:
+                    pygame.draw.circle(screen, lt_gray, cord, size_w//800, 0)
+
+                screen.blit(SF_icons[0],[size_w/2.53,size_h/2.91])
+            elif courseLvl == 3:
                 strs = ["A function is a block of code which only runs when",
                 "it is called. You can pass data, known as parameters, into",
                 "a function. A function can return data as a result."]
+                SF_icons.clear()
                 course.dialogTop(6.41,"According to my calculations, my mission here is","to teach you about functions, so let's get started!",fontSize=1.2)
                 course.definition(strs,txtFontSize=1.7)
-            elif courseLvl==3:
+            elif courseLvl==4:
                 course.dialogTop(6.41,"Let's start with functions syntax") 
                 course.consoleExample("def name():",3.08,left=True)
                 course.consoleExample("instructions",2.06)
-            elif courseLvl == 4:
+            elif courseLvl == 5:
                 notBlocked = False
                 course.dialogTop(6.41,"Let's analyze it one by one")
                 course.definition(["it's a keyword starting function","iterpretation and it always have","to be at the beggining"],"Def")
@@ -6857,7 +6879,7 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(1.27,dark_green,"",size_w//250)
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1
-            elif courseLvl == 5:
+            elif courseLvl == 6:
                 notBlocked = False
                 course.dialogTop(6.41,"Now the important thing")
                 course.definition(["name can be whatever you want(if not","forbidden by syntax) and it will be needed","if you want to call this function"],"name():")
@@ -6868,7 +6890,7 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(1.27,dark_green,"",size_w//250)
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1       
-            elif courseLvl == 6:
+            elif courseLvl == 7:
                 notBlocked = False
                 course.dialogTop(6.41,"And for the end!","Also remember about '()' and ':'")
                 course.definition(["Block of code instructions that","will be executed when function","is called"],"instructions")
@@ -6879,7 +6901,7 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(1.27,dark_blue,"",size_w//250)
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1            
-            elif courseLvl == 7:
+            elif courseLvl == 8:
                 course.dialogTop(6.41,"So let's suppose you have written a","function, how to call it now then?")               
                 questionMark = Write(round(size_w/100*6),"?",lt_blue,[size_w/1.82,size_h/2.2])
                 questRect = questionMark.get_rect()
@@ -6887,10 +6909,10 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w/100*6),"?",logoBlue,[size_w/1.82,size_h/2.2])
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1
-            elif courseLvl == 8:
+            elif courseLvl == 9:
                 notBlocked = True
                 course.dialogStandard(2.6,"It can't be simplier! Let's suppose","your function name is func5, so you","can call it by typing func5() - That's all!",fontSize=1.4)
-            elif courseLvl == 9:    
+            elif courseLvl == 10:    
                 course.consoleGame("Call a function named func3","func3()","Check")
                 if iterator > 1:
                     notBlocked = True
@@ -6898,7 +6920,7 @@ class Course(pygame.sprite.Sprite):
                 else:
                     notBlocked = False
                     Write(round(size_w//100*2.7),"Type correct answer in the box",lt_blue,[size_w/1.91,size_h/1.84])
-            elif courseLvl == 10:
+            elif courseLvl == 11:
                 notBlocked = False
                 txts = [
                     "You already know that functions are kind of",
@@ -6912,7 +6934,7 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(2.45,dark_blue,"",adjustToDialog=True,border=size_w//250)
                     if event.type==MOUSEBUTTONDOWN:
                         courseLvl += 1
-            elif courseLvl == 11:
+            elif courseLvl == 12:
                 iterator = 1
                 course.dialogTop(6.41,"Here's a defined function, let's add arguments",fontSize=1.3)
                 course.consoleExample("def build_ship():",3.71,left=True)
@@ -6927,7 +6949,7 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*5),">",color3,[size_w/1.29,size_h/1.72])
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1
-            elif courseLvl == 12:
+            elif courseLvl == 13:
                 notBlocked = False
                 course.dialogTop(6.41,"So we want to add 4 wings instead of 2",fontSize=1.3)
                 course.consoleExample("def build_ship(amount):",3.71,left=True,fontSize=2)
@@ -6943,7 +6965,7 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*5),">",color3,[size_w/1.29,size_h/1.72])
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1              
-            elif courseLvl == 13:
+            elif courseLvl == 14:
                 if iterator > 1:
                     notBlocked = True
                     course.dialogTop(6.41,"It seems you got it, good!","and there's a ship you've built")
@@ -6956,10 +6978,27 @@ class Course(pygame.sprite.Sprite):
                 else:
                     notBlocked = False
                     course.consoleGame("build a ship with 2 wings","build_ship(2)","Go")
-            elif courseLvl == 14:
+            elif courseLvl == 15:
                 SF_icons.clear()
-            elif courseLvl==1: #MINIGAME(ALSO HACKING MINIGAME MIGHT BE INTERESTING)
-                course.scifi.shooting_ships(3)
+                course.dialogTop(6.41,"Wanna test it?")
+                goBtn = course.centeredBtn(3.27,purple,"Go",adjustToDialog=True)
+                if goBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(3.27,lt_blue,"Go",adjustToDialog=True)
+                    course.centeredBtn(3.27,dark_blue,"",adjustToDialog=True,border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 16:
+                course.dialogStandard(2.6,"As doing this in space could be","too dangerous you will enter","special symulation",fontSize=1.8)
+                symBtn = course.centeredBtn(1.55,lt_blue,"Symulation",adjustToDialog=True,fontSize=1.4)
+                course.scifi.clearVars()
+
+                if symBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.55,lter_blue,"",adjustToDialog=True,fontSize=1.4)
+                    course.centeredBtn(1.55,lt_blue,"Symulation",adjustToDialog=True,border=size_w//250,fontSize=1.4)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl==17: #MINIGAME(ALSO HACKING MINIGAME MIGHT BE INTERESTING)
+                course.scifi.shooting_ships(3,"Shoot those fighters!")
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
