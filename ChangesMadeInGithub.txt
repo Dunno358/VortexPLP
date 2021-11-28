@@ -7,7 +7,7 @@
 -✓Definition
 -✓Syntax
 -✓Calling a function
--Arguments[IN WORK]
+-✓Arguments
 -Multiple arguments
 -*args
 -Arguments with default value
