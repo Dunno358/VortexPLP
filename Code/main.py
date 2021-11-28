@@ -477,7 +477,6 @@ def errorHandling():
                 errorShowed = False
                 start.welcomeScreen()
 
-
 class Start(pygame.sprite.Sprite):
     global language
     language = getLang()
@@ -2237,6 +2236,186 @@ class Course(pygame.sprite.Sprite):
                                     wdth += size_w/35
                             wdth = size_w/2.18
                             hght += size_h/25               
+    class scifi():
+        def shooting_ships(indexOfShip):
+            if True:
+                global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+                global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+                global storedTime,storedTimeValue
+                global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3
+                try:
+                    if len(SF_icons)<1:
+                        destroyer = pygame.image.load(r"{}/Images/Game/sf/Destroyer.png".format(dirPath))
+                        destroyer = pygame.transform.scale(destroyer, [int(size_w/4),int(size_h/9)])
+                        SF_icons.append(destroyer)
+                        cruiser = pygame.image.load(r"{}/Images/Game/sf/cruiser.png".format(dirPath))
+                        cruiser = pygame.transform.scale(cruiser, [int(size_w/4),int(size_h/7)])
+                        SF_icons.append(cruiser)
+                        fighter1 = pygame.image.load(r"{}/Images/Game/sf/fighter1.png".format(dirPath))
+                        fighter1 = pygame.transform.scale(fighter1, [int(size_w/14.22),int(size_h/12)])
+                        SF_icons.append(fighter1)
+                        fighter2 = pygame.image.load(r"{}/Images/Game/sf/fighter2.png".format(dirPath))
+                        fighter2 = pygame.transform.scale(fighter2, [int(size_w/9),int(size_h/16)])
+                        SF_icons.append(fighter2)
+                        fire = pygame.image.load(r"{}/Images/Game/sf/fire.jpg".format(dirPath))
+                        fire = pygame.transform.scale(fire, [int(size_w/200),int(size_h/100)])
+                        SF_icons.append(fire)
+
+                except:
+                    errorInit("Failed to load ships")
+
+                descs = [
+                    "Heavy Destroyer GMHDS-P-1",
+                    "Cruiser SBIAHT-H1",
+                    "Fighter CMISF-N2",
+                    "Fighter GMFP-A-1"
+                ]
+                nr = indexOfShip #starting from 0
+                fighters = [2,3]
+
+                bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], 0,size_w//200)
+                pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], size_w//300,size_w//200)
+                
+                #HERE
+                pygame.draw.rect(screen, lter_blue, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], 0,size_w//200)
+                pygame.draw.rect(screen, color1, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], size_w//110,size_w//200)
+                
+
+                for x in range(100):
+                    starW = uniform(size_w/4.01,size_w/1.22)
+                    starH = uniform(size_h/4.57,size_h/1.46)
+                    if x%2==0:
+                        color = dark_blue
+                    else:
+                        color = dark_blue
+                    pygame.draw.line(screen, color,[size_w/4.08,starH],[size_w/1.21,starH], size_w//800)
+
+                target = "None"
+                try:
+                    if "SHIP1" not in SF_holder2:
+                        ship1 = screen.blit(SF_icons[indexOfShip],[size_w/3.39,size_h/4.29]) 
+                    else:
+                        ship1 = None
+                    if "SHIP2" not in SF_holder2:
+                        ship2 = screen.blit(SF_icons[indexOfShip],[size_w/2.04,size_h/2.7]) 
+                    else:
+                        ship2 = None
+                    if "SHIP3" not in SF_holder2:
+                        ship3 = screen.blit(SF_icons[indexOfShip],[size_w/2.78,size_h/1.9]) 
+                    else:
+                        ship3 = None
+                except:
+                    ship1 = None
+                    ship2 = None
+                    ship3 = None
+                for cord in SF_cords:
+                    index = SF_cords.index(cord)
+                    screen.blit(SF_icons[4],[cord[0]-SF_icons[4].get_width()/2,cord[1]-SF_icons[4].get_height()/2])
+                for cord in SF_cords2:
+                    index = SF_cords2.index(cord)
+                    screen.blit(SF_icons[4],[cord[0]-SF_icons[4].get_width()/2,cord[1]-SF_icons[4].get_height()/2])
+                for cord in SF_cords3:
+                    index = SF_cords3.index(cord)
+                    screen.blit(SF_icons[4],[cord[0]-SF_icons[4].get_width()/2,cord[1]-SF_icons[4].get_height()/2])
+
+                if bckgr.collidepoint(mouse_pos):
+                    pygame.mouse.set_visible(False)
+                    pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//650, 0)     
+                    pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//150, size_w//550) 
+                    course.coursorMarked(logoBlue)
+                    try:
+                        if ship1.collidepoint(mouse_pos): 
+                            target = descs[nr]
+                            SF_item = "SHIP1"
+                    except:
+                        ship1 = pygame.draw.rect(screen, color2, [size_w/2.26,size_h/9.72,1,1], width=0)
+                    try:
+                        if ship2.collidepoint(mouse_pos): 
+                            target = descs[nr]
+                            SF_item = "SHIP2"
+                    except:
+                        ship2 = pygame.draw.rect(screen, color2, [size_w/2.26,size_h/9.72,1,1], width=0)
+                    try:
+                        if ship3.collidepoint(mouse_pos):
+                            target = descs[nr]
+                            SF_item = "SHIP3"
+                    except:
+                        ship3 = pygame.draw.rect(screen, color2, [size_w/2.26,size_h/9.72,1,1], width=0)
+                    if event.type == MOUSEBUTTONDOWN and any([ship1.collidepoint(mouse_pos),ship2.collidepoint(mouse_pos),ship3.collidepoint(mouse_pos)]):
+                        pygame.draw.circle(screen, orange, mouse_pos, size_w//200, 0)
+                        course.coursorMarked()
+                        try:
+                            if ship1.collidepoint(mouse_pos): 
+                                SF_holder.append("SHIP1")
+                                SF_cords.append(mouse_pos)
+                        except:
+                            ship1 = None
+                        try:
+                            if ship2.collidepoint(mouse_pos): 
+                                SF_holder.append("SHIP2")
+                                SF_cords2.append(mouse_pos)
+
+                        except:
+                            ship2=None
+                        try:
+                            if ship3.collidepoint(mouse_pos):
+                                SF_holder.append("SHIP3")
+                                SF_cords3.append(mouse_pos)
+
+                        except:
+                            ship3 = None
+                else:
+                    pygame.mouse.set_visible(True)
+
+                ships = [ship1,ship2,ship3]
+
+                try:
+                    if ships[0][3]==1 and ships[1][3]==1 and ships[2][3]==1:
+                        notBlocked = True
+                    else:
+                        notBlocked = False
+                except:
+                    notBlocked = True
+
+                if nr not in fighters:
+                    percValue = 10
+                else:
+                    percValue = 25
+
+                Write(round(size_w//100*2),"Target:",dark_red,[size_w/1.89,size_h/1.26])
+                Write(round(size_w//100*1.5),target,logoBlue,[size_w/1.89,size_h/1.15])
+                if 100-(SF_holder.count(SF_item)*percValue) > 0:
+                    if 100-(SF_holder.count(SF_item)*percValue) > 20:
+                        color = logoBlue
+                    else:
+                        color = red
+                    Write(round(size_w//100*1.5),f"{100-(SF_holder.count(SF_item)*percValue)}%",color,[size_w/1.61,size_h/1.26])
+                else:
+                    Write(round(size_w//100*1.3),"None",logoBlue,[size_w/1.63,size_h/1.26])
+                    for item in SF_holder2:
+                        if item.lower()==SF_item.lower():
+                            index = SF_holder2.index(item)
+                            try:
+                                if SF_item.lower()=="ship1":
+                                    SF_cords.clear()
+                                if SF_item.lower()=="ship2":
+                                    SF_cords2.clear()
+                                if SF_item.lower()=="ship3":
+                                    SF_cords3.clear()
+                            except:
+                                pass
+                    if SF_item not in SF_holder2:
+                        SF_holder2.append(SF_item)
+                        pygame.draw.circle(screen, orange, mouse_pos, size_w//10, width=0)            
+        def clearVars():
+            global SF_icons,SF_cords,SF_cords2,SF_cords3,SF_holder,SF_holder2,SF_item
+            SF_icons = []
+            SF_cords = []
+            SF_cords2 = []
+            SF_cords3 = []
+            SF_holder = []
+            SF_holder2 = []
+            SF_item = 0            
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -2435,6 +2614,7 @@ class Course(pygame.sprite.Sprite):
                     iterator = 1
                     storedCords = []
                     course.shooting_range.clearVars()
+                    course.scifi.clearVars()
                     course.tower_defence.reset()
                     course.tower_defence.clearAdminTools()
                     course.eventsReset()
@@ -2712,6 +2892,8 @@ class Course(pygame.sprite.Sprite):
                         text += "#"
                     elif event.key == K_SEMICOLON:
                         text += ":"
+                    elif event.key == K_MINUS:
+                        text += "_"
                     else:
                         try:
                             text += chr(event.key)
@@ -6731,6 +6913,7 @@ class Course(pygame.sprite.Sprite):
                     if event.type==MOUSEBUTTONDOWN:
                         courseLvl += 1
             elif courseLvl == 11:
+                iterator = 1
                 course.dialogTop(6.41,"Here's a defined function, let's add arguments",fontSize=1.3)
                 course.consoleExample("def build_ship():",3.71,left=True)
                 course.consoleExample("add_body()",2.33)
@@ -6760,153 +6943,23 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*5),">",color3,[size_w/1.29,size_h/1.72])
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1              
-            elif courseLvl==15: #MINIGAME(ALSO HACKING MINIGAME MIGHT BE INTERESTING)
-                try:
-                    if len(SF_icons)<1:
-                        destroyer = pygame.image.load(r"{}/Images/Game/sf/Destroyer.png".format(dirPath))
-                        destroyer = pygame.transform.scale(destroyer, [int(size_w/3),int(size_h/7)])
-                        SF_icons.append(destroyer)
-                        cruiser = pygame.image.load(r"{}/Images/Game/sf/cruiser.png".format(dirPath))
-                        cruiser = pygame.transform.scale(cruiser, [int(size_w/4),int(size_h/7)])
-                        SF_icons.append(cruiser)
-                        fighter1 = pygame.image.load(r"{}/Images/Game/sf/fighter1.png".format(dirPath))
-                        fighter1 = pygame.transform.scale(fighter1, [int(size_w/14.22),int(size_h/12)])
-                        SF_icons.append(fighter1)
-                        fire = pygame.image.load(r"{}/Images/Game/sf/fire.jpg".format(dirPath))
-                        fire = pygame.transform.scale(fire, [int(size_w/200),int(size_h/100)])
-                        SF_icons.append(fire)
-                except:
-                    errorInit("Failed to load ships")
-
-                bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], 0,size_w//200)
-                pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], size_w//300,size_w//200)
-                
-                #HERE
-                pygame.draw.rect(screen, lter_blue, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], 0,size_w//200)
-                pygame.draw.rect(screen, color1, [size_w/2.71,size_h/1.34,size_w/3.3,size_h/5], size_w//110,size_w//200)
-
-
-                for x in range(200):
-                    starW = uniform(size_w/4.01,size_w/1.22)
-                    starH = uniform(size_h/4.57,size_h/1.46)
-                    if x%2==0:
-                        color = dark_blue
-                    else:
-                        color = dark_blue
-                    pygame.draw.line(screen, color,[starW,size_h/4.71],[starW,size_h/1.44], size_w//800)
-
-                target = "None"
-                try:
-                    if "SHIP1" not in SF_holder2:
-                        ship1 = screen.blit(SF_icons[1],[size_w/3.39,size_h/4.57]) 
-                    else:
-                        ship1 = None
-                    if "SHIP2" not in SF_holder2:
-                        ship2 = screen.blit(SF_icons[1],[size_w/2.04,size_h/2.7]) 
-                    else:
-                        ship2 = None
-                    if "SHIP3" not in SF_holder2:
-                        ship3 = screen.blit(SF_icons[1],[size_w/2.78,size_h/1.9]) 
-                    else:
-                        ship3 = None
-                except:
-                    ship1 = None
-                    ship2 = None
-                    ship3 = None
-                for cord in SF_cords:
-                    index = SF_cords.index(cord)
-                    screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
-                for cord in SF_cords2:
-                    index = SF_cords2.index(cord)
-                    screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
-                for cord in SF_cords3:
-                    index = SF_cords3.index(cord)
-                    screen.blit(SF_icons[3],[cord[0]-SF_icons[3].get_width()/2,cord[1]-SF_icons[3].get_height()/2])
-
-                if bckgr.collidepoint(mouse_pos):
-                    pygame.mouse.set_visible(False)
-                    pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//650, 0)     
-                    pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//150, size_w//550) 
-                    course.coursorMarked(logoBlue)
-                    try:
-                        if ship1.collidepoint(mouse_pos): 
-                            target = "Sneereses Cruiser SBIAHT-H1"
-                            SF_item = "SHIP1"
-                    except:
-                        ship1 = pygame.draw.rect(screen, color2, [size_w/2.26,size_h/9.72,1,1], width=0)
-                    try:
-                        if ship2.collidepoint(mouse_pos): 
-                            target = "Sneereses Cruiser SBIAHT-H1"
-                            SF_item = "SHIP2"
-                    except:
-                        ship2 = pygame.draw.rect(screen, color2, [size_w/2.26,size_h/9.72,1,1], width=0)
-                    try:
-                        if ship3.collidepoint(mouse_pos):
-                            target = "Sneereses Cruiser SBIAHT-H1"
-                            SF_item = "SHIP3"
-                    except:
-                        ship3 = pygame.draw.rect(screen, color2, [size_w/2.26,size_h/9.72,1,1], width=0)
-                    if event.type == MOUSEBUTTONDOWN and any([ship1.collidepoint(mouse_pos),ship2.collidepoint(mouse_pos),ship3.collidepoint(mouse_pos)]):
-                        pygame.draw.circle(screen, orange, mouse_pos, size_w//200, 0)
-                        course.coursorMarked()
-                        try:
-                            if ship1.collidepoint(mouse_pos): 
-                                SF_holder.append("SHIP1")
-                                SF_cords.append(mouse_pos)
-                        except:
-                            ship1 = None
-                        try:
-                            if ship2.collidepoint(mouse_pos): 
-                                SF_holder.append("SHIP2")
-                                SF_cords2.append(mouse_pos)
-
-                        except:
-                            ship2=None
-                        try:
-                            if ship3.collidepoint(mouse_pos):
-                                SF_holder.append("SHIP3")
-                                SF_cords3.append(mouse_pos)
-
-                        except:
-                            ship3 = None
-                else:
-                    pygame.mouse.set_visible(True)
-
-                ships = [ship1,ship2,ship3]
-
-                try:
-                    if ships[0][3]==1 and ships[1][3]==1 and ships[2][3]==1:
-                        notBlocked = True
-                    else:
-                        notBlocked = False
-                except:
+            elif courseLvl == 13:
+                if iterator > 1:
                     notBlocked = True
-
-                Write(round(size_w//100*2),"Target:",dark_red,[size_w/1.89,size_h/1.26])
-                Write(round(size_w//100*1.5),target,logoBlue,[size_w/1.89,size_h/1.15])
-                if 100-(SF_holder.count(SF_item)*10) > 0:
-                    if 100-(SF_holder.count(SF_item)*10) > 20:
-                        color = logoBlue
-                    else:
-                        color = red
-                    Write(round(size_w//100*1.5),f"{100-(SF_holder.count(SF_item)*10)}%",color,[size_w/1.61,size_h/1.26])
+                    course.dialogTop(6.41,"It seems you got it, good!","and there's a ship you've built")
+                    if len(SF_icons)<1:
+                        ship = pygame.image.load(r"{}/Images/Game/sf/fighter3.png".format(dirPath))
+                        ship = pygame.transform.scale(ship, [int(size_w/4.5),int(size_h/2.5)])
+                        ship = pygame.transform.rotate(ship, 90)
+                        SF_icons.append(ship)  
+                    screen.blit(SF_icons[0],[size_w/2.33,size_h/2.8])
                 else:
-                    Write(round(size_w//100*1.3),"None",logoBlue,[size_w/1.63,size_h/1.26])
-                    for item in SF_holder2:
-                        if item.lower()==SF_item.lower():
-                            index = SF_holder2.index(item)
-                            try:
-                                if SF_item.lower()=="ship1":
-                                    SF_cords.clear()
-                                if SF_item.lower()=="ship2":
-                                    SF_cords2.clear()
-                                if SF_item.lower()=="ship3":
-                                    SF_cords3.clear()
-                            except:
-                                pass
-                    if SF_item not in SF_holder2:
-                        SF_holder2.append(SF_item)
-                        pygame.draw.circle(screen, orange, mouse_pos, size_w//10, width=0)
+                    notBlocked = False
+                    course.consoleGame("build a ship with 2 wings","build_ship(2)","Go")
+            elif courseLvl == 14:
+                SF_icons.clear()
+            elif courseLvl==1: #MINIGAME(ALSO HACKING MINIGAME MIGHT BE INTERESTING)
+                course.scifi.shooting_ships(3)
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
