@@ -231,6 +231,7 @@ SF_cords3 = []
 SF_holder = []
 SF_holder2 = []
 SF_item = 0
+SF_stage = 0
 
 #PRIZE
 iconsUnlock = []
@@ -2408,7 +2409,7 @@ class Course(pygame.sprite.Sprite):
                         SF_holder2.append(SF_item)
                         pygame.draw.circle(screen, orange, mouse_pos, size_w//10, width=0)            
         def clearVars():
-            global SF_icons,SF_cords,SF_cords2,SF_cords3,SF_holder,SF_holder2,SF_item
+            global SF_icons,SF_cords,SF_cords2,SF_cords3,SF_holder,SF_holder2,SF_item,SF_stage
             SF_icons = []
             SF_cords = []
             SF_cords2 = []
@@ -2416,6 +2417,7 @@ class Course(pygame.sprite.Sprite):
             SF_holder = []
             SF_holder2 = []
             SF_item = 0            
+            SF_stage = 0
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -6819,7 +6821,7 @@ class Course(pygame.sprite.Sprite):
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
         global storedTime,storedTimeValue
-        global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3
+        global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson7",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
@@ -6829,7 +6831,7 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 1: #FUNCTIONS
+            if courseLvl == 11: #FUNCTIONS
                 txts = [
                     "Hello there! I'm Kigam Yntorwdo,",
                     "Lieutenant of Greezo's Army and",
@@ -7000,8 +7002,51 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl==17: #MINIGAME(ALSO HACKING MINIGAME MIGHT BE INTERESTING)
                 if "SHIP1" in SF_holder2 and "SHIP2" in SF_holder2 and "SHIP3" in SF_holder2:
                     course.dialogTop(6.41,"Seems like you can operate a","fighter, good for you")
+                    pygame.mouse.set_visible(True)
+                    notBlocked = True
                 else:    
                     course.scifi.shooting_ships(3,"Shoot those fighters!")
+            elif courseLvl==18:
+                course.dialogTop(6.41,"Back to the arguments, function can","take multiple arguments")
+                course.consoleExample("def build_ship(style,type,amount):",3.37,left=True,fontSize=1.5)
+                course.consoleExample("add_body(style)",2.21,fontSize=1.5)
+                course.consoleExample("add_cockpit(type)",1.64,fontSize=1.5)
+                course.consoleExample("add_wings(amount)",1.3,fontSize=1.5)
+            elif courseLvl == 19:
+                course.dialogTop(6.41,"Let's have a closer look")
+                course.consoleExample("build_ship(triangle,single,0)",3.69,fontSize=2.2)
+
+                if SF_stage != 1:
+                    detRect = pygame.draw.rect(screen, purple, [size_w/1.4,size_h/3.52,size_w/9,size_h/7], 0,size_w//150)
+                    Write(round(size_w//100*1.6),"Details",color1,[size_w/1.3,size_h/2.79])
+                else:
+                    course.consoleExample("style=triangle",2.21,fontSize=1.5)
+                    course.consoleExample("type=single",1.64,fontSize=1.5)
+                    course.consoleExample("amount=0",1.3,fontSize=1.5) 
+                    execRect = pygame.draw.rect(screen, dark_green, [size_w/1.4,size_h/2.08,size_w/9,size_h/7], 0,size_w//150)
+                    Write(round(size_w//100*1.6),"Execute",color1,[size_w/1.3,size_h/1.8])                   
+
+
+                try:
+                    if detRect.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, lt_blue, [size_w/1.4,size_h/3.52,size_w/9,size_h/7], 0,size_w//150)
+                        pygame.draw.rect(screen, dark_blue, [size_w/1.4,size_h/3.52,size_w/9,size_h/7], size_w//250,size_w//150)
+                        Write(round(size_w//100*1.6),"Details",color3,[size_w/1.3,size_h/2.79])
+                        if event.type == MOUSEBUTTONDOWN:
+                            SF_stage = 1
+                except:
+                    pass
+                try:
+                    if execRect.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, green, [size_w/1.4,size_h/2.08,size_w/9,size_h/7], 0,size_w//150)
+                        pygame.draw.rect(screen, dark_green, [size_w/1.4,size_h/2.08,size_w/9,size_h/7], size_w//250,size_w//150)
+                        Write(round(size_w//100*1.6),"Execute",color3,[size_w/1.3,size_h/1.8])  
+                        if event.type == MOUSEBUTTONDOWN:
+                            courseLvl += 1 
+                except:
+                    pass
+            elif courseLvl == 20:
+                test = True #blip with GMFP-A-1(Greezos) as a reward
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
