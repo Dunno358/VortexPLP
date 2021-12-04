@@ -8,7 +8,7 @@
 -✓Syntax
 -✓Calling a function
 -✓Arguments
--Multiple arguments[IN WORK]
+-✓Multiple arguments
 -*args
 -Arguments with default value
 -Return
