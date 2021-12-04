@@ -1,7 +1,6 @@
 [todo-DUNGEON] entering settings while on Tower Defense Lvls need to adjust allowing events(KEYDOWN) to queue
 [todo-PRIZE/SETTINGS] name can be too long to fit at Prize and Settings
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
-[SF-IDEA]Stars: Make function for stars outside of event loop, but give in loop not only for loop stars, give background rect as well to avoid complications with objects
 
 [Function lesson] 
 -✓Definition
