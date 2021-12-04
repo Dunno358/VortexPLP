@@ -97,6 +97,8 @@ clock = pygame.time.Clock()
 #size_h=1080
 
 #ADMIN
+adminWriting = False
+adminText = ""
 #admin = False
 admin = True
 
@@ -812,6 +814,84 @@ class Start(pygame.sprite.Sprite):
                             pygame.draw.rect(screen, green, [rect[0],rect[1],rect[2],rect[3]], size_w//450,size_w//250)
             else:
                 pygame.draw.rect(screen, color1, [size_w/8.13,size_h/16,size_w/16,size_h/1.1], 0,size_w//450)
+        def changingCourseLvl():
+            global admin,adminWriting,adminText,courseLvl
+            if admin:
+                bckgr = pygame.draw.rect(screen, color2, [size_w/1.12,size_h/3.61,size_w/12,size_h/14], 0,size_w//250)
+
+                if event.type == MOUSEBUTTONDOWN:
+                    if bckgr.collidepoint(mouse_pos):
+                        adminWriting = True
+                    else:
+                        if adminWriting:
+                            adminWriting=False
+
+                if adminWriting:
+                    pygame.draw.rect(screen, color3, [size_w/1.12,size_h/3.61,size_w/12,size_h/14], size_w//300,size_w//250)
+                    if event.type == KEYDOWN:
+                        if event.key == pygame.K_BACKSPACE:
+                            try:
+                                adminText=adminText[:-1]                      
+                            except:
+                                pass
+                        if event.key == pygame.K_RETURN:
+                            try:
+                                courseLvl = int(adminText)
+                            except:
+                                pass
+                        elif len(adminText) < 3 and event.key!=K_BACKSPACE:
+                            if keys[K_LSHIFT]:
+                                if event.key==K_9:
+                                    adminText += "("
+                                elif event.key==K_8:
+                                    adminText += "*"
+                                elif event.key==K_7:
+                                    adminText += "&"
+                                elif event.key==K_6:
+                                    adminText += "^"
+                                elif event.key==K_5:
+                                    adminText += "%"
+                                elif event.key==K_4:
+                                    adminText += "$"
+                                elif event.key==K_3:
+                                    adminText += "#"
+                                elif event.key==K_2:
+                                    adminText += "@"
+                                elif event.key==K_1:
+                                    adminText += "!"                        
+                                elif event.key==K_0:
+                                    adminText += ")"
+                                elif event.key==K_LEFTBRACKET:
+                                    adminText += "["
+                                elif event.key == K_RIGHTBRACKET:
+                                    adminText += "]"
+                                elif event.key == K_QUOTE:
+                                    adminText += "\""
+                                elif event.key == K_3:
+                                    adminText += "#"
+                                elif event.key == K_SEMICOLON:
+                                    adminText += ":"
+                                elif event.key == K_MINUS:
+                                    adminText += "_"
+                                else:
+                                    try:
+                                        adminText += chr(event.key)
+                                    except:
+                                        pass
+                            elif keys[K_RALT or K_LALT]:
+                                if event.key==K_l:
+                                    adminText += "ł"        
+                                elif event.key==K_z:
+                                    adminText += "ż"   
+                            else:
+                                try:
+                                    if event.key != K_LSHIFT:
+                                        adminText += chr(event.key)
+                                except:
+                                    pass                    
+                    Write(round(size_w//100*1.3),adminText,color3,[size_w/1.07,size_h/3.19])
+                else:
+                    Write(round(size_w//100*1.3),courseLvl,lter_blue,[size_w/1.07,size_h/3.19])
 class Course(pygame.sprite.Sprite):
     global actualLesson
     actualLesson = str(activeLesson)[17:-23]
@@ -6831,7 +6911,7 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
-            if courseLvl == 11: #FUNCTIONS
+            if courseLvl == 1: #FUNCTIONS
                 txts = [
                     "Hello there! I'm Kigam Yntorwdo,",
                     "Lieutenant of Greezo's Army and",
@@ -6976,11 +7056,27 @@ class Course(pygame.sprite.Sprite):
                         ship = pygame.transform.scale(ship, [int(size_w/4.5),int(size_h/2.5)])
                         ship = pygame.transform.rotate(ship, 90)
                         SF_icons.append(ship)  
-                    screen.blit(SF_icons[0],[size_w/2.33,size_h/2.8])
+                    fighter = screen.blit(SF_icons[0],[size_w/2.33,size_h/2.8])
+
+                    if fighter.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, lter_blue, [size_w/2.4,size_h/1.3,size_w/4,size_h/6], 0,size_w//250)
+                        pygame.draw.rect(screen, lt_blue, [size_w/2.4,size_h/1.3,size_w/4,size_h/6], size_w//250,size_w//250)
+                        
+                        txts = [
+                            "Made by SneeresesBattleIndustries",
+                            "SBISFP-D-1 is a standard fighter",
+                            "of Sneereses Space Navy"
+                        ]
+                        
+                        hght = size_h/1.24
+                        for txt in txts:
+                            Write(round(size_w//100*1),txt,dark_blue,[size_w/1.86,hght])
+                            hght += size_h/20
                 else:
                     notBlocked = False
                     course.consoleGame("build a ship with 2 wings","build_ship(2)","Go")
             elif courseLvl == 15:
+                notBlocked = False
                 SF_icons.clear()
                 course.dialogTop(6.41,"Wanna test it?")
                 goBtn = course.centeredBtn(3.27,purple,"Go",adjustToDialog=True)
@@ -7013,6 +7109,8 @@ class Course(pygame.sprite.Sprite):
                 course.consoleExample("add_cockpit(type)",1.64,fontSize=1.5)
                 course.consoleExample("add_wings(amount)",1.3,fontSize=1.5)
             elif courseLvl == 19:
+                notBlocked = False
+                SF_icons.clear()
                 course.dialogTop(6.41,"Let's have a closer look")
                 course.consoleExample("build_ship(triangle,single,0)",3.69,fontSize=2.2)
 
@@ -7046,7 +7144,78 @@ class Course(pygame.sprite.Sprite):
                 except:
                     pass
             elif courseLvl == 20:
-                test = True #blip with GMFP-A-1(Greezos) as a reward
+                notBlocked = True
+                course.dialogTop(6.41,"And there's a GMFP-A-1 Fighter","Personally I like their design very much",fontSize=1.4)
+                if len(SF_icons)<1:
+                    gmfp = pygame.image.load(f"{dirPath}/Images/Game/sf/fighter2.png")
+                    gmfp = pygame.transform.scale(gmfp, [int(size_w/3),int(size_h/6)])
+                    SF_icons.append(gmfp)
+                try:
+                    gmfp = screen.blit(SF_icons[0],[size_w/2.69,size_h/2.73])    
+                    if gmfp.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, lter_blue, [size_w/2.4,size_h/1.61,size_w/4,size_h/7], 0,size_w//250)
+                        pygame.draw.rect(screen, lt_blue, [size_w/2.4,size_h/1.61,size_w/4,size_h/7], size_w//250,size_w//250)
+                        
+                        txts = [
+                            "Made by Greezos Militaries GMFP-A-1 is a",
+                            "standard fighter of Greezos Empire Navy",
+                        ]
+                        
+                        hght = size_h/1.5
+                        for txt in txts:
+                            Write(round(size_w//100*0.9),txt,dark_blue,[size_w/1.86,hght])
+                            hght += size_h/20
+                except:
+                    errorInit("Failed to blit image")                
+            elif courseLvl == 21:
+                if not done:
+                    notBlocked = False
+
+                    course.dialogTop(6.41,"Now a question:","how many arguments you","can give to function?")
+                    
+                    wdth = size_w/4.14
+                    txtWdth = size_w/3.2
+                    rects = []
+                    strs = [
+                        "100",
+                        "Unlimited",
+                        "10000"
+                    ]
+                    
+                    for x in range(3):
+                        rect = pygame.draw.rect(screen, color1, [wdth,size_h/2.06,size_w/7,size_h/7], 0,size_w//250)
+                        Write(round(size_w//100*1.7),strs[x],color3,[txtWdth,size_h/1.81])
+                        wdth += size_w/4.6
+                        txtWdth += size_w/4.6
+                        rects.append(rect)
+
+                    try:
+                        pygame.draw.rect(screen, color3, rects[selected], size_w//250,size_w//250)
+                    except:
+                        pass
+
+                    confBtn = course.centeredBtn(1.34,dark_green,"Confirm")
+                    if confBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.34,green,"Confirm")
+                        course.centeredBtn(1.34,dark_green,"",size_w//250)
+
+                    if event.type == MOUSEBUTTONDOWN:
+                        for rect in rects:
+                            if rect.collidepoint(mouse_pos):
+                                index = rects.index(rect)
+                                selected = index
+                        if confBtn.collidepoint(mouse_pos) and isinstance(selected,int):
+                            done = True
+                else:
+                    notBlocked = True
+                    if selected == 1:
+                        course.dialogStandard(2.6,"Correct! You can give as much","arguments as you want",fontSize=1.8)
+                    else:
+                        course.dialogStandard(2.6,"Wrong! You can give as much","arguments as you want",fontSize=1.8)
+            elif courseLvl == 22: #*args
+                test = True
+            elif courseLvl == 23: #must argument be used in function?
+                test = True
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
@@ -7702,6 +7871,7 @@ while running:
         start.sideBarEvents()
         start.setNameScreen()
         start.welcomeScreen()
+        start.adminTools.changingCourseLvl()
         start.adminTools.iterators()
         start.adminTools.changingLvl()
         if len(getName()) > 0:
