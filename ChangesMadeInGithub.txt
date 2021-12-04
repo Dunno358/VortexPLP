@@ -15,5 +15,3 @@
 -Pass
 -Recursion(Rekurencja)
  ✓
-
-[DONE|IDEA] line or bar with graphiccaly shown percentage of accomplishing course when user is not admin mode
