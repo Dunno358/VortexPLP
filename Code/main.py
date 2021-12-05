@@ -1,3 +1,4 @@
+from Code.test import test
 from typing import Type
 import pygame
 from pygame import Surface, rect
@@ -3170,7 +3171,6 @@ class Course(pygame.sprite.Sprite):
                                     errorInit("Failed to load 'wooden_chest.ogg'!",fontSize=1.7)
                             index = rects.index(rect)
                             storedItems.append(index)
-                            print(index,storedItems)
             elif courseLvl==5:
                 if language == "ENG":
                     course.dialogStandard(2.7,"Now we will install Python,","just follow my lead!")   
@@ -7209,12 +7209,118 @@ class Course(pygame.sprite.Sprite):
                 else:
                     notBlocked = True
                     if selected == 1:
-                        course.dialogStandard(2.6,"Correct! You can give as much","arguments as you want",fontSize=1.8)
+                        course.dialogStandard(2.65,"Correct! You can give as much","arguments as you want",fontSize=1.8)
                     else:
-                        course.dialogStandard(2.6,"Wrong! You can give as much","arguments as you want",fontSize=1.8)
-            elif courseLvl == 22: #*args
-                test = True
-            elif courseLvl == 23: #must argument be used in function?
+                        course.dialogStandard(2.65,"Wrong! You can give as much","arguments as you want",fontSize=1.8)
+            elif courseLvl == 22: 
+                strs = [
+                    "But adding argument after argument",
+                    "can be uncomfortable with significant",
+                    "amount of arguments, that's why we use", 
+                    "*args as an option to add any arguments"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],fontSize=1.4)
+                course.consoleExample("function(arg1,arg2,arg3,arg4,...):",2.18,fontSize=2)
+                Write(round(size_w//100*3),"As",red,[size_w/1.95,size_h/1.49])
+                course.consoleExample("function(*args):",1.41,fontSize=2)
+            elif courseLvl == 23:
+                done = False
+                if len(storedItems)<4:
+                    notBlocked = False
+                else:
+                    notBlocked = True
+                    course.consoleExample("for arg in args:",3.38)
+                    course.consoleExample("args[0],args[1]",1.45)
+                top = [
+                        "Type is",
+                        "Example is",
+                        "Accessing *args?",
+                        "Only iteration?"
+                    ]
+                bot = [
+                    "Tupple",
+                    "print()",
+                    "Iteration",
+                    "Indexes too!"
+                ]
+                colors=[red,dark_blue,dark_green,orange]
+
+                course.dialogTop(6.41,"Open chests for more info about *args")
+                
+                wdth = size_w/4.17
+                hght = size_h/1.79
+                rects = []
+                for x in range(4):
+                    if x not in storedItems:
+                        rect = pygame.draw.rect(screen, dark_gray, [wdth,hght,size_w/12,size_h/8], 0,size_w//250)
+                        rects.append(rect)
+                        pygame.draw.rect(screen, darkThemeMainCol, [wdth,hght,size_w/12,size_h/8], size_w//450,size_w//250)
+                        pygame.draw.line(screen, darkThemeMainCol, [wdth,hght+size_h/16], [wdth+size_w/12.2,hght+size_h/16], size_w//450)
+                        pygame.draw.rect(screen, darker_gray, [wdth+size_w/30,hght+size_h/25,size_w/55,size_h/55], 0)
+                    else:
+                        rect = pygame.draw.rect(screen, color2, [wdth,hght,size_w/12,size_h/8], 0,size_w//250)
+                        rects.append(rect)  
+                        WriteItalic(round(size_w//100*1.7),top[x],colors[x],[wdth+size_w/25,hght])
+                        WriteItalic(round(size_w//100*1.9),bot[x],colors[x],[wdth+size_w/25,hght+size_h/25])                      
+                    wdth += size_w/6
+
+                if event.type == MOUSEMOTION:
+                    for rect in rects:
+                        index = rects.index(rect)
+                        if rect.collidepoint(mouse_pos) and index not in storedItems:
+                            pygame.draw.rect(screen, lt_blue, [rect[0],rect[1],rect[2],rect[3]], size_w//450,size_w//250)
+                            pygame.draw.line(screen, lt_blue, [rect[0],rect[1]+size_h/16], [rect[0]+size_w/12.2,rect[1]+size_h/16], size_w//450)
+                elif event.type == MOUSEBUTTONDOWN:
+                    for rect in rects:
+                        if rect.collidepoint(mouse_pos):
+                            index = rects.index(rect)
+                            storedItems.append(index)
+            elif courseLvl == 24: 
+                if not done:
+                    notBlocked = False
+
+                    course.dialogTop(6.41,"Time for a question:","How do you think","must argument be used in function?")
+                    
+                    wdth = size_w/3.07
+                    txtWdth = size_w/2.53
+                    rects = []
+                    strs = [
+                        "Yes",
+                        "No",
+                    ]
+                    
+                    for x in range(2):
+                        rect = pygame.draw.rect(screen, color1, [wdth,size_h/2.06,size_w/7,size_h/7], 0,size_w//250)
+                        Write(round(size_w//100*1.7),strs[x],color3,[txtWdth,size_h/1.81])
+                        wdth += size_w/4.6
+                        txtWdth += size_w/4.6
+                        rects.append(rect)
+
+                    try:
+                        pygame.draw.rect(screen, color3, rects[selected], size_w//250,size_w//250)
+                    except:
+                        pass
+
+                    confBtn = course.centeredBtn(1.34,dark_green,"Confirm")
+                    if confBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.34,green,"Confirm")
+                        course.centeredBtn(1.34,dark_green,"",size_w//250)
+
+                    if event.type == MOUSEBUTTONDOWN:
+                        for rect in rects:
+                            if rect.collidepoint(mouse_pos):
+                                index = rects.index(rect)
+                                selected = index
+                        if confBtn.collidepoint(mouse_pos) and isinstance(selected,int):
+                            done = True
+                else:
+                    notBlocked = True
+                    if selected == 0:
+                        Write(round(size_w//100*3.5),"Wrong",red,[size_w/1.87,size_h/4.99])
+                    else:
+                        Write(round(size_w//100*3.5),"Correct",green,[size_w/1.87,size_h/4.99])
+                    course.dialogStandard(2.6,"Given argument may not be","used in function, but","but what's the point then?",fontSize=1.8)
+            elif courseLvl == 25:
                 test = True
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
