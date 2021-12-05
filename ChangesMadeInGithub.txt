@@ -8,7 +8,7 @@
 -✓Calling a function
 -✓Arguments
 -✓Multiple arguments
--*args
+-✓*args
 -Arguments with default value
 -Return
 -Pass
