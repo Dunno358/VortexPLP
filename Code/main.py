@@ -1,4 +1,3 @@
-from Code.test import test
 from typing import Type
 import pygame
 from pygame import Surface, rect
@@ -7320,8 +7319,24 @@ class Course(pygame.sprite.Sprite):
                     else:
                         Write(round(size_w//100*3.5),"Correct",green,[size_w/1.87,size_h/4.99])
                     course.dialogStandard(2.6,"Given argument may not be","used in function, but","but what's the point then?",fontSize=1.8)
-            elif courseLvl == 25:
-                test = True
+            elif courseLvl == 25: #testing sniper lvl
+                if len(SF_icons)<1:
+                    sight=pygame.image.load(f"{dirPath}/Images/Game/sf/sniper_sight.png")
+                    sight = pygame.transform.scale(sight, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(sight)
+                    soldier = pygame.image.load(f"{dirPath}/Images/Game/sf/holo.png")
+                    soldier = pygame.transform.scale(soldier,[int(size_w/25.29),int(size_h/12)])
+                    SF_icons.append(soldier)
+                sight = pygame.draw.rect(screen, color1, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],size_w//550,10)
+
+                if sight.collidepoint(mouse_pos):
+                    pygame.mouse.set_visible(False)
+                    screen.blit(SF_icons[1],mouse_pos)
+                else:
+                    pygame.mouse.set_visible(True)
+
+                
+                sight = screen.blit(SF_icons[0],[size_w/5,size_h/16])
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
