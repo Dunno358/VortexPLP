@@ -6899,7 +6899,7 @@ class Course(pygame.sprite.Sprite):
     def lesson7():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
-        global storedTime,storedTimeValue
+        global storedTime,storedTimeValue,rectCenter
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson7",99,condition=notBlocked)
@@ -7275,6 +7275,7 @@ class Course(pygame.sprite.Sprite):
                             index = rects.index(rect)
                             storedItems.append(index)
             elif courseLvl == 24: 
+                pygame.mouse.set_visible(True)
                 if not done:
                     notBlocked = False
 
@@ -7320,22 +7321,39 @@ class Course(pygame.sprite.Sprite):
                         Write(round(size_w//100*3.5),"Correct",green,[size_w/1.87,size_h/4.99])
                     course.dialogStandard(2.6,"Given argument may not be","used in function, but","but what's the point then?",fontSize=1.8)
             elif courseLvl == 25: #testing sniper lvl
+                notBlocked = False
                 if len(SF_icons)<1:
                     sight=pygame.image.load(f"{dirPath}/Images/Game/sf/sniper_sight.png")
                     sight = pygame.transform.scale(sight, [int(size_w/1.5),int(size_h/1.1)])
                     SF_icons.append(sight)
                     soldier = pygame.image.load(f"{dirPath}/Images/Game/sf/holo.png")
-                    soldier = pygame.transform.scale(soldier,[int(size_w/25.29),int(size_h/12)])
+                    soldier = pygame.transform.scale(soldier,[int(size_w/22),int(size_h/9)])
                     SF_icons.append(soldier)
-                sight = pygame.draw.rect(screen, color1, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],size_w//550,10)
+                    bckgr = pygame.image.load(f"{dirPath}/Images/Game/sf/bckgr.jpg")
+                    bckgr = pygame.transform.scale(bckgr, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(bckgr)
+                #sight = screen.blit(SF_icons[2],[size_w/5,size_h/16])
+                sight = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                for x in range(400):
+                    hght = uniform(size_h/1.09,size_h/9.85)
+                    pygame.draw.line(screen, dark_blue, [size_w/4.61,hght], [size_w/1.2,hght], size_w//800)
 
                 if sight.collidepoint(mouse_pos):
                     pygame.mouse.set_visible(False)
-                    screen.blit(SF_icons[1],mouse_pos)
+                    if mouse_pos[1]<size_h/1.21 and mouse_pos[0]<size_w/1.22:
+                        holo = screen.blit(SF_icons[1],mouse_pos)
+                    if event.type == MOUSEBUTTONDOWN:
+                        pygame.draw.circle(screen, logoBlue, [size_w/1.91,size_h/1.96], size_w/4, 0)
                 else:
                     pygame.mouse.set_visible(True)
 
-                
+                try:
+                    if event.type == MOUSEBUTTONDOWN:
+                        if holo.collidepoint([size_w/1.91,size_h/1.96]):
+                            pygame.mouse.set_pos([uniform(size_w/4.61,size_w/1.2), uniform(size_h/1.09,size_h/9.85)])
+                except:
+                    pass
+
                 sight = screen.blit(SF_icons[0],[size_w/5,size_h/16])
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
