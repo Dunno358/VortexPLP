@@ -234,6 +234,8 @@ SF_holder = []
 SF_holder2 = []
 SF_item = 0
 SF_stage = 0
+SF_iterator = ""
+SF_points = 0
 
 #PRIZE
 iconsUnlock = []
@@ -2498,6 +2500,67 @@ class Course(pygame.sprite.Sprite):
             SF_holder2 = []
             SF_item = 0            
             SF_stage = 0
+        def sniper_game(pointsToGet,ammo=6):
+            global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+            global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+            global storedTime,storedTimeValue,rectCenter
+            global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
+            global SF_iterator,SF_points
+            if not errorShowed:
+                notBlocked = False
+                if isinstance(SF_iterator,str):
+                    SF_iterator = ammo
+                if len(SF_icons)<1:
+                    sight=pygame.image.load(f"{dirPath}/Images/Game/sf/sniper_sight.png")
+                    sight = pygame.transform.scale(sight, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(sight)
+                    soldier = pygame.image.load(f"{dirPath}/Images/Game/sf/holo.png")
+                    soldier = pygame.transform.scale(soldier,[int(size_w/22),int(size_h/9)])
+                    SF_icons.append(soldier)
+                    bckgr = pygame.image.load(f"{dirPath}/Images/Game/sf/bckgr.jpg")
+                    bckgr = pygame.transform.scale(bckgr, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(bckgr)
+                #sight = screen.blit(SF_icons[2],[size_w/5,size_h/16])
+                sight = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                for x in range(400):
+                    hght = uniform(size_h/1.09,size_h/9.85)
+                    pygame.draw.line(screen, dark_blue, [size_w/4.61,hght], [size_w/1.2,hght], size_w//800)
+
+                if sight.collidepoint(mouse_pos):
+                    pygame.mouse.set_visible(False) #False
+                    if mouse_pos[1]<size_h/1.21 and mouse_pos[0]<size_w/1.22:
+                        holo = screen.blit(SF_icons[1],mouse_pos)
+                    try:
+                        if event.type == MOUSEBUTTONDOWN and event.button == 1 and SF_iterator>0:
+                            if holo.collidepoint([size_w/1.91,size_h/1.96]):
+                                SF_points += 1
+                                pygame.mouse.set_pos([uniform(size_w/4.61,size_w/1.2), uniform(size_h/1.09,size_h/9.85)])
+                    except:
+                        pass
+                    if event.type == MOUSEBUTTONDOWN and event.button==1 and SF_iterator>0:
+                        pygame.draw.circle(screen, logoBlue, [size_w/1.91,size_h/1.96], size_w/4, 0)
+                        if SF_iterator>0:
+                            SF_iterator -= 1
+                else:
+                    pygame.mouse.set_visible(True)
+
+
+                sight = screen.blit(SF_icons[0],[size_w/5,size_h/16])
+                pygame.draw.rect(screen, lter_blue, [size_w/1.41,size_h/1.13,(size_w/54)*SF_iterator,size_h/20], 0,size_w//150)
+                pygame.draw.rect(screen, black, [size_w/1.41,size_h/1.13,size_w/9,size_h/20], size_w//300,size_w//150)
+                Write(round(size_w//100*4),SF_points,lter_blue,[size_w/4.07,size_h/1.13])
+
+                if SF_iterator == 0:
+                    pygame.draw.rect(screen, red, [size_w/1.41,size_h/1.13,size_w/9,size_h/20], size_w//300,size_w//150)
+                    course.dialogTop(6.41,"Mag empty! Press R to reload!",bckgr=True)
+                if event.type == KEYDOWN:
+                    if event.key==K_r:
+                        SF_iterator = 6
+
+                if SF_points == pointsToGet:
+                    courseLvl += 1
+                    SF_points = 0
+                    SF_iterator = ""
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -6901,6 +6964,7 @@ class Course(pygame.sprite.Sprite):
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
         global storedTime,storedTimeValue,rectCenter
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
+        global SF_iterator,SF_points
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson7",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
@@ -7276,6 +7340,7 @@ class Course(pygame.sprite.Sprite):
                             storedItems.append(index)
             elif courseLvl == 24: 
                 pygame.mouse.set_visible(True)
+                SF_icons.clear()
                 if not done:
                     notBlocked = False
 
@@ -7320,41 +7385,8 @@ class Course(pygame.sprite.Sprite):
                     else:
                         Write(round(size_w//100*3.5),"Correct",green,[size_w/1.87,size_h/4.99])
                     course.dialogStandard(2.6,"Given argument may not be","used in function, but","but what's the point then?",fontSize=1.8)
-            elif courseLvl == 25: #testing sniper lvl
-                notBlocked = False
-                if len(SF_icons)<1:
-                    sight=pygame.image.load(f"{dirPath}/Images/Game/sf/sniper_sight.png")
-                    sight = pygame.transform.scale(sight, [int(size_w/1.5),int(size_h/1.1)])
-                    SF_icons.append(sight)
-                    soldier = pygame.image.load(f"{dirPath}/Images/Game/sf/holo.png")
-                    soldier = pygame.transform.scale(soldier,[int(size_w/22),int(size_h/9)])
-                    SF_icons.append(soldier)
-                    bckgr = pygame.image.load(f"{dirPath}/Images/Game/sf/bckgr.jpg")
-                    bckgr = pygame.transform.scale(bckgr, [int(size_w/1.5),int(size_h/1.1)])
-                    SF_icons.append(bckgr)
-                #sight = screen.blit(SF_icons[2],[size_w/5,size_h/16])
-                sight = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
-                for x in range(400):
-                    hght = uniform(size_h/1.09,size_h/9.85)
-                    pygame.draw.line(screen, dark_blue, [size_w/4.61,hght], [size_w/1.2,hght], size_w//800)
-
-                if sight.collidepoint(mouse_pos):
-                    pygame.mouse.set_visible(False)
-                    if mouse_pos[1]<size_h/1.21 and mouse_pos[0]<size_w/1.22:
-                        holo = screen.blit(SF_icons[1],mouse_pos)
-                    if event.type == MOUSEBUTTONDOWN:
-                        pygame.draw.circle(screen, logoBlue, [size_w/1.91,size_h/1.96], size_w/4, 0)
-                else:
-                    pygame.mouse.set_visible(True)
-
-                try:
-                    if event.type == MOUSEBUTTONDOWN:
-                        if holo.collidepoint([size_w/1.91,size_h/1.96]):
-                            pygame.mouse.set_pos([uniform(size_w/4.61,size_w/1.2), uniform(size_h/1.09,size_h/9.85)])
-                except:
-                    pass
-
-                sight = screen.blit(SF_icons[0],[size_w/5,size_h/16])
+            elif courseLvl == 25: #testing sniper lvl | Mag:6
+                course.scifi.sniper_game(25)
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
