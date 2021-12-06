@@ -2517,10 +2517,6 @@ class Course(pygame.sprite.Sprite):
                     soldier = pygame.image.load(f"{dirPath}/Images/Game/sf/holo.png")
                     soldier = pygame.transform.scale(soldier,[int(size_w/22),int(size_h/9)])
                     SF_icons.append(soldier)
-                    bckgr = pygame.image.load(f"{dirPath}/Images/Game/sf/bckgr.jpg")
-                    bckgr = pygame.transform.scale(bckgr, [int(size_w/1.5),int(size_h/1.1)])
-                    SF_icons.append(bckgr)
-                #sight = screen.blit(SF_icons[2],[size_w/5,size_h/16])
                 sight = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
                 for x in range(400):
                     hght = uniform(size_h/1.09,size_h/9.85)
@@ -7387,6 +7383,61 @@ class Course(pygame.sprite.Sprite):
                     course.dialogStandard(2.6,"Given argument may not be","used in function, but","but what's the point then?",fontSize=1.8)
             elif courseLvl == 25: #testing sniper lvl | Mag:6
                 course.scifi.sniper_game(25)
+            elif courseLvl == 26: #testing fighter dogfight
+                notBlocked = False
+                if isinstance(SF_iterator,str):
+                    SF_iterator = 6
+                if len(SF_icons)<1:
+                    cockpit=pygame.image.load(f"{dirPath}/Images/Game/sf/cockpit.png")
+                    cockpit = pygame.transform.scale(cockpit, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(cockpit)
+                    fighter = pygame.image.load(f"{dirPath}/Images/Game/sf/fighter1.png")
+                    fighter = pygame.transform.scale(fighter,[int(size_w/10),int(size_h/14)]) #int(size_w/22),int(size_h/9)
+                    SF_icons.append(fighter)
+                sight = pygame.draw.rect(screen, black, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                for x in range(400):
+                    wdth = uniform(size_w/4.91,size_w/1.16)
+                    hght = uniform(size_h/1.27,size_h/4.13)
+                    pygame.draw.circle(screen, lt_gray, [wdth,hght], size_w//800, 0)
+
+                if sight.collidepoint(mouse_pos):
+                    pygame.mouse.set_visible(False) #False
+                    if mouse_pos[1]<size_h/1.21 and mouse_pos[0]<size_w/1.31:
+                        holo = screen.blit(SF_icons[1],mouse_pos)
+                    try:
+                        if event.type == MOUSEBUTTONDOWN and event.button == 1 and SF_iterator>0:
+                            if holo.collidepoint([size_w/1.91,size_h/1.96]):
+                                SF_points += 1
+                                pygame.draw.circle(screen, orange, [sight[0]+(sight[2]/2),sight[1]+(sight[3]/2)], size_w//30, 0)
+                                pygame.draw.circle(screen, green, [size_w/2.27,size_h/1.3], size_w/11, 0)
+                                pygame.mouse.set_pos([uniform(size_w/4.61,size_w/1.2), uniform(size_h/1.09,size_h/9.85)])
+                    except:
+                        pass
+                    if event.type == MOUSEBUTTONDOWN and event.button==1 and SF_iterator>0:
+                        pygame.draw.circle(screen, green, [size_w/2.27,size_h/1.3], size_w/11, 0)
+                        pygame.draw.circle(screen, green, [size_w/1.54,size_h/1.3], size_w/11, 0)
+                else:
+                    pygame.mouse.set_visible(True)
+
+
+                sight = screen.blit(SF_icons[0],[size_w/5,size_h/16])
+                pygame.draw.circle(screen, logoBlue, [sight[0]+(sight[2]/2),sight[1]+(sight[3]/2)], size_w//50, size_w//400)
+                pygame.draw.circle(screen, logoBlue, [sight[0]+(sight[2]/2),sight[1]+(sight[3]/2)], size_w//500, 0)
+                Write(round(size_w//100*3),SF_points,lt_blue,[sight[0]+(sight[2]/1.9),sight[1]+(sight[3]/1.25)])
+
+                if mouse_pos[0]<size_w/3.36:
+                    Write(round(size_w//100*2),"<",red,[sight[0]+(sight[2]/2.1),sight[1]+(sight[3]/2)])
+                if mouse_pos[0]>size_w/1.4:
+                    Write(round(size_w//100*2),">",red,[sight[0]+(sight[2]/1.9),sight[1]+(sight[3]/2)])
+                if mouse_pos[1]<size_h/2.43:
+                    Write(round(size_w//100*2),"^",red,[sight[0]+(sight[2]/2),sight[1]+(sight[3]/2.1)])
+                if mouse_pos[1]>size_h/1.41:
+                    Write(round(size_w//100*2.2),"!",red,[sight[0]+(sight[2]/2),sight[1]+(sight[3]/1.7)])
+
+                if SF_points == 50:
+                    courseLvl += 1
+                    SF_points = 0
+                    SF_iterator = ""
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
     def lesson9():
