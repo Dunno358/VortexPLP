@@ -15,7 +15,7 @@ import unicodedata
 pygInit = pygame.init()
 pygame.mixer.init()
 pygame.key.set_repeat(500, 100)
-print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]))
+print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]),pygame.get_init())
 print("Init_Start_Time: ",str(datetime.now())[10:])
 print("Witaj {}!".format(os.getlogin()))# - RETURNS NAME OF CURRENT USER
 
@@ -7462,9 +7462,11 @@ class Course(pygame.sprite.Sprite):
                     else:
                         Write(round(size_w//100*3.5),"Correct",green,[size_w/1.87,size_h/4.99])
                     course.dialogStandard(2.6,"Given argument may not be","used in function, but","but what's the point then?",fontSize=1.8)
-            elif courseLvl == 25: #testing sniper lvl | Mag:6
+            elif courseLvl == 25:
+                test = True #arguments with default values
+            elif courseLvl == 100: #testing sniper lvl | Mag:6
                 course.scifi.sniper_game(10)
-            elif courseLvl == 26: #testing fighter dogfight
+            elif courseLvl == 101: #testing fighter dogfight
                 course.scifi.dogfight(50)
     def lesson8():
         course.standardLessonEvents("lesson8",99) 
