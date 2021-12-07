@@ -2562,7 +2562,7 @@ class Course(pygame.sprite.Sprite):
                 if mouse_pos[1]<size_h/13.24:
                     Write(round(size_w//100*6),"^",red,[sight[0]+(sight[2]/2.03),sight[1]+(sight[3]/2.3)])
                 if mouse_pos[1]>size_h/1.28:
-                    Write(round(size_w//100*7),"!",red,[sight[0]+(sight[2]/2.05),sight[1]+(sight[3]/1.65)])   
+                    Write(round(size_w//100*3.5),"\/",red,[sight[0]+(sight[2]/2.05),sight[1]+(sight[3]/1.75)])   
 
                 if SF_points == pointsToGet:
                     courseLvl += 1
@@ -2589,11 +2589,13 @@ class Course(pygame.sprite.Sprite):
                     fighter = pygame.transform.scale(fighter,[int(size_w/10),int(size_h/14)]) #int(size_w/22),int(size_h/9)
                     SF_icons.append(fighter)
                 sight = pygame.draw.rect(screen, black, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                
                 for x in range(400):
                     wdth = uniform(size_w/4.91,size_w/1.16)
                     hght = uniform(size_h/1.27,size_h/4.13)
                     pygame.draw.circle(screen, lt_gray, [wdth,hght], size_w//800, 0)
 
+                
                 if sight.collidepoint(mouse_pos):
                     pygame.mouse.set_visible(False) #False
                     if mouse_pos[1]<size_h/1.21 and mouse_pos[0]<size_w/1.31:
@@ -2627,7 +2629,7 @@ class Course(pygame.sprite.Sprite):
                 if mouse_pos[1]<size_h/2.43:
                     Write(round(size_w//100*2),"^",red,[sight[0]+(sight[2]/2),sight[1]+(sight[3]/2.1)])
                 if mouse_pos[1]>size_h/1.41:
-                    Write(round(size_w//100*2.2),"!",red,[sight[0]+(sight[2]/2),sight[1]+(sight[3]/1.7)])
+                    Write(round(size_w//100*1.3),"\/",red,[sight[0]+(sight[2]/2),sight[1]+(sight[3]/1.88)])
 
                 if SF_points == pointsToGet:
                     courseLvl += 1
