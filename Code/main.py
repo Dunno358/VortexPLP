@@ -11,7 +11,6 @@ from random import uniform
 import sys
 import os
 import time
-import unicodedata
 pygInit = pygame.init()
 pygame.mixer.init()
 pygame.key.set_repeat(500, 100)
@@ -2508,6 +2507,7 @@ class Course(pygame.sprite.Sprite):
             global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
             global SF_iterator,SF_points,SF_iterator2
             if not errorShowed:
+
                 notBlocked = False
                 if isinstance(SF_iterator,str):
                     SF_iterator = ammo
@@ -7483,7 +7483,7 @@ class Course(pygame.sprite.Sprite):
                     "you don't have to give value of arg3",
                     "as it has a value already, you can",
                     "enter a new value of arg3 for this",
-                    "function call tho"
+                    "function call as well"
                 ]
                 course.consoleExample("def func(arg1,arg2,arg3='test'):",9.97,fontSize=2.2)
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],strs[5],fontSize=1.7)
