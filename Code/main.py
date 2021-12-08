@@ -7463,7 +7463,32 @@ class Course(pygame.sprite.Sprite):
                         Write(round(size_w//100*3.5),"Correct",green,[size_w/1.87,size_h/4.99])
                     course.dialogStandard(2.6,"Given argument may not be","used in function, but","but what's the point then?",fontSize=1.8)
             elif courseLvl == 25:
-                test = True #arguments with default values
+                strs = [
+                    "Let's go futher, what when you",
+                    "have an argument that often has",
+                    "the same value, but not always?"
+                ]
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2],fontSize=1.8)
+            elif courseLvl == 26:
+                strs = [
+                    "With help comes possibility to set",
+                    "default values of function arguments"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+                course.consoleExample("def func(arg1,arg2,arg3='test'):",2.57,fontSize=2.2)
+            elif courseLvl == 27:
+                strs = [
+                    "Now when calling a function you have",
+                    "to give values of arg1 and arg2, but",
+                    "you don't have to give value of arg3",
+                    "as it has a value already, you can",
+                    "enter a new value of arg3 for this",
+                    "function call tho"
+                ]
+                course.consoleExample("def func(arg1,arg2,arg3='test'):",9.97,fontSize=2.2)
+                course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],strs[5],fontSize=1.7)
+            elif courseLvl == 28:
+                course.consoleGame("")
             elif courseLvl == 100: #testing sniper lvl | Mag:6
                 course.scifi.sniper_game(10)
             elif courseLvl == 101: #testing fighter dogfight
