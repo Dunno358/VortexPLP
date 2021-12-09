@@ -101,6 +101,11 @@ adminText = ""
 #admin = False
 admin = True
 
+#GUIDE
+guideMode = False
+guideStage = 1
+guideFullDisplay = True
+
 #ACTIVITIES
 activeAny = False
 activeCourse = False
@@ -485,7 +490,7 @@ def errorHandling():
 class Start(pygame.sprite.Sprite):
     global language
     language = getLang()
-    def useScreenDef():
+    def useScreenDef(blind=False):
         global sideBarOpt1,sideBarOpt2,sideBarOpt3,sideBarOpt4,sideBarOpt5, sideBarIcons
         global screen
         global color1,color2,color3
@@ -544,15 +549,16 @@ class Start(pygame.sprite.Sprite):
             it+=sideBar_h/5.6        
 
         Write(size_w//100,"V0.0.0.9",color3,[size_w/1.81,10]) 
-        logoTxt1 = WriteItalic(round(size_w//100*6),"Vortex",logoBlue,[size_w/2,size_h/5.15])
-        logoTxt1 = WriteItalic(round(size_w//100*4),"PLP",red,[size_w/1.59,size_h/5.5])
+        if not blind:
+            logoTxt1 = WriteItalic(round(size_w//100*6),"Vortex",logoBlue,[size_w/2,size_h/5.15])
+            logoTxt1 = WriteItalic(round(size_w//100*4),"PLP",red,[size_w/1.59,size_h/5.5])
 
-        WriteItalic(round(size_w//100*3.5),"Content is being loaded for you...",color3,[size_w/1.84,size_h/2.65])
-        WriteItalic(round(size_w//100*1.5),"Loading sounds...",color3,[size_w/1.86,size_h/2.16])
-        WriteItalic(round(size_w//100*1.5),"Loading images...",color3,[size_w/1.86,size_h/1.9])
-        WriteItalic(round(size_w//100*1.5),"Loading fun...",color3,[size_w/1.86,size_h/1.7])
-        
-        Write(round(size_w//100*2.5),"Please be patient",color3,[size_w/1.84,size_h/1.2])
+            WriteItalic(round(size_w//100*3.5),"Content is being loaded for you...",color3,[size_w/1.84,size_h/2.65])
+            WriteItalic(round(size_w//100*1.5),"Loading sounds...",color3,[size_w/1.86,size_h/2.16])
+            WriteItalic(round(size_w//100*1.5),"Loading images...",color3,[size_w/1.86,size_h/1.9])
+            WriteItalic(round(size_w//100*1.5),"Loading fun...",color3,[size_w/1.86,size_h/1.7])
+            
+            Write(round(size_w//100*2.5),"Please be patient",color3,[size_w/1.84,size_h/1.2])
 
         pygame.display.update()
     def sideBarEvents():
@@ -671,7 +677,7 @@ class Start(pygame.sprite.Sprite):
                     except:
                         pass
     def welcomeScreen():
-        global activeAny
+        global activeAny,guideMode
         if len(getName()) > 0 and not activeAny:
             if getLang() == "ENG":
                 strs = [
@@ -713,9 +719,8 @@ class Start(pygame.sprite.Sprite):
                     guideBtn = pygame.draw.rect(screen, green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],0,10)
                     guideBtnBrd = pygame.draw.rect(screen, dark_green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],size_w//675,10)
                     guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.78,size_h/1.24])      
-                else:
-                    guideBtn = pygame.draw.rect(screen, dark_green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],0,10)
-                    guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.78,size_h/1.24]) 
+            elif event.type == MOUSEBUTTONDOWN and guideBtn.collidepoint(mouse_pos):
+                guideMode = True
     def finishBar():
         global admin
         if not admin:
@@ -743,6 +748,200 @@ class Start(pygame.sprite.Sprite):
                 pygame.draw.line(screen, logoBlue, endPoint, customEndPoint, size_w//500)
                 pygame.draw.circle(screen, logoBlue, [size_w/6.47,size_h/1.15-actualPercent*fullH], size_w//200, 0)
                 Write(round(size_w//100*2),f"{int(actualPercent*100)}%",lt_blue,[size_w/6.5,size_h/1.08])
+    def guide():
+        global guideMode,guideStage,admin,sideBarOpts,guideFullDisplay,activities,activeLesson,courseLvl,activeMenu
+        if guideMode:
+            title = ""
+            desc = ""
+
+            if guideFullDisplay:
+                bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+
+                rectDesc=pygame.draw.rect(screen, color1, [size_w/2.91,size_h/3.16,size_w/2.6,size_h/4], 0,size_w//250)
+                rectTitle=pygame.draw.rect(screen, color1, [size_w/3.45,size_h/6.59,size_w/2,size_h/6], 0,size_w//250)
+
+                rectDescBord=pygame.draw.rect(screen, dark_gray, [size_w/2.91,size_h/3.16,size_w/2.6,size_h/4], size_w//250,size_w//250)
+                rectTitleBord=pygame.draw.rect(screen, lt_gray, [size_w/3.45,size_h/6.59,size_w/2,size_h/6], size_w//250,size_w//250)
+                
+                exitBtn=pygame.draw.rect(screen, dark_red, [size_w/1.23,size_h/11.74,size_w/25,size_h/15], 0,size_w//250)
+                Write(round(size_w//100*2),"X",color1,[size_w/1.202,size_h/8.37])
+
+                nextBtn = pygame.draw.rect(screen, dark_green, [size_w/2.25,size_h/1.7,size_w/6,size_h/8],0,size_w//250)
+                Write(round(size_w//100*2.5),"Next",color1,[size_w/1.9,size_h/1.53])
+            else:
+                rectTitle=pygame.draw.rect(screen, color1, [size_w/2.87,size_h/8.93,size_w/2.4,size_h/6], 0,size_w//250)
+                rectTitleBord=pygame.draw.rect(screen, color3, [size_w/2.87,size_h/8.93,size_w/2.4,size_h/6], size_w//300,size_w//250)
+
+                nextBtn = pygame.draw.rect(screen, dark_green, [size_w/1.29,size_h/8.12,size_w/19,size_h/7.5],0,size_w//250)
+                Write(round(size_w//100*4.5),">",color1,[size_w/1.245,size_h/5.22])
+            try:
+                if exitBtn.collidepoint(mouse_pos):
+                    pygame.event.set_allowed(MOUSEBUTTONDOWN)
+                    exitBtn=pygame.draw.rect(screen, red, [size_w/1.23,size_h/11.74,size_w/25,size_h/15], 0,size_w//250)
+                    Write(round(size_w//100*2),"X",color3,[size_w/1.202,size_h/8.37])
+                    if event.type == MOUSEBUTTONDOWN and event.button==1:
+                        guideMode=False
+                        guideStage = 1
+                        start.useScreenDef(blind=True)
+                elif nextBtn.collidepoint(mouse_pos):
+                    pygame.event.set_allowed(MOUSEBUTTONDOWN)
+                    nextBtn = pygame.draw.rect(screen, green, [size_w/2.25,size_h/1.7,size_w/6,size_h/8],0,size_w//250)
+                    pygame.draw.rect(screen, dark_green, [size_w/2.25,size_h/1.7,size_w/6,size_h/8],size_w//250,size_w//250)
+                    Write(round(size_w//100*2.5),"Next",color1,[size_w/1.9,size_h/1.53])  
+                    if event.type == MOUSEBUTTONDOWN:
+                        guideStage += 1    
+                        start.useScreenDef(blind=True)
+                else:
+                    pygame.event.set_blocked(MOUSEBUTTONDOWN)
+            except:
+                if nextBtn.collidepoint(mouse_pos):
+                    pygame.event.set_allowed(MOUSEBUTTONDOWN)
+                    nextBtn = pygame.draw.rect(screen, green, [size_w/1.29,size_h/8.12,size_w/19,size_h/7.5],0,size_w//250)
+                    nextBtn = pygame.draw.rect(screen, dark_green, [size_w/1.29,size_h/8.12,size_w/19,size_h/7.5],size_w//250,size_w//250)
+                    Write(round(size_w//100*4.5),">",color1,[size_w/1.245,size_h/5.22])    
+                    if event.type == MOUSEBUTTONDOWN:
+                        guideStage += 1         
+                        start.useScreenDef(blind=True)  
+                else:
+                    pygame.event.set_blocked(MOUSEBUTTONDOWN)     
+
+            if guideMode:
+                if guideStage == 1:
+                    title = "Exit Button"
+                    desc = [
+                        "Use it when you want to exit application",
+                        "Activated by clicking"
+                    ]    
+                    pygame.draw.line(screen, color3, [size_w/1.25,size_h/3.54], [size_w/1.11,size_h/8.78], size_w//300)      
+                    pygame.draw.line(screen, color3, [size_w/1.11,size_h/8.78], [size_w/1.115,size_h/5.93],size_w//300)      
+                    pygame.draw.line(screen, color3, [size_w/1.11,size_h/8.78], [size_w/1.16,size_h/7.88],size_w//300)      
+                elif guideStage == 2:
+                    if not admin:
+                        title = "Course Completion Bar"
+                        desc = [
+                            "Shows how much of course have been",
+                            "completed as graphic bar and", 
+                            "percentage representation"
+                        ]
+                        pygame.draw.rect(screen, red, [size_w/1.12,size_h/7.6,size_w/12,size_h/1.2], size_w//350,size_w//300)
+                    else:
+                        title = "Administrator Tools"
+                        desc = [
+                            "Change courseLvl manually, add 1",
+                            "to courselvl, substract or add 1", 
+                            "to iterator, FPS and mouse",
+                            "position at the bottom"
+                        ]
+                        pygame.draw.rect(screen, red, [size_w/1.13,size_h/7.6,size_w/10,size_h/1.35], size_w//350,size_w//300)                        
+                elif guideStage == 3:
+                    if admin:
+                        pygame.draw.rect(screen, red, [size_w/8.13,size_h/16,size_w/16,size_h/1.1], size_w//300,size_w//250)
+                        title = "Change unlocked lvl"
+                        desc = [
+                            "Choose one of nine options and",
+                            "set unlocked lesson as chosen",
+                            "(all lessons before and the one chosen)",
+                            "unlocked one is marked as blue"
+                        ]
+                    else:
+                        guideStage += 1
+                elif guideStage == 4:
+                    title = "Categories"
+                    desc = [
+                        "Choose one of five different categories",
+                    ]
+                    sideBar_w = size_w//11 
+                    sideBar_h = size_h - size_h//18
+                    sideBar = pygame.draw.rect(screen,red,[20,20,sideBar_w,sideBar_h],size_w//300,30)
+                elif guideStage == 5:
+                    pygame.draw.rect(screen, red, sideBarOpts[0], size_w//270,size_w//200)
+                    title = "Course"
+                    desc = [
+                        "Main Course Menu",
+                        "Activated by clicking"
+                    ]
+                elif guideStage == 6:
+                    pygame.draw.rect(screen, red, sideBarOpts[1], size_w//270,size_w//200)
+                    title = "Search"
+                    desc = [
+                        "Use to search for definition of",
+                        "Python keywords etc.",
+                        "Activated by clicking"
+                    ]
+                elif guideStage == 7:
+                    pygame.draw.rect(screen, red, sideBarOpts[2], size_w//270,size_w//200)
+                    title = "Settings"
+                    desc = [
+                        "Change resolution, language(ENG/PL)",
+                        "Change theme(dar/light),nickname",
+                        "Log in or out as admin",
+                        "Activated by clicking"
+                    ]
+                elif guideStage == 8:
+                    pygame.draw.rect(screen, red, sideBarOpts[3], size_w//270,size_w//200)
+                    title = "Prizes"
+                    desc = [
+                        "Check the prizes you got after",
+                        "completing lessons",
+                        "Activated by clicking"
+                    ]
+                elif guideStage == 9:
+                    pygame.draw.rect(screen, red, sideBarOpts[4], size_w//270,size_w//200)
+                    title = "Contact"
+                    desc = [
+                        "Contact Administrator to:",
+                        "Report error or issue",
+                        "Suggest upgrades",
+                        "Activated by clicking"
+                    ]
+                elif guideStage == 10:
+                    guideFullDisplay = False
+                    activities[0] = True
+                    activeLesson = course.lesson1
+                    courseLvl = 2
+                    activeMenu = False
+                    desc = ["You're in one of lessons now, let's see around","Click arrow at right from here"]
+                elif guideStage == 11:
+                    if not admin:
+                        pygame.draw.rect(screen, red, [size_w/8.13,size_h/16,size_w/16,size_h/1.1], size_w//300,size_w//450)   
+                        desc = [
+                            "Graphic and percentage representation",
+                            "of actual lesson completion"
+                        ]    
+                    else:
+                        guideStage += 1                 
+                elif guideStage == 12:
+                    pygame.draw.rect(screen, red, [size_w/4.93,size_h/15.04,size_w/10,size_h/10], size_w//168,30)
+                    desc = [
+                        "Use it to go back to the",
+                        "course main menu section"
+                    ]
+                elif guideStage == 13:
+                    pygame.draw.rect(screen, red, [size_w/4.56,size_h/1.25,size_w/8,size_h/8], size_w//300,size_w//250) 
+                    desc = [
+                        "Use it to go to the",
+                        "previous lvl of the lesson"
+                    ]
+                elif guideStage == 14:
+                    pygame.draw.rect(screen, red, [size_w/1.45,size_h/1.25,size_w/8,size_h/8], size_w//300,size_w//250)
+                    desc = [
+                        "Use it to go to the",
+                        "next level of the lesson"
+                    ]
+
+
+                if guideFullDisplay:
+                    WriteItalic(round(size_w//100*3),title,color3,[size_w/1.84,size_h/4.19])
+
+                    hght = size_h/2.77
+                    for txt in desc:
+                        Write(round(size_w//100*1.3),txt,color3,[size_w/1.87,hght])
+                        hght += size_h/20
+                else:
+                    hght = size_h/6.43
+                    for txt in desc:
+                        Write(round(size_w//100*1.3),txt,color3,[size_w/1.87,hght])
+                        hght += size_h/20
     class adminTools(pygame.sprite.Sprite):
         global admin
         def iterators():
@@ -2638,6 +2837,16 @@ class Course(pygame.sprite.Sprite):
                         SF_iterator2 = 0
                     SF_iterator = ""         
                     SF_icons.clear()   
+    def lessons():
+        course.lesson1()
+        course.lesson2()
+        course.lesson3()
+        course.lesson4()
+        course.lesson5()
+        course.lesson6()
+        course.lesson7()
+        course.lesson8()
+        course.lesson9()
     def startScreen():
         global activeAny,activeLesson,activeMenu,wait,storedTime
 
@@ -3168,6 +3377,7 @@ class Course(pygame.sprite.Sprite):
         if not errorShowed:
             course.standardLessonEvents("lesson1",11) 
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson1" and not errorShowed:
+            print(activeLesson,type(activeLesson))
             language = getLang()
             try:
                 if getTheme().lower() == "light":
@@ -8156,15 +8366,7 @@ while running:
             lookFor.startScreen()
             settings.startScreen()
             contacts.startScreen()
-            course.lesson1()
-            course.lesson2()
-            course.lesson3()
-            course.lesson4()
-            course.lesson5()
-            course.lesson6()
-            course.lesson7()
-            course.lesson8()
-            course.lesson9()
+            course.lessons()
             settings.theme()
             settings.resizing()
             settings.resetName()
@@ -8188,5 +8390,6 @@ while running:
     course.shooting_range.doubleForRectDraw()
     start.finishBar()
     start.courseLvlBar()
+    start.guide()
     if pygame.display.get_init():
         pygame.display.update()
