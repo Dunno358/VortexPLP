@@ -693,8 +693,8 @@ class Start(pygame.sprite.Sprite):
             Write(size_w//100*3,"{} {}!".format(strs[0],getName()),color3,[size_w/1.8,size_h/5])
 
             Write(round(size_w//100*1.8),strs[1],color3,[size_w/1.8,size_h/1.5])
-            guideBtn = pygame.draw.rect(screen, dark_green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],0,10)
-            guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.78,size_h/1.24])
+            guideBtn = pygame.draw.rect(screen, dark_green, [size_w/2.2,size_h/1.35,size_w/6,size_h/8],0,10)
+            guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.86,size_h/1.24])
 
             logoName = "Vortex"
 
@@ -716,9 +716,9 @@ class Start(pygame.sprite.Sprite):
             #logoTxt1 = WriteItalic(logoSize-logoSize//3,"PLP",red,[size_w/2+(size_w//50*3*len(logoName)/2.65),size_h/2.5])
             if event.type == MOUSEMOTION:
                 if guideBtn.collidepoint(mouse_pos):
-                    guideBtn = pygame.draw.rect(screen, green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],0,10)
-                    guideBtnBrd = pygame.draw.rect(screen, dark_green, [size_w/2.1,size_h/1.35,size_w/6,size_h/8],size_w//675,10)
-                    guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.78,size_h/1.24])      
+                    guideBtn = pygame.draw.rect(screen, green, [size_w/2.2,size_h/1.35,size_w/6,size_h/8],0,10)
+                    guideBtnBrd = pygame.draw.rect(screen, dark_green, [size_w/2.2,size_h/1.35,size_w/6,size_h/8],size_w//675,10)
+                    guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.86,size_h/1.24])      
             elif event.type == MOUSEBUTTONDOWN and guideBtn.collidepoint(mouse_pos):
                 guideMode = True
     def finishBar():
@@ -753,6 +753,10 @@ class Start(pygame.sprite.Sprite):
         if guideMode:
             title = ""
             desc = ""
+            if guideStage != 15:
+                nextTxt = "Next"
+            else:
+                nextTxt = "Finish"
 
             if guideFullDisplay:
                 bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
@@ -767,7 +771,7 @@ class Start(pygame.sprite.Sprite):
                 Write(round(size_w//100*2),"X",color1,[size_w/1.202,size_h/8.37])
 
                 nextBtn = pygame.draw.rect(screen, dark_green, [size_w/2.25,size_h/1.7,size_w/6,size_h/8],0,size_w//250)
-                Write(round(size_w//100*2.5),"Next",color1,[size_w/1.9,size_h/1.53])
+                Write(round(size_w//100*2.5),nextTxt,color1,[size_w/1.9,size_h/1.53])
             else:
                 rectTitle=pygame.draw.rect(screen, color1, [size_w/2.87,size_h/8.93,size_w/2.4,size_h/6], 0,size_w//250)
                 rectTitleBord=pygame.draw.rect(screen, color3, [size_w/2.87,size_h/8.93,size_w/2.4,size_h/6], size_w//300,size_w//250)
@@ -787,7 +791,7 @@ class Start(pygame.sprite.Sprite):
                     pygame.event.set_allowed(MOUSEBUTTONDOWN)
                     nextBtn = pygame.draw.rect(screen, green, [size_w/2.25,size_h/1.7,size_w/6,size_h/8],0,size_w//250)
                     pygame.draw.rect(screen, dark_green, [size_w/2.25,size_h/1.7,size_w/6,size_h/8],size_w//250,size_w//250)
-                    Write(round(size_w//100*2.5),"Next",color1,[size_w/1.9,size_h/1.53])  
+                    Write(round(size_w//100*2.5),nextTxt,color1,[size_w/1.9,size_h/1.53])  
                     if event.type == MOUSEBUTTONDOWN:
                         guideStage += 1    
                         start.useScreenDef(blind=True)
@@ -873,7 +877,7 @@ class Start(pygame.sprite.Sprite):
                     title = "Settings"
                     desc = [
                         "Change resolution, language(ENG/PL)",
-                        "Change theme(dar/light),nickname",
+                        "Change theme(dark/light),nickname",
                         "Log in or out as admin",
                         "Activated by clicking"
                     ]
@@ -913,8 +917,8 @@ class Start(pygame.sprite.Sprite):
                 elif guideStage == 12:
                     pygame.draw.rect(screen, red, [size_w/4.93,size_h/15.04,size_w/10,size_h/10], size_w//168,30)
                     desc = [
-                        "Use it to go back to the",
-                        "course main menu section"
+                        "Menu Button - Use it to go back",
+                        "to the course main menu section"
                     ]
                 elif guideStage == 13:
                     pygame.draw.rect(screen, red, [size_w/4.56,size_h/1.25,size_w/8,size_h/8], size_w//300,size_w//250) 
@@ -928,17 +932,30 @@ class Start(pygame.sprite.Sprite):
                         "Use it to go to the",
                         "next level of the lesson"
                     ]
-
+                elif guideStage == 15:
+                    guideFullDisplay = True
+                    activeMenu = True
+                    activities[0] = False
+                    activeLesson = ""
+                    courseLvl = 1
+                    title = "That's it!"
+                elif guideStage == 16:
+                    guideStage = 1
+                    guideMode = False
+                    start.welcomeScreen()
 
                 if guideFullDisplay:
                     WriteItalic(round(size_w//100*3),title,color3,[size_w/1.84,size_h/4.19])
 
-                    hght = size_h/2.77
-                    for txt in desc:
-                        Write(round(size_w//100*1.3),txt,color3,[size_w/1.87,hght])
-                        hght += size_h/20
+                    if guideStage!=15:
+                        hght = size_h/2.77
+                        for txt in desc:
+                            Write(round(size_w//100*1.3),txt,color3,[size_w/1.87,hght])
+                            hght += size_h/20
+                    else:
+                        Write(round(size_w//100*3.5),"Have fun!",color3,[size_w/1.86,size_h/2.24])
                 else:
-                    hght = size_h/6.43
+                    hght = size_h/6.1
                     for txt in desc:
                         Write(round(size_w//100*1.3),txt,color3,[size_w/1.87,hght])
                         hght += size_h/20
