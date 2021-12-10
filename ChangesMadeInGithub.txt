@@ -10,7 +10,7 @@
 -✓Arguments
 -✓Multiple arguments
 -✓*args
--Arguments with default value
+-✓Arguments with default value
 -Return
 -Pass
 -Recursion(Rekurencja)
