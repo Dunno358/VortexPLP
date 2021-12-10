@@ -7715,7 +7715,67 @@ class Course(pygame.sprite.Sprite):
                 course.consoleExample("def func(arg1,arg2,arg3='test'):",9.97,fontSize=2.2)
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],strs[5],fontSize=1.7)
             elif courseLvl == 28:
-                course.consoleGame("")
+                ex1 = course.consoleExample("func(1,2,3)",5.73)
+                Write(round(size_w//100*1.2),"Every argument has it's own value(arg1=1,arg2=2,arg3=3)",red,[ex1[0]+ex1[2]/2,size_h/8.08])
+
+                ex2 = course.consoleExample("func(1,2)",2.01)
+                Write(round(size_w//100*1.2),"Arg3 is using it's default value(arg1=1,arg2=2,arg3='test')",red,[ex2[0]+ex2[2]/2,size_h/2.19])
+            elif courseLvl == 29:
+                strs = [
+                    "Function is a scheme of given commands,",
+                    "we got it clear already, but what if we",
+                    "want to store function result as variable",
+                    "or use it in any other way?"
+                ]
+                course.dialogStandard(2.55,strs[0],strs[1],strs[2],strs[3],fontSize=1.4)
+            elif courseLvl == 30:
+                strs = [
+                    "There comes 'return' keyword:",
+                    "it's used to break function and",
+                    "return whatever is given"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+                course.consoleExample("def returnTest(toReturn):",2.49)
+                course.consoleExample("return toReturn",1.79)
+            elif courseLvl == 31:
+                enterVal = ['test',5,4.39,True]
+
+                hght = size_h/4.31
+                for val in enterVal:
+                    txt1 = Write(round(size_w//100*3),f"returnTest({val}) ->",red,[size_w/2.13,hght])
+                    txt1 = txt1.get_rect()
+                    Write(round(size_w//100*3),val,color3,[(txt1[0]+txt1[2])+size_w/15,hght])
+                    hght += size_h/8
+            elif courseLvl == 32:
+                course.dialogTop(6.41,"And that's how function return a","value - now, how to store it?")
+                course.consoleExample("storage = returnTest('value')",3.07,fontSize=2)
+                course.consoleExample("print(storage)",2.06,fontSize=2)
+                Write(round(size_w//100*3),"\/",red,[size_w/1.96,size_h/1.4])
+                Write(round(size_w//100*3),"'value'",red,[size_w/1.96,size_h/1.25])
+            elif courseLvl == 33:
+                strs = [
+                    "And last, but not least, return",
+                    "breaks the function so any command",
+                    "after return will not be executed"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                bckgr = pygame.draw.rect(screen, color1, [size_w/3.62,size_h/2.33,size_w/2,size_h/2.8], 0,size_w//250)
+                bckgr = pygame.draw.rect(screen, purple, [size_w/3.62,size_h/2.33,size_w/2,size_h/2.8], size_w//300,size_w//250)
+                
+                Write(round(size_w//100*2),"def test():",green,[size_w/2.61,size_h/2.09])
+                Write(round(size_w//100*2),"return True",green,[size_w/2.24,size_h/1.84])
+                Write(round(size_w//100*2),"return 'test'",red,[size_w/2.24,size_h/1.64])
+            elif courseLvl == 34:
+                strs = [
+                    "[return 'test'] will not be",
+                    "executed in this situation as",
+                    "[return True] will break function"
+                ]
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2],fontSize=1.7)
+            elif courseLvl == 35:
+                test = True #pass
+
             elif courseLvl == 100: #testing sniper lvl | Mag:6
                 course.scifi.sniper_game(10)
             elif courseLvl == 101: #testing fighter dogfight
