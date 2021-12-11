@@ -12,6 +12,6 @@
 -✓*args
 -✓Arguments with default value
 -✓Return
--Pass
+-✓Pass
 -Recursion(Rekurencja)
  ✓
