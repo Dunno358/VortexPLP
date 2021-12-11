@@ -2723,7 +2723,6 @@ class Course(pygame.sprite.Sprite):
             global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
             global SF_iterator,SF_points,SF_iterator2
             if not errorShowed:
-
                 notBlocked = False
                 if isinstance(SF_iterator,str):
                     SF_iterator = ammo
@@ -2991,7 +2990,7 @@ class Course(pygame.sprite.Sprite):
                 Write(round(size_w//100*2.5),"Najpierw ukończ poprzednie lekcje!",color3,[size_w/1.91,size_h/2.75])
             if getActualSecond()-storedTime > 0.8:
                 wait = False
-    def standardLessonEvents(lesson,maxLvl,condition=True,bckgr=True,standard=True,customCol=""):
+    def standardLessonEvents(lesson,maxLvl,condition=True,bckgr=True,standard=True,customCol="",events=True):
         global activeMenu,courseLvl,activeLesson,selected,chosen,inFight,notBlocked,loadingBar
         global hp1,hp2,loadingBar,storedCords,storedTime,TD_circs,bckgrMusicPlayed,SR_icons
         global iterator,done,maxCourseLvl,admin
@@ -3026,65 +3025,65 @@ class Course(pygame.sprite.Sprite):
             if admin:
                 Write(round(size_w//100*1.5),"{}/{}".format(courseLvl,maxLvl),color3,[size_w/1.19,size_h/11.53])
 
-
-            if event.type == MOUSEMOTION:
-                if menuBtn.collidepoint(mouse_pos):
-                    menuBtn = pygame.draw.rect(screen, green, [size_w/4.93,size_h/15.04,size_w/10,size_h/10], 0,30)
-                    pygame.draw.rect(screen, dark_green, [size_w/4.93,size_h/15.04,size_w/10,size_h/10], size_w//168,30)
-                    menuTxt = Write(size_w//100*2,"Menu",color3,[size_w/3.95,size_h/8.54]) 
-                try:
-                    if nextBtn.collidepoint(mouse_pos) and courseLvl != maxLvl and notBlocked == True:
-                        nextArrow = Write(size_w//100*4,"->",color1,[size_w/1.33,size_h/1.16])    
-                except:
-                    pass
-                try:
-                    if backBtn.collidepoint(mouse_pos) and courseLvl != 1:
-                        backArrow = Write(size_w//100*4,"<-",color1,[size_w/3.59,size_h/1.16])  
-                except:
-                    pass 
-            elif event.type == MOUSEBUTTONDOWN:
-                if menuBtn.collidepoint(mouse_pos):
-                    courseLvl = 1
-                    bckgrMusicPlayed = False
-                    if bckgr:
-                        pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
-                    course.startScreen()
-                    activeMenu = True 
-                    chosen = "" 
-                    selected = ""  
-                    storedTime = ""
-                    inFight = False 
-                    loadingBar = False
-                    notBlocked = True
-                    done = False
-                    hp1 = size_w/2.66
-                    hp2 = size_w/6
-                    iterator = 1
-                    storedCords = []
-                    course.shooting_range.clearVars()
-                    course.scifi.clearVars()
-                    course.tower_defence.reset()
-                    course.tower_defence.clearAdminTools()
-                    course.eventsReset()
-                    pygame.mouse.set_visible(True)
-                try:
-                    if nextBtn.collidepoint(mouse_pos): 
-                        if courseLvl<maxLvl and condition:
-                            courseLvl += 1 
-                            selected = ""  
-                        storedTime = getActualSecond() 
-                except:
-                    pass
-                try:
-                    if backBtn.collidepoint(mouse_pos) and courseLvl > 1:
-                        iterator = 1
-                        courseLvl -=1
-                        selected = ""
-                        SR_icons.clear()
+            if events:
+                if event.type == MOUSEMOTION:
+                    if menuBtn.collidepoint(mouse_pos):
+                        menuBtn = pygame.draw.rect(screen, green, [size_w/4.93,size_h/15.04,size_w/10,size_h/10], 0,30)
+                        pygame.draw.rect(screen, dark_green, [size_w/4.93,size_h/15.04,size_w/10,size_h/10], size_w//168,30)
+                        menuTxt = Write(size_w//100*2,"Menu",color3,[size_w/3.95,size_h/8.54]) 
+                    try:
+                        if nextBtn.collidepoint(mouse_pos) and courseLvl != maxLvl and notBlocked == True:
+                            nextArrow = Write(size_w//100*4,"->",color1,[size_w/1.33,size_h/1.16])    
+                    except:
+                        pass
+                    try:
+                        if backBtn.collidepoint(mouse_pos) and courseLvl != 1:
+                            backArrow = Write(size_w//100*4,"<-",color1,[size_w/3.59,size_h/1.16])  
+                    except:
+                        pass 
+                elif event.type == MOUSEBUTTONDOWN:
+                    if menuBtn.collidepoint(mouse_pos):
+                        courseLvl = 1
+                        bckgrMusicPlayed = False
+                        if bckgr:
+                            pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                        course.startScreen()
+                        activeMenu = True 
+                        chosen = "" 
+                        selected = ""  
+                        storedTime = ""
+                        inFight = False 
+                        loadingBar = False
                         notBlocked = True
-                except:
-                    pass
-                print("LVL",courseLvl) 
+                        done = False
+                        hp1 = size_w/2.66
+                        hp2 = size_w/6
+                        iterator = 1
+                        storedCords = []
+                        course.shooting_range.clearVars()
+                        course.scifi.clearVars()
+                        course.tower_defence.reset()
+                        course.tower_defence.clearAdminTools()
+                        course.eventsReset()
+                        pygame.mouse.set_visible(True)
+                    try:
+                        if nextBtn.collidepoint(mouse_pos): 
+                            if courseLvl<maxLvl and condition:
+                                courseLvl += 1 
+                                selected = ""  
+                            storedTime = getActualSecond() 
+                    except:
+                        pass
+                    try:
+                        if backBtn.collidepoint(mouse_pos) and courseLvl > 1:
+                            iterator = 1
+                            courseLvl -=1
+                            selected = ""
+                            SR_icons.clear()
+                            notBlocked = True
+                    except:
+                        pass
+                    print("LVL",courseLvl) 
     def dialogStandard(hStart,*args,big=False,fontSize=2,iconH=2.1,rectH=3):
         try:
             if size_w < 1890:
@@ -3371,15 +3370,19 @@ class Course(pygame.sprite.Sprite):
         for event in events:
             if pygame.event.get_blocked(event):
                 pygame.event.set_allowed(event)
-    def consoleExample(text,hght=1.51,fontSize=2.5,left=False):
-        bckgr = pygame.draw.rect(screen, color1, [size_w/3.11,size_h/hght,size_w/2.6,size_h/6], 0,15)
-        pygame.draw.rect(screen, color3, [size_w/3,size_h/hght+size_h/44.1,size_w/2.8,size_h/8], size_w//450,15) 
-        if not left:
-            WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/1.95,size_h/hght+size_h/11.15])
-        elif left=='mega':
-            WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.47,size_h/hght+size_h/11.15])
+    def consoleExample(text,hght=1.51,fontSize=2.5,left=False,color=""):
+        if isinstance(color,str):
+            usingColor = color3
         else:
-            WriteItalic(round(size_w//100*fontSize),text, color3, [size_w/2.15,size_h/hght+size_h/11.15])
+            usingColor = color
+        bckgr = pygame.draw.rect(screen, color1, [size_w/3.11,size_h/hght,size_w/2.6,size_h/6], 0,15)
+        pygame.draw.rect(screen, usingColor, [size_w/3,size_h/hght+size_h/44.1,size_w/2.8,size_h/8], size_w//450,15) 
+        if not left:
+            WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/1.95,size_h/hght+size_h/11.15])
+        elif left=='mega':
+            WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/2.47,size_h/hght+size_h/11.15])
+        else:
+            WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/2.15,size_h/hght+size_h/11.15])
         return bckgr
     def definition(strAsList,title="Definition",hghtPoint=2.09,titleFontSize=2.6,txtFontSize=2):
         pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
@@ -7268,9 +7271,13 @@ class Course(pygame.sprite.Sprite):
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
         global storedTime,storedTimeValue,rectCenter
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
-        global SF_iterator,SF_points
+        global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            course.standardLessonEvents("lesson7",99,condition=notBlocked)
+            miniGameLvls = []
+            if courseLvl not in miniGameLvls:
+                course.standardLessonEvents("lesson7",99,condition=notBlocked)
+            else:
+                course.standardLessonEvents("lesson7",99,condition=notBlocked,events=False)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
@@ -7774,10 +7781,234 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.6,strs[0],strs[1],strs[2],fontSize=1.7)
             elif courseLvl == 35:
-                test = True #pass
+                course.dialogTop(6.41,"And futher, function cannot be","empty The way to cheat this","is using pass keyword")
+                course.consoleExample("def func():",2.48,left=True)
+                course.consoleExample("pass",1.79)
+            elif courseLvl == 36:
+                strs = [
+                    "And now the important thing - recursion,",
+                    "So calling the same function in function"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],fontSize=1.4)
+                course.consoleExample("function",3.25,left=True)
+                course.consoleExample("commands",2.16)
+                course.consoleExample("function call",1.61)
+            elif courseLvl == 37:
+                notBlocked = False
+                strs = [
+                    "Very often example of recursion is",
+                    "factorial - and it's good example"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+                bckgr = pygame.draw.rect(screen, color1, [size_w/3.62,size_h/3.21,size_w/2,size_h/3], 0,size_w//250)
+                bckgr = pygame.draw.rect(screen, purple, [size_w/3.62,size_h/3.21,size_w/2,size_h/3], size_w//300,size_w//250)
+
+                lines = [
+                    "def factorial(n):",
+                    "if n == 1:",
+                    "return 1",
+                    "else:",
+                    "                           return n*factorial(n-1)"
+                ]
+
+                hght = size_h/2.82
+                for line in lines:
+                    index = lines.index(line)
+                    if line.endswith(":"):
+                        Write(round(size_w//100*2),line,purple,[size_w/2.61,hght])
+                    else:
+                        Write(round(size_w//100*2),line,purple,[size_w/2.24,hght])
+                    hght += size_h/20
+
+                analiseBtn = course.centeredBtn(1.44,purple,"Analise")
+
+                if analiseBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.44,lt_blue,"Analise")
+                    course.centeredBtn(1.44,dark_blue,"",border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 38:
+                notBlocked = True
+                course.dialogTop(6.41,"So there's a name of function,","which is 'factorial' and it takes","one argument named as 'n'")
+                course.consoleExample("def factorial(n):",2.36,color=purple)
+            elif courseLvl == 39:
+                strs = [
+                    "if argument is 1 then return 1, because",
+                    "that's what of factorial from 1 is"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+                course.consoleExample("if n==1:",2.36,color=purple,left=True)
+                course.consoleExample("return 1",1.73,color=purple)
+            elif courseLvl == 40:
+                strs = [
+                    "if argument is not 1 then return", 
+                    "argument*argument-1(for example",
+                    "5*4*3 etc.) and so that until",
+                    "argument is 1"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3])
+                course.consoleExample("else:",1.99,color=purple,left=True)
+                course.consoleExample("return n*factorial(n-1)",1.52,color=purple)
+            elif courseLvl == 41:
+                pygame.mouse.set_visible(True)
+                notBlocked = False
+                strs = [
+                    "It seems like we got it,",
+                    "now let's test your knowledge"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+                testBtn = course.centeredBtn(2.54,purple,"Test",adjustToDialog=True)
+
+                if testBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.54,lt_blue,"Test",adjustToDialog=True)
+                    course.centeredBtn(2.54,dark_blue,"",adjustToDialog=True,border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 42:
+                try:
+                    if len(SF_icons)<1:
+                        cruiser = pygame.image.load(r"{}/Images/Game/sf/cruiser.png".format(dirPath))
+                        cruiser = pygame.transform.scale(cruiser, [int(size_w/7),int(size_h/11)])
+                        SF_icons.append(cruiser)
+                        fire = pygame.image.load(r"{}/Images/Game/sf/fire.jpg".format(dirPath))
+                        fire = pygame.transform.scale(fire, [int(size_w/200),int(size_h/100)])
+                        SF_icons.append(fire)
+
+                except:
+                    errorInit("Failed to load ships")
+
+
+                if isinstance(SF_iterator,str):
+                    SF_iterator = 0
+
+                questions = [
+                    "Function is",
+                    "Which is correct keyword",
+                    "Correct function call is",
+                    "Correct call of func3(arg1):",
+                    "How many arguments can fucntion take",
+                    "Keyword for infinite args is",
+                    "How to access *args?",
+                    "Correct arg with default value?",
+                    "Which return does not do?",
+                    "What's needed to assign function to variable?",
+                    "Assign function to variable",
+                    "Instructions after return activated",
+                    "How to make function 'empty'?"
+                ]
+
+                answers = [
+                    ["Type of loop","Block of code","Keyword"],
+                    ["fun","function","def"],
+                    ["func5","func5()","func5{}"],
+                    ["func5(3)","func3(3,5)","func3(5)"],
+                    ["Infinite","Up to 100","100000"],
+                    ["*args","inf args","~args"],
+                    ["return","pass","iteration"],
+                    ["func(arg1=5)","func(arg1==5)","func(arg1!=5)"],
+                    ["return value","break function","restart function"],
+                    ["argument","return","integer or str"],
+                    ["var=func()","var==func()","var is func()"],
+                    ["Will work","Will work once","Won't work"],
+                    ["pass","empty","none"]
+                ]
+
+                correctAnswerIndex = [1,2,1,2,0,0,2,0,2,1,0,2,0]
+                #print(SF_iterator,correctAnswerIndex[SF_iterator],SF_points)
+
+                SF_iterator2 = len(questions)
+
+
+                bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], 0,size_w//200)
+                pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/4.92,size_w/1.7,size_h/2], size_w//300,size_w//200)
+                
+                try:
+                    Write(round(size_w//100*2),questions[SF_iterator],lt_blue,[size_w/1.88,size_h/6.8])
+
+                    for x in range(100):
+                        starW = uniform(size_w/4.01,size_w/1.22)
+                        starH = uniform(size_h/4.57,size_h/1.46)
+                        if x%2==0:
+                            color = dark_blue
+                        else:
+                            color = dark_blue
+                        pygame.draw.line(screen, color,[size_w/4.08,starH],[size_w/1.21,starH], size_w//800)
+
+                    ships = []
+                    wdth = size_w/3.51
+                    for x in range(3):
+                        ship = screen.blit(SF_icons[0],[wdth,size_h/2.06])
+                        ships.append(ship)
+                        Write(round(size_w/100*1.5),answers[SF_iterator][x],lter_blue,[ship[0]+ship[2]/2,ship[1]*0.9])
+                        wdth += ship[2]*1.3
+
+                    for cord in SF_cords:
+                        screen.blit(SF_icons[1],cord)
+
+                    if bckgr.collidepoint(mouse_pos):
+                        pygame.mouse.set_visible(False)
+                        pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//650, 0)     
+                        pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//150, size_w//550) 
+                        course.coursorMarked(logoBlue)
+                            
+                    if event.type == MOUSEBUTTONDOWN:
+                        for ship in ships:
+                            if ship.collidepoint(mouse_pos):
+                                index = ships.index(ship)
+                                SF_cords.append(mouse_pos)
+                                pygame.draw.circle(screen, orange, mouse_pos, size_w//70, 0)
+                                print(index,correctAnswerIndex[SF_iterator],index == correctAnswerIndex[SF_iterator])
+                                if index == correctAnswerIndex[SF_iterator]:
+                                    print("TEST")
+                                    SF_points += 1
+                                SF_iterator += 1
+                except:
+                    pygame.mouse.set_visible(True)
+                    Write(round(size_w//100*5),"DONE!",lt_blue,[size_w/1.88,size_h/1.88])
+                    resultBtn = course.centeredBtn(3.48,purple,"Results")
+
+                    if resultBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(3.48,lt_blue,"Results")
+                        course.centeredBtn(3.48,dark_blue,"",border=size_w//250)
+                        if event.type == MOUSEBUTTONDOWN:
+                            courseLvl += 1
+            elif courseLvl == 43:
+                course.dialogTop(6.41,"At least 8 points is needed","Your results:")
+                bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/3.43,size_w/1.7,size_h/2], 0,size_w//200)
+                pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/3.43,size_w/1.7,size_h/2], size_w//300,size_w//200)
+                
+                lines = [
+                    f"Points: {SF_points}",
+                    f"Max: {SF_iterator2}"
+                ]
+                
+                hght = size_h/2.75
+                for line in lines:
+                    Write(round(size_w//100*5),line,lt_blue,[size_w/1.85,hght])
+                    hght += size_h/8
+
+                if SF_points>7:
+                    text = "Next"
+                else:
+                    text = "Try again"
+                btn = course.centeredBtn(1.7,purple,text)
+
+                if btn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.7,lt_blue,text)
+                    course.centeredBtn(1.7,dark_blue,"",border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        if SF_points>7:
+                            courseLvl += 1
+                        else:
+                            courseLvl -= 1
+                            SF_points = 0
+                            SF_cords.clear()
+                            SF_iterator = 0
+            elif courseLvl == 44:
+                test = True #sniper minigame
 
             elif courseLvl == 100: #testing sniper lvl | Mag:6
-                course.scifi.sniper_game(10)
+                course.scifi.sniper_game(100)
             elif courseLvl == 101: #testing fighter dogfight
                 course.scifi.dogfight(50)
     def lesson8():
@@ -7943,6 +8174,7 @@ class Settings(pygame.sprite.Sprite):
         global size,size_w,size_h,activeAny,TD_circs,selectingDisplay,SR_icons,SR_cords
         global hp1,hp2,rectCenter,TD_wdthStart,TD_hghtStart,DG_icons,TD_icon
         global storedCords,storedItems
+        global SF_cords,SF_cords2,SF_cords3,SF_icons
         if activities[2]:
             language = getLang()
             if language == "ENG":
@@ -7987,6 +8219,8 @@ class Settings(pygame.sprite.Sprite):
                             DG_icons = []
                             TD_icon = ""
                             SR_icons.clear()
+                            SF_icons.clear()
+                            SF_cords = SF_cords2 = SF_cords3 = []
                             SR_cords.clear()
                             storedCords.clear()
                             storedItems.clear()
