@@ -13,5 +13,7 @@
 -✓Arguments with default value
 -✓Return
 -✓Pass
--Recursion(Rekurencja)
+-✓Recursion(Rekurencja)
+-✓QUIZ
+-[IN WORK]MINIGAME
  ✓
