@@ -3,17 +3,7 @@
 [TODO-GENERAL] Epilepsy Warning
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 
-[Function lesson] 
--✓Definition
--✓Syntax
--✓Calling a function
--✓Arguments
--✓Multiple arguments
--✓*args
--✓Arguments with default value
--✓Return
--✓Pass
--✓Recursion(Rekurencja)
--✓QUIZ
--[IN WORK]MINIGAME
+[Class lesson] 
+-
+
  ✓
