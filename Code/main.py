@@ -7273,11 +7273,11 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            miniGameLvls = []
+            miniGameLvls = [46]
             if courseLvl not in miniGameLvls:
-                course.standardLessonEvents("lesson7",99,condition=notBlocked)
+                course.standardLessonEvents("lesson7",47,condition=notBlocked)
             else:
-                course.standardLessonEvents("lesson7",99,condition=notBlocked,events=False)
+                course.standardLessonEvents("lesson7",47,condition=notBlocked,events=False)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
@@ -7973,6 +7973,8 @@ class Course(pygame.sprite.Sprite):
                         if event.type == MOUSEBUTTONDOWN:
                             courseLvl += 1
             elif courseLvl == 43:
+                notBlocked = False
+                SF_icons.clear()
                 course.dialogTop(6.41,"At least 8 points is needed","Your results:")
                 bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/3.43,size_w/1.7,size_h/2], 0,size_w//200)
                 pygame.draw.rect(screen, lt_blue, [size_w/4.14,size_h/3.43,size_w/1.7,size_h/2], size_w//300,size_w//200)
@@ -8005,14 +8007,79 @@ class Course(pygame.sprite.Sprite):
                             SF_cords.clear()
                             SF_iterator = 0
             elif courseLvl == 44:
-                test = True #sniper minigame
+                notBlocked = False
+                if len(SF_icons)<1:
+                    sniper = pygame.image.load(f"{dirPath}/Images/Game/sf/sniper.png")
+                    sniper = pygame.transform.scale(sniper, [int(size_w/2.5),int(size_h/7)])
+                    SF_icons.append(sniper)
+                strs = [
+                    "And that's it! It wasn't so hard, was",
+                    "it? Anyway, here's a gift for you!",
+                    "Wanna test that bad boy?"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+                screen.blit(SF_icons[0],[size_w/2.8,size_h/2.33])
 
-            elif courseLvl == 100: #testing sniper lvl | Mag:6
-                course.scifi.sniper_game(100)
-            elif courseLvl == 101: #testing fighter dogfight
-                course.scifi.dogfight(50)
+                yesBtn = course.centeredBtn(1.54,dark_green,"Sure!")
+                noBtn = course.centeredBtn(1.28,dark_green,"Nope")
+
+                if yesBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.54,green,"Sure!")
+                    course.centeredBtn(1.54,dark_green,"",border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                        courseLvl += 1
+                elif noBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.28,green,"Nope")
+                    course.centeredBtn(1.28,dark_green,"",border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                        courseLvl = 47                    
+            elif courseLvl == 45:
+                SF_icons.clear()
+                SF_points = 0
+                SF_iterator = ""
+                notBlocked = False
+                strs = [
+                    "You will enter special symulation in",
+                    "a moment and you will have to shot",
+                    "holograms of enemies - and one more",
+                    "thing: I turned on invert movement",
+                    "so to make it harder for you!"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],strs[4])
+                Write(round(size_w//100*4),"Shoot 12 holograms!",lt_blue,[size_w/1.86,size_h/1.54])
+
+                goBtn = course.centeredBtn(1.33,dark_green,"Go!")
+
+                if goBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.33,green,"Go!")
+                    course.centeredBtn(1.33,dark_green,"",border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN:
+                        courseLvl += 1
+            elif courseLvl == 46: #Sniper Minigame
+                course.scifi.sniper_game(12)
+            elif courseLvl == 47:
+                pygame.mouse.set_visible(True)
+                strs = [
+                    "I hope you had fun!",
+                    "Don't worry, I will see you",
+                    "soon again, you can keep a",
+                    "sniper rifle as a gift from me!"
+                ]
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2],strs[3])
+
+                finishBtn = course.centeredBtn(1.36,dark_green,"Finish")
+
+                if finishBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.36,green,"Finish")
+                    course.centeredBtn(1.36,dark_green,"",border=size_w//250)
+                    if event.type == MOUSEBUTTONDOWN and event.button==1:
+                        if getCourseLvl() < 8:
+                            changeCourselvl(8)
+                        activeMenu = True
+                        courseLvl = 1
+                        bckgrMusicPlayed = False
     def lesson8():
-        course.standardLessonEvents("lesson8",99) 
+        course.standardLessonEvents("lesson8",99)  #Classes
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
@@ -8515,7 +8582,7 @@ class Prize(pygame.sprite.Sprite):
                     "Book of spells",
                     "Graduate's medal",
                     "Dogtag",
-                    "None",
+                    "Sniper Rifle",
                     "None",
                 ]
             else:
@@ -8526,7 +8593,7 @@ class Prize(pygame.sprite.Sprite):
                     "Księga zaklęć",
                     "Medal ukończenia",
                     "Nieśmiertelnik",
-                    "None",
+                    "Snajperka",
                     "None",
                 ]
             
@@ -8544,7 +8611,10 @@ class Prize(pygame.sprite.Sprite):
                     medalL = pygame.transform.scale(medalL, [int(size_w/12),int(size_h/6)]) 
                     dogtagL = pygame.image.load(r"{}/Images/Game/sr/dogtag1_locked.png".format(dirPath))
                     dogtagL = pygame.transform.scale(dogtagL, [int(size_w/10.6),int(size_h/6)]) 
-                    iconsLocked = [cupL,axeL,potionL,bookL,medalL,dogtagL]
+                    sniperL = pygame.image.load(r"{}/Images/Game/sf/sniper_locked.png".format(dirPath))
+                    sniperL = pygame.transform.scale(sniperL, [int(size_w/7.8),int(size_h/17)]) 
+                    sniperL = pygame.transform.rotate(sniperL, -45)
+                    iconsLocked = [cupL,axeL,potionL,bookL,medalL,dogtagL,sniperL]
 
                 if len(iconsUnlock) < 1:
                     cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
@@ -8559,7 +8629,10 @@ class Prize(pygame.sprite.Sprite):
                     medal = pygame.transform.scale(medal, [int(size_w/12),int(size_h/6)]) 
                     dogtag = pygame.image.load(r"{}/Images/Game/sr/dogtag1.png".format(dirPath))
                     dogtag = pygame.transform.scale(dogtag, [int(size_w/10.6),int(size_h/6)])
-                    iconsUnlock = [cup,axe,potion,book,medal,dogtag]
+                    sniper = pygame.image.load(r"{}/Images/Game/sf/sniper.png".format(dirPath))
+                    sniper = pygame.transform.scale(sniper, [int(size_w/7.8),int(size_h/17)]) 
+                    sniper = pygame.transform.rotate(sniper, -45)
+                    iconsUnlock = [cup,axe,potion,book,medal,dogtag,sniper]
             except:
                 errorInit("Failed to load icons at prize.startScreen()",fontSize=1.7)
 
@@ -8567,6 +8640,7 @@ class Prize(pygame.sprite.Sprite):
             hght = size_h/2.13
             lvl = getCourseLvl() - 2
             iterator = 0
+
 
             for it in range(2):
                 for it2 in range(4):
