@@ -4,6 +4,14 @@
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 
 [Class lesson] 
--
+-syntax(create class)
+-assign to var(object)
+-__init__()
+-functions in class(object methods)
+-self
+-modify object vars
+-delete object properties(del object.property)
+-delete object(del object)
+-pass
 
  ✓
