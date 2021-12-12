@@ -8079,7 +8079,20 @@ class Course(pygame.sprite.Sprite):
                         courseLvl = 1
                         bckgrMusicPlayed = False
     def lesson8():
-        course.standardLessonEvents("lesson8",99)  #Classes
+        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+        global storedTime,storedTimeValue,rectCenter
+        global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
+        global SF_iterator,SF_iterator2,SF_points
+        if activeMain and not errorShowed:
+            course.standardLessonEvents("lesson7",99,condition=notBlocked)
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson8" and not errorShowed:
+            try:
+                mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)])
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
+            language = getLang()
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
