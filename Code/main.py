@@ -11,6 +11,8 @@ from random import uniform
 import sys
 import os
 import time
+
+from pygame.mouse import set_visible
 pygInit = pygame.init()
 pygame.mixer.init()
 pygame.key.set_repeat(500, 100)
@@ -2805,7 +2807,7 @@ class Course(pygame.sprite.Sprite):
                     SF_icons.append(fighter)
                 sight = pygame.draw.rect(screen, black, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
                 
-                for x in range(400):
+                for x in range(100):
                     wdth = uniform(size_w/4.91,size_w/1.16)
                     hght = uniform(size_h/1.27,size_h/4.13)
                     pygame.draw.circle(screen, lt_gray, [wdth,hght], size_w//800, 0)
@@ -3391,6 +3393,10 @@ class Course(pygame.sprite.Sprite):
         for x in strAsList:
             Write(round(size_w//100*txtFontSize),x,color3,[size_w/1.92,hght])
             hght += size_h/10
+    def shadowWrite(txt):
+        pygame.draw.rect(screen, dark_gray, [size_w/3.12,size_h/2.16,size_w/2.3,size_h/5], 0,size_w//150)
+        Write(round(size_w//100*8),txt,black,[size_w/1.85,size_h/1.77])
+        Write(round(size_w//100*8.5),txt,lt_gray,[size_w/1.85,size_h/1.77])
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
         global bckgrMusicPlayed,soundEnabled,errorShowed
@@ -7279,10 +7285,9 @@ class Course(pygame.sprite.Sprite):
             else:
                 course.standardLessonEvents("lesson7",47,condition=notBlocked,events=False)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
-            print(courseLvl == 1)
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
-                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)])
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
@@ -8106,9 +8111,24 @@ class Course(pygame.sprite.Sprite):
             
             if courseLvl == 1:
                 strs = [
-                    "And here I am again!"
+                    "And here I am again! so, let's continue",
+                    "Our adventure and it's time for Classes!"
                 ] 
-                course.dialogTop(6.41)
+                course.dialogTop(6.41,strs[0],strs[1])
+                course.shadowWrite("Classes")
+            elif courseLvl == 2:
+                course.dialogTop(6.41,"So what are the classes/objects?")
+
+                desc = [
+                    "Almost everything in Python is an object, with its", 
+                    "properties and methods. A Class is like an object",
+                    "constructor, or a 'blueprint' for creating objects.", 
+                ]
+
+                course.definition(desc,"Class ~ W3Schools",txtFontSize=1.8)
+            elif courseLvl == 3:
+                course.dialogTop(6.41,"What comes first is syntax, which","is very similar to functions btw")
+
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
