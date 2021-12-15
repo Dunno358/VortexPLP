@@ -7269,7 +7269,7 @@ class Course(pygame.sprite.Sprite):
     def lesson7():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
-        global storedTime,storedTimeValue,rectCenter
+        global storedTime,storedTimeValue,rectCenter,storedValue
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
@@ -7279,6 +7279,7 @@ class Course(pygame.sprite.Sprite):
             else:
                 course.standardLessonEvents("lesson7",47,condition=notBlocked,events=False)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson7" and not errorShowed:
+            print(courseLvl == 1)
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
                 mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/12),int(size_h/6)]) #[int(size_w/10.6),int(size_h/6)]
@@ -7950,17 +7951,25 @@ class Course(pygame.sprite.Sprite):
                         pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//650, 0)     
                         pygame.draw.circle(screen, logoBlue, mouse_pos, size_w//150, size_w//550) 
                         course.coursorMarked(logoBlue)
-                            
+                    else:
+                        pygame.mouse.set_visible(True)
+
+                    pygame.draw.rect(screen, color2, [size_w/2.5,size_h/1.3,size_w/4,size_h/9], width=0)
+                    if storedValue == 1:
+                        Write(round(size_w//100*5),"Correct!",green,[size_w/1.9,size_h/1.22])   
+                    elif storedValue == 2:   
+                        Write(round(size_w//100*5),"Wrong!",red,[size_w/1.9,size_h/1.22])  
                     if event.type == MOUSEBUTTONDOWN:
                         for ship in ships:
                             if ship.collidepoint(mouse_pos):
                                 index = ships.index(ship)
                                 SF_cords.append(mouse_pos)
                                 pygame.draw.circle(screen, orange, mouse_pos, size_w//70, 0)
-                                print(index,correctAnswerIndex[SF_iterator],index == correctAnswerIndex[SF_iterator])
                                 if index == correctAnswerIndex[SF_iterator]:
-                                    print("TEST")
                                     SF_points += 1
+                                    storedValue = 1
+                                else:
+                                    storedValue = 2
                                 SF_iterator += 1
                 except:
                     pygame.mouse.set_visible(True)
@@ -8006,6 +8015,7 @@ class Course(pygame.sprite.Sprite):
                             SF_points = 0
                             SF_cords.clear()
                             SF_iterator = 0
+                            storedValue = ''
             elif courseLvl == 44:
                 notBlocked = False
                 if len(SF_icons)<1:
@@ -8085,7 +8095,7 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            course.standardLessonEvents("lesson7",99,condition=notBlocked)
+            course.standardLessonEvents("lesson8",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson8" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
@@ -8093,6 +8103,12 @@ class Course(pygame.sprite.Sprite):
             except:
                 errorInit("Failed to load mentor icon!",fontSize=1.8)
             language = getLang()
+            
+            if courseLvl == 1:
+                strs = [
+                    "And here I am again!"
+                ] 
+                course.dialogTop(6.41)
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
