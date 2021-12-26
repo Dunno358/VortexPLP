@@ -3577,7 +3577,7 @@ class Course(pygame.sprite.Sprite):
                 course.dialogTop(6.41,strs[0],strs[1]) 
                 if event.type == MOUSEBUTTONDOWN:
                     if link.collidepoint(mouse_pos):
-                        os.system(r"start https://www.python.org/ftp/python/3.9.7/python-3.9.7-amd64.exe")
+                        os.system(r'https://www.python.org/ftp/python/3.10.1/python-3.10.1-amd64.exe')
                     elif link2.collidepoint(mouse_pos):
                         os.system(r"start https://www.python.org/downloads/")
                 elif event.type == MOUSEMOTION:
@@ -8061,7 +8061,7 @@ class Course(pygame.sprite.Sprite):
                     "so to make it harder for you!"
                 ]
                 course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],strs[4])
-                Write(round(size_w//100*4),"Shoot 12 holograms!",lt_blue,[size_w/1.86,size_h/1.54])
+                Write(round(size_w//100*4),"Shoot 5 holograms!",lt_blue,[size_w/1.86,size_h/1.54])
 
                 goBtn = course.centeredBtn(1.33,dark_green,"Go!")
 
@@ -8071,7 +8071,7 @@ class Course(pygame.sprite.Sprite):
                     if event.type == MOUSEBUTTONDOWN:
                         courseLvl += 1
             elif courseLvl == 46: #Sniper Minigame
-                course.scifi.sniper_game(12)
+                course.scifi.sniper_game(5)
             elif courseLvl == 47:
                 pygame.mouse.set_visible(True)
                 strs = [
@@ -8128,7 +8128,100 @@ class Course(pygame.sprite.Sprite):
                 course.definition(desc,"Class ~ W3Schools",txtFontSize=1.8)
             elif courseLvl == 3:
                 course.dialogTop(6.41,"What comes first is syntax, which","is very similar to functions btw")
+                course.consoleExample("class anyName():",2.73,left=True)
+                course.consoleExample("instructions",1.91)
+            elif courseLvl == 4:
+                strs = [
+                    "So what has changed are",
+                    "only keywords, instead of",
+                    "'def' there is 'class'"
+                ]
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2])
+            elif courseLvl == 5:
+                strs = [
+                    "So a template like that is a class and",
+                    "object is a class assigned to variable",
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+                classRect = course.consoleExample("class testClass():",3.37,left=True)
+                course.consoleExample("instructions",2.21)
+                objectRect = course.consoleExample("testVar = testClass()",1.65)
 
+                if classRect.collidepoint(mouse_pos):
+                    course.consoleExample("Class",3.37,fontSize=3,color=purple)
+                elif objectRect.collidepoint(mouse_pos):
+                    course.consoleExample("Object",1.65,fontSize=3,color=purple)
+            elif courseLvl == 6:
+                notBlocked = False
+                hght = size_h/3.56
+                wdth = size_w/3.91
+                strs = [
+                    "Object is:",
+                    "Template",
+                    "Blueprint",
+                    "Variable",
+                    "Class is:",
+                    "Variable",
+                    "Method",
+                    "Template"
+                ]
+                for x in range(2):
+                    for y in range(4):
+                        rect = pygame.draw.rect(screen, color1, [wdth,hght,size_w/8,size_h/10], 0,size_w//250)
+                        if y != 0:
+                            if rect not in storedCords:
+                                storedCords.append(rect)
+                        if x == 0:
+                            if y == 0:
+                                Write(round(size_w//100*1.8),strs[y],red,[(wdth+size_w/16),(hght+size_h/20)])
+                            else:    
+                                Write(round(size_w//100*1.8),strs[y],color3,[(wdth+size_w/16),(hght+size_h/20)])
+                        elif x ==1:
+                            if y == 0:
+                                Write(round(size_w//100*1.8),strs[y+4],red,[(wdth+size_w/16),(hght+size_h/20)])
+                            else:    
+                                Write(round(size_w//100*1.8),strs[y+4],color3,[(wdth+size_w/16),(hght+size_h/20)])
+                        wdth += size_w/7
+                    hght += size_h/6
+                    wdth = size_w/3.91
+
+                    if not isinstance(SF_iterator,int):
+                        SF_iterator = 0
+                    if SF_iterator2 < 3:
+                        SF_iterator2 = 3
+
+
+                    pygame.draw.rect(screen, color3, storedCords[SF_iterator], size_w//250,size_w//250)
+                    if len(storedCords)>5:
+                        pygame.draw.rect(screen, color3, storedCords[SF_iterator2], size_w//250,size_w//250)
+                        print(len(storedCords))
+
+                    for cord in storedCords:
+                        if cord.collidepoint(mouse_pos) and event.type == MOUSEBUTTONDOWN:
+                            index = storedCords.index(cord)
+                            if index < 3:
+                                SF_iterator = index
+                            else:
+                                SF_iterator2 = index
+
+                    checkBtn = course.centeredBtn(1.45,dark_green,"Check")
+                    if checkBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.45,green,"Check")
+                        course.centeredBtn(1.45,dark_green,"",size_w//250)
+                        if event.type == MOUSEBUTTONDOWN and event.button==1:
+                            if SF_iterator == 2 and SF_iterator2 == 5:
+                                if courseLvl == 6:
+                                    courseLvl += 1
+                            else:
+                                course.centeredBtn(1.45,red,"",0)
+            elif courseLvl == 7:
+                notBlocked = True
+                storedCords.clear()
+                SF_iterator = ''
+                SF_iterator2 = ''
+                course.dialogStandard(2.65,"I'm glad you got it,","let's go futher")
+            elif courseLvl == 8: #__init__()
+                test = True
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
