@@ -5,7 +5,7 @@
 
 [Class lesson] 
 -✓syntax(create class)
--assign to var(object)
+-✓assign to var(object)
 -__init__()
 |MINIGAME|ship attacked - making your way
 -functions in class(object methods)
