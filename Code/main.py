@@ -1,3 +1,4 @@
+from Code.test import test
 from typing import Type
 import pygame
 from pygame import Surface, rect
@@ -734,7 +735,7 @@ class Start(pygame.sprite.Sprite):
             pygame.draw.rect(screen, color1, [size_w/1.12,size_h/7.6,size_w/12,size_h/1.2], 0)
             pygame.draw.line(screen, dark_gray, startPoint, endPoint, size_w//500)
             pygame.draw.line(screen, green, endPoint, customEndPoint, size_w//500)
-            pygame.draw.circle(screen, green, [size_w/1.069,size_h/1.15-actualPercent*fullH], size_w//200, 0)
+            #pygame.draw.circle(screen, green, [size_w/1.069,size_h/1.15-actualPercent*fullH], size_w//200, 0)
             Write(round(size_w//100*2),f"{int(actualPercent*100)}%",green,[size_w/1.07,size_h/1.08])
     def courseLvlBar():
         global admin,activeMenu,maxCourseLvl,courseLvl
@@ -748,7 +749,7 @@ class Start(pygame.sprite.Sprite):
                 customEndPoint = [size_w/6.5,size_h/1.15-actualPercent*fullH]
                 pygame.draw.line(screen, dark_gray, startPoint, endPoint, size_w//500)
                 pygame.draw.line(screen, logoBlue, endPoint, customEndPoint, size_w//500)
-                pygame.draw.circle(screen, logoBlue, [size_w/6.47,size_h/1.15-actualPercent*fullH], size_w//200, 0)
+                #pygame.draw.circle(screen, logoBlue, [size_w/6.47,size_h/1.15-actualPercent*fullH], size_w//200, 0)
                 Write(round(size_w//100*2),f"{int(actualPercent*100)}%",lt_blue,[size_w/6.5,size_h/1.08])
     def guide():
         global guideMode,guideStage,admin,sideBarOpts,guideFullDisplay,activities,activeLesson,courseLvl,activeMenu
@@ -3383,8 +3384,13 @@ class Course(pygame.sprite.Sprite):
             WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/1.95,size_h/hght+size_h/11.15])
         elif left=='mega':
             WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/2.47,size_h/hght+size_h/11.15])
-        else:
+        elif left == True:
             WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/2.15,size_h/hght+size_h/11.15])
+        else:
+            try:
+                WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/left,size_h/hght+size_h/11.15])
+            except:
+                WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/1.95,size_h/hght+size_h/11.15])
         return bckgr
     def definition(strAsList,title="Definition",hghtPoint=2.09,titleFontSize=2.6,txtFontSize=2):
         pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
@@ -8138,6 +8144,9 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.6,strs[0],strs[1],strs[2])
             elif courseLvl == 5:
+                storedCords.clear()
+                SF_iterator = ''
+                SF_iterator2 = ''
                 strs = [
                     "So a template like that is a class and",
                     "object is a class assigned to variable",
@@ -8187,6 +8196,8 @@ class Course(pygame.sprite.Sprite):
 
                     if not isinstance(SF_iterator,int):
                         SF_iterator = 0
+                    if not isinstance(SF_iterator2,int):
+                        SF_iterator2 = 0
                     if SF_iterator2 < 3:
                         SF_iterator2 = 3
 
@@ -8194,7 +8205,6 @@ class Course(pygame.sprite.Sprite):
                     pygame.draw.rect(screen, color3, storedCords[SF_iterator], size_w//250,size_w//250)
                     if len(storedCords)>5:
                         pygame.draw.rect(screen, color3, storedCords[SF_iterator2], size_w//250,size_w//250)
-                        print(len(storedCords))
 
                     for cord in storedCords:
                         if cord.collidepoint(mouse_pos) and event.type == MOUSEBUTTONDOWN:
@@ -8220,7 +8230,68 @@ class Course(pygame.sprite.Sprite):
                 SF_iterator = ''
                 SF_iterator2 = ''
                 course.dialogStandard(2.65,"I'm glad you got it,","let's go futher")
-            elif courseLvl == 8: #__init__()
+            elif courseLvl == 8: 
+                strs = [
+                    "What's important, as instruction of a",
+                    "class you can give other functions",
+                    "with their own instructions"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+                course.consoleExample("class Worker():",2.67,left=2.32,color=green)
+                course.consoleExample("def name():",1.89,left=True,color=orange)
+                course.consoleExample("instructions",1.46)
+            elif courseLvl == 9:
+                strs = [
+                    "To call it, we need to make an object",
+                    "out of this class, so let's assign it",
+                    "to variable and then use it"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                objectRect = course.consoleExample("worker = Worker",2.69) #u"\u2193" - down arrow
+                WriteItalic(round(size_w//100*3.5),u"\u2193",color3,[size_w/1.97,size_h/1.71])
+                funcRect = course.consoleExample("worker.name()",1.53)
+
+                infCirc1 = pygame.draw.circle(screen, color1, [size_w/3.81,size_h/2.14], size_w//48, 0)
+                WriteItalic(round(size_w//100*1.6),"i",color3,[infCirc1[0]+(infCirc1[2]/2),size_h/2.14])
+                infCirc2 = pygame.draw.circle(screen, color1, [size_w/1.3,size_h/2.14], size_w//48, 0)
+                WriteItalic(round(size_w//100*1.6),"i",color3,[infCirc2[0]+(infCirc2[2]/2),size_h/2.14])
+
+                if objectRect.collidepoint(mouse_pos):
+                    course.consoleExample("Object",2.69,color=green,fontSize=3)
+                elif funcRect.collidepoint(mouse_pos):
+                    course.consoleExample("Function",1.53,color=orange,fontSize=3)
+                elif infCirc1.collidepoint(mouse_pos): #1.98,1.9
+                    pygame.draw.rect(screen, color1, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], 0,size_w//250)
+                    pygame.draw.rect(screen, red, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], size_w//350,size_w//250)
+                    WriteItalic(round(size_w//100*1.6),"i",logoBlue,[infCirc1[0]+(infCirc1[2]/2),size_h/2.14])
+                    txts = [
+                        "It's good to use the same name for",
+                        "class and object, but to start class",
+                        "name with big letter and object",
+                        "(variable) name with small letter"
+                    ]
+                    wdth = size_w/1.98
+                    hght = size_h/1.9
+                    for txt in txts:
+                        Write(round(size_w//100*1.6),txt,orange,[wdth,hght])
+                        hght += size_h/18
+                elif infCirc2.collidepoint(mouse_pos): #1.98,1.9
+                    pygame.draw.rect(screen, color1, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], 0,size_w//250)
+                    pygame.draw.rect(screen, red, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], size_w//350,size_w//250)
+                    WriteItalic(round(size_w//100*1.6),"i",logoBlue,[infCirc2[0]+(infCirc2[2]/2),size_h/2.14])
+                    txts = [
+                        "When making an object, so assigning",
+                        "class to variable, remember to enter",
+                        "class name without '()' so you can",
+                        "call it's functions properly"
+                    ]
+                    wdth = size_w/1.98
+                    hght = size_h/1.9
+                    for txt in txts:
+                        Write(round(size_w//100*1.6),txt,orange,[wdth,hght])
+                        hght += size_h/18
+            elif courseLvl == 10: #moment of attack and __init__()
                 test = True
     def lesson9():
         course.standardLessonEvents("lesson9",99)
