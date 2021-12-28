@@ -1,11 +1,8 @@
-from Code.test import test
-from typing import Type
 import pygame
 from pygame import Surface, rect
 from pygame import font
 from pygame.event import get_blocked, post
 from pygame.locals import *
-import os
 from datetime import datetime
 from random import randint
 from random import uniform
@@ -33,6 +30,7 @@ dark_gray = (120,120,120)
 darker_gray = (80,80,80)
 black = (0,0,0)
 red = (150,0,0)
+lt_red = (214, 122, 122)
 dark_red  = (90,0,0)
 green = (0,150,0)
 dark_green = (0,90,0)
@@ -2856,6 +2854,31 @@ class Course(pygame.sprite.Sprite):
                         SF_iterator2 = 0
                     SF_iterator = ""         
                     SF_icons.clear()   
+        def lamp(lesson,lvl,pos,incolor1=dark_red,incolor2=red,incolor3=lt_red,condition=''):
+            global activeLesson,courseLvl,activities
+            if str(activeLesson)[17:-23]==lesson and courseLvl == lvl and activities[0]:
+                if isinstance(condition,bool):
+                    if condition:
+                        pygame.draw.circle(screen, color2, pos, size_w//30, size_w//100)
+                        if int(time.process_time())%2 == 0:
+                            pygame.draw.circle(screen, incolor1, pos, size_w//45, 0)
+                        else:
+                            pygame.draw.circle(screen, incolor2, pos, size_w//45, 0)
+                            pygame.draw.circle(screen, incolor3, pos, size_w//32, size_w//100)
+                else:
+                    pygame.draw.circle(screen, color2, pos, size_w//30, size_w//100)
+                    if int(time.process_time())%2 == 0:
+                        pygame.draw.circle(screen, incolor1, pos, size_w//45, 0)
+                    else:
+                        pygame.draw.circle(screen, incolor2, pos, size_w//45, 0)
+                        pygame.draw.circle(screen, incolor3, pos, size_w//32, size_w//100)                    
+        def usingLamps():
+            global storedTime,storedTimeValue
+            try:
+                course.scifi.lamp('lesson8',10,[size_w/3.31,size_h/3.51],condition=storedTime-storedTimeValue > 1)
+                course.scifi.lamp('lesson8',10,[size_w/1.34,size_h/3.51],condition=storedTime-storedTimeValue > 1)
+            except:
+                pass
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -8106,7 +8129,11 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            course.standardLessonEvents("lesson8",99,condition=notBlocked)
+            miniGameLvls = [13]
+            if courseLvl not in miniGameLvls:
+                course.standardLessonEvents("lesson8",99,condition=notBlocked)
+            else:
+                course.standardLessonEvents("lesson8",99,condition=notBlocked,events=False)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson8" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
@@ -8291,8 +8318,129 @@ class Course(pygame.sprite.Sprite):
                     for txt in txts:
                         Write(round(size_w//100*1.6),txt,orange,[wdth,hght])
                         hght += size_h/18
-            elif courseLvl == 10: #moment of attack and __init__()
-                test = True
+            elif courseLvl == 10:
+                notBlocked = False
+                if not isinstance(storedTimeValue,float):
+                    storedTimeValue = round(float(time.process_time()),2)
+                storedTime = round(float(time.process_time()),2)
+                if storedTime-storedTimeValue < 1:
+                    course.dialogTop(6.41,"And now it's time for the...")
+                else:
+                    Write(round(size_w//100*5),"Red alert!",red,[size_w/1.91,size_h/3.4])
+                    Write(round(size_w//100*3.5),"We've been attacked!",color3,[size_w/1.91,size_h/2.18])
+                    Write(round(size_w//100*2.5),"Everyone take your battle positions!",color3,[size_w/1.91,size_h/1.6])
+                    windowBtn = course.centeredBtn(1.34,purple,"Window")
+
+                    if windowBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.34,lt_blue,"Window")
+                        course.centeredBtn(1.34,dark_blue,"",size_w//250)
+                        if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                            courseLvl += 1
+                            storedTimeValue = round(float(time.process_time()),2)
+            elif courseLvl == 11:
+                selected = ''
+                done = False
+                if len(SF_icons)<1:
+                    cruiser = pygame.image.load(r"{}/Images/Game/sf/Cruiser.png".format(dirPath))
+                    cruiser = pygame.transform.scale(cruiser, [int(size_w/5),int(size_h/9)])
+                    SF_icons.append(cruiser)
+
+                storedTime = round(float(time.process_time()),2)
+
+                bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/3.38,size_w/1.7,size_h/2], 0,size_w//20)
+                if storedTime-storedTimeValue < 3:
+                    #stars
+                    if len(SF_cords)<1:
+                        for x in range(300):
+                            wdth = uniform(size_w/3.99,size_w/1.22)
+                            hght = uniform(size_h/3.17,size_h/1.29)
+                            SF_cords.append([wdth,hght])
+                    for cord in SF_cords:
+                        pygame.draw.circle(screen, lt_gray, cord, size_w//800, 0)       
+                    #stars
+                    pygame.draw.rect(screen, dark_gray, [size_w/4.14,size_h/3.38,size_w/1.7,size_h/2], size_w//150,size_w//20)    
+
+                    if len(storedCords)<1:
+                        for x in range(2):
+                            wdth = uniform(size_w/3.47,size_w/1.7)
+                            storedCords.append(wdth)
+                    hght = size_h/2.83
+
+                    for x in range(2):
+                        screen.blit(SF_icons[0],[storedCords[x],hght])
+                        hght += (SF_icons[0].get_height()*1.8)
+                else:
+                    notBlocked = True
+                    pygame.draw.rect(screen, darkThemeMainCol, [size_w/4.14,size_h/3.38,size_w/1.7,size_h/2], 0,size_w//20)
+                    pygame.draw.line(screen, black, [size_w/4.11,size_h/1.81], [size_w/1.21,size_h/1.81], size_w//200)
+                    pygame.draw.rect(screen, dark_gray, [size_w/4.14,size_h/3.38,size_w/1.7,size_h/2], size_w//150,size_w//20) 
+                    WriteItalic(round(size_w//100*3),"*Security lock activated!*",color3,[size_w/1.85,size_h/5.02]) 
+            elif courseLvl == 12:
+                if not done:
+                    SF_icons.clear()
+                    done = True
+                if len(SF_icons)<1:
+                    pistol=pygame.image.load(f"{dirPath}/Images/Game/sf/pistol1.png")
+                    pistol = pygame.transform.scale(pistol, [int(size_w/3.90),int(size_h/3.5)])
+                    SF_icons.append(pistol)
+                strs = [
+                    "Okay, that's not what i hoped for today",
+                    "I'm gonna go to comms and check what's",
+                    "up, take this and go check armory room"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],fontSize=1.4)
+
+                if selected != 1:
+                    screen.blit(SF_icons[0],[size_w/2.4,size_h/2.59])
+                    takeBtn = course.centeredBtn(1.3,dark_green,"Take")
+                    notBlocked = False
+                else:
+                    if len(SF_icons)>0:
+                        SF_icons.clear()
+                    notBlocked = True
+                    pygame.draw.circle(screen, red, [size_w/1.33,size_h/1.16], size_w//35, size_w//450)
+
+                try:
+                    if takeBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.3,green,"Take")
+                        course.centeredBtn(1.3,dark_green,"",size_w//250)
+                        if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                            selected = 1
+                except:
+                    pass
+            elif courseLvl == 13: #attacked - shooting minigame and later __init__()
+                if len(SF_icons)<1:
+                    map1=pygame.image.load(f"{dirPath}/Images/Game/sf/map2.jpg")
+                    map1 = pygame.transform.scale(map1, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(map1)  
+                    soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy1.png")
+                    soldier1 = pygame.transform.scale(soldier1, [int(size_w/4.1),int(size_h/1.79)])
+                    SF_icons.append(soldier1)
+                    soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy2.png")
+                    soldier2 = pygame.transform.scale(soldier2, [int(size_w/8),int(size_h/3.5)])
+                    SF_icons.append(soldier2)
+                screen.blit(SF_icons[0],[size_w/5,size_h/16])
+
+                pygame.draw.rect(screen, color2, [size_w/3.06,size_h/12.59,size_w/2.4,size_h/9], 0,size_w//250)
+                pygame.draw.rect(screen, color1, [size_w/3.06,size_h/12.59,size_w/2.4,size_h/9], size_w//450,size_w//250)
+                Write(round(size_w//100*2),"Are those friends or enemies?",color3,[size_w/1.89,size_h/7.31])
+
+                screen.blit(SF_icons[2],[size_w/2.11,size_h/3.86])
+                screen.blit(SF_icons[1],[size_w/4.15,size_h/5.09])
+
+                attackBtn = course.centeredBtn(1.4,dark_red,"Attack")
+                waitBtn = course.centeredBtn(1.21,dark_green,"Wait")
+
+                if attackBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.4,red,"Attack")
+                    course.centeredBtn(1.4,dark_red,"",size_w//250)
+                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                        courseLvl += 2
+                elif waitBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.21,green,"Wait")
+                    course.centeredBtn(1.21,dark_green,"",size_w//250)
+                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                        courseLvl += 1                                 
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
@@ -8986,6 +9134,7 @@ while running:
     course.shooting_range.rangeOfRects()
     course.shooting_range.counting()
     course.shooting_range.doubleForRectDraw()
+    course.scifi.usingLamps()
     start.finishBar()
     start.courseLvlBar()
     start.guide()
