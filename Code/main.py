@@ -2894,6 +2894,9 @@ class Course(pygame.sprite.Sprite):
                 sight = pygame.image.load(f"{dirPath}/Images/Game/sf/pistol_sight2.png")
                 sight = pygame.transform.scale(sight, [int(size_w/4.2),int(size_h/2.5)])
                 SF_icons.append(sight)
+                def_soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated.png")
+                def_soldier1 = pygame.transform.scale(def_soldier1, [int(size_w/4.4),int(size_h/3.3)])
+                SF_icons.append(def_soldier1)
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -8441,12 +8444,13 @@ class Course(pygame.sprite.Sprite):
                 if attackBtn.collidepoint(mouse_pos):
                     course.centeredBtn(1.4,red,"Attack")
                     course.centeredBtn(1.4,dark_red,"",size_w//250)
-                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if clicked:
                         courseLvl += 2
+                        SF_iterator = 10
                 elif waitBtn.collidepoint(mouse_pos):
                     course.centeredBtn(1.21,green,"Wait")
                     course.centeredBtn(1.21,dark_green,"",size_w//250)
-                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if clicked:
                         courseLvl += 1                                 
             elif courseLvl == 14:
                 course.scifi.loadStoryIcons()
@@ -8485,6 +8489,7 @@ class Course(pygame.sprite.Sprite):
                         enemy2 = screen.blit(SF_icons[1],[size_w/4.15,size_h/5.09])
                     else:
                         enemy2 = pygame.draw.rect(screen, color1, [1,1,0,0], width=0)
+                        screen.blit(SF_icons[4],[size_w/4,size_h/2.3])
 
                     if bckgr.collidepoint(mouse_pos):
                         correctW = size_w/1.29>mouse_pos[0]>size_w/2.86
@@ -8500,9 +8505,10 @@ class Course(pygame.sprite.Sprite):
                             pygame.draw.rect(screen, black, [rectW,rectH,size_w/12,size_h/50], size_w//350)
 
                             if clicked:
-                                if SF_iterator>2:
+                                if SF_iterator>2 or ("enemy1" in SF_holder and "enemy2" in SF_holder):
                                     SF_iterator -= 1
-                                    pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
+                                    if SF_iterator>0:
+                                        pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
                                 if enemy1.collidepoint(mouse_pos):
                                     SF_holder.append("enemy1")
                                     pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
