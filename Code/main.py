@@ -2879,6 +2879,21 @@ class Course(pygame.sprite.Sprite):
                 course.scifi.lamp('lesson8',10,[size_w/1.34,size_h/3.51],condition=storedTime-storedTimeValue > 1)
             except:
                 pass
+        def loadStoryIcons():
+            global SF_icons
+            if len(SF_icons)<1:
+                map1=pygame.image.load(f"{dirPath}/Images/Game/sf/map2.jpg")
+                map1 = pygame.transform.scale(map1, [int(size_w/1.5),int(size_h/1.1)])
+                SF_icons.append(map1)  
+                soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy1.png")
+                soldier1 = pygame.transform.scale(soldier1, [int(size_w/4.1),int(size_h/1.79)])
+                SF_icons.append(soldier1)
+                soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy2.png")
+                soldier2 = pygame.transform.scale(soldier2, [int(size_w/8),int(size_h/3.5)])
+                SF_icons.append(soldier2)
+                sight = pygame.image.load(f"{dirPath}/Images/Game/sf/pistol_sight2.png")
+                sight = pygame.transform.scale(sight, [int(size_w/4.2),int(size_h/2.5)])
+                SF_icons.append(sight)
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -8124,12 +8139,12 @@ class Course(pygame.sprite.Sprite):
                         bckgrMusicPlayed = False
     def lesson8():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
-        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,clicked
         global storedTime,storedTimeValue,rectCenter
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            miniGameLvls = [13]
+            miniGameLvls = [13,14,15]
             if courseLvl not in miniGameLvls:
                 course.standardLessonEvents("lesson8",99,condition=notBlocked)
             else:
@@ -8291,7 +8306,7 @@ class Course(pygame.sprite.Sprite):
                 elif infCirc1.collidepoint(mouse_pos): #1.98,1.9
                     pygame.draw.rect(screen, color1, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], 0,size_w//250)
                     pygame.draw.rect(screen, red, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], size_w//350,size_w//250)
-                    WriteItalic(round(size_w//100*1.6),"i",logoBlue,[infCirc1[0]+(infCirc1[2]/2),size_h/2.14])
+                    WriteItalic(round(size_w//100*1.6),"i",orange,[infCirc1[0]+(infCirc1[2]/2),size_h/2.14])
                     txts = [
                         "It's good to use the same name for",
                         "class and object, but to start class",
@@ -8306,7 +8321,7 @@ class Course(pygame.sprite.Sprite):
                 elif infCirc2.collidepoint(mouse_pos): #1.98,1.9
                     pygame.draw.rect(screen, color1, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], 0,size_w//250)
                     pygame.draw.rect(screen, red, [size_w/3.18,size_h/2.09,size_w/2.5,size_h/3.5], size_w//350,size_w//250)
-                    WriteItalic(round(size_w//100*1.6),"i",logoBlue,[infCirc2[0]+(infCirc2[2]/2),size_h/2.14])
+                    WriteItalic(round(size_w//100*1.6),"i",orange,[infCirc2[0]+(infCirc2[2]/2),size_h/2.14])
                     txts = [
                         "When making an object, so assigning",
                         "class to variable, remember to enter",
@@ -8328,7 +8343,7 @@ class Course(pygame.sprite.Sprite):
                 else:
                     Write(round(size_w//100*5),"Red alert!",red,[size_w/1.91,size_h/3.4])
                     Write(round(size_w//100*3.5),"We've been attacked!",color3,[size_w/1.91,size_h/2.18])
-                    Write(round(size_w//100*2.5),"Everyone take your battle positions!",color3,[size_w/1.91,size_h/1.6])
+                    Write(round(size_w//100*2.5),"Everyone take your battle stations!",color3,[size_w/1.91,size_h/1.6])
                     windowBtn = course.centeredBtn(1.34,purple,"Window")
 
                     if windowBtn.collidepoint(mouse_pos):
@@ -8409,16 +8424,8 @@ class Course(pygame.sprite.Sprite):
                 except:
                     pass
             elif courseLvl == 13: #attacked - shooting minigame and later __init__()
-                if len(SF_icons)<1:
-                    map1=pygame.image.load(f"{dirPath}/Images/Game/sf/map2.jpg")
-                    map1 = pygame.transform.scale(map1, [int(size_w/1.5),int(size_h/1.1)])
-                    SF_icons.append(map1)  
-                    soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy1.png")
-                    soldier1 = pygame.transform.scale(soldier1, [int(size_w/4.1),int(size_h/1.79)])
-                    SF_icons.append(soldier1)
-                    soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy2.png")
-                    soldier2 = pygame.transform.scale(soldier2, [int(size_w/8),int(size_h/3.5)])
-                    SF_icons.append(soldier2)
+                course.scifi.loadStoryIcons()
+
                 screen.blit(SF_icons[0],[size_w/5,size_h/16])
 
                 pygame.draw.rect(screen, color2, [size_w/3.06,size_h/12.59,size_w/2.4,size_h/9], 0,size_w//250)
@@ -8441,6 +8448,77 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(1.21,dark_green,"",size_w//250)
                     if event.type == MOUSEBUTTONDOWN and event.button == 1:
                         courseLvl += 1                                 
+            elif courseLvl == 14:
+                course.scifi.loadStoryIcons()
+                try:
+                    screen.blit(SF_icons[0],[size_w/5,size_h/16])
+
+                    screen.blit(SF_icons[2],[size_w/2.11,size_h/3.86])
+                    screen.blit(SF_icons[1],[size_w/4.15,size_h/5.09])
+                except:
+                    errorInit("Icons init earlier required | L8-lvl13",1.8)
+
+                pygame.draw.rect(screen, color2, [size_w/3.98,size_h/6.8,size_w/1.75,size_h/5], 0,size_w//250)
+                pygame.draw.rect(screen, color1, [size_w/3.98,size_h/6.8,size_w/1.75,size_h/5], size_w//250,size_w//250)
+                WriteItalic(round(size_w//100*2.2),"*Everyone watch out! Enemy has invaded the ship!*",color3,[size_w/1.89,size_h/5.22])
+                WriteItalic(round(size_w//100*2.2),"*They've been seen by armory room and hangar!*",color3,[size_w/1.89,size_h/3.61])
+
+                pistolBtn = course.centeredBtn(2.71,dark_green,"Pistol")
+
+                if pistolBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.71,green,"Pistol")
+                    course.centeredBtn(2.71,dark_green,"",size_w//250)
+                    if clicked:
+                        courseLvl += 1
+                        SF_iterator = 10
+            elif courseLvl == 15:
+                course.scifi.loadStoryIcons()
+                if True:
+
+                    bckgr = screen.blit(SF_icons[0],[size_w/5,size_h/16])
+
+                    if "enemy1" not in SF_holder:
+                        enemy1 = screen.blit(SF_icons[2],[size_w/2.11,size_h/3.86])
+                    else:
+                        enemy1 = pygame.draw.rect(screen, color1, [1,1,0,0], width=0)
+                    if "enemy2" not in SF_holder:
+                        enemy2 = screen.blit(SF_icons[1],[size_w/4.15,size_h/5.09])
+                    else:
+                        enemy2 = pygame.draw.rect(screen, color1, [1,1,0,0], width=0)
+
+                    if bckgr.collidepoint(mouse_pos):
+                        correctW = size_w/1.29>mouse_pos[0]>size_w/2.86
+                        correctH = size_h/1.74>mouse_pos[1]>size_h/10.97
+                        if correctW and correctH:
+                            pygame.mouse.set_visible(False)
+                            screen.blit(SF_icons[3],[mouse_pos[0]-SF_icons[3].get_width()/1.6,mouse_pos[1]-SF_icons[3].get_height()/30])
+                            rectW = mouse_pos[0] - SF_icons[3].get_width()/6
+                            rectH = mouse_pos[1] + SF_icons[3].get_height()/5
+                            width = (size_w/12)/10 * SF_iterator
+                            pygame.draw.rect(screen, darker_gray, [rectW,rectH,size_w/12,size_h/50], 0)
+                            pygame.draw.rect(screen, lt_blue, [rectW,rectH,width,size_h/50], 0)
+                            pygame.draw.rect(screen, black, [rectW,rectH,size_w/12,size_h/50], size_w//350)
+
+                            if clicked:
+                                if SF_iterator>2:
+                                    SF_iterator -= 1
+                                    pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
+                                if enemy1.collidepoint(mouse_pos):
+                                    SF_holder.append("enemy1")
+                                    pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
+                                    SF_iterator -= 1
+                                if enemy2.collidepoint(mouse_pos):
+                                    SF_holder.append("enemy2")
+                                    pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
+                                    SF_iterator -= 1
+
+
+                        else:
+                            pygame.mouse.set_visible(True)
+                    else:
+                        pygame.mouse.set_visible(True)
+
+
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
@@ -9100,6 +9178,7 @@ while running:
     course.tower_defence.loadingBar(storedTime)
     music.playBackground()
     for event in pygame.event.get():
+        clicked = event.type == MOUSEBUTTONDOWN and event.button == 1
         errorHandling()
         start.sideBarEvents()
         start.setNameScreen()
