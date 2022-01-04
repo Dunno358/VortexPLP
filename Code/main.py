@@ -2891,7 +2891,7 @@ class Course(pygame.sprite.Sprite):
                 soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy2.png")
                 soldier2 = pygame.transform.scale(soldier2, [int(size_w/8),int(size_h/3.5)])
                 SF_icons.append(soldier2)
-                sight = pygame.image.load(f"{dirPath}/Images/Game/sf/pistol_sight2.png")
+                sight = pygame.image.load(f"{dirPath}/Images/Game/sf/pistol_sight3.png")
                 sight = pygame.transform.scale(sight, [int(size_w/4.2),int(size_h/2.5)])
                 SF_icons.append(sight)
                 def_soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated.png")
