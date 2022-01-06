@@ -2897,6 +2897,9 @@ class Course(pygame.sprite.Sprite):
                 def_soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated.png")
                 def_soldier1 = pygame.transform.scale(def_soldier1, [int(size_w/4.4),int(size_h/3.3)])
                 SF_icons.append(def_soldier1)
+                def_soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated2.png")
+                def_soldier2 = pygame.transform.scale(def_soldier2, [int(size_w/13),int(size_h/22)])
+                SF_icons.append(def_soldier2)
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -8147,7 +8150,7 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            miniGameLvls = [13,14,15]
+            miniGameLvls = [13,14,15.16]
             if courseLvl not in miniGameLvls:
                 course.standardLessonEvents("lesson8",99,condition=notBlocked)
             else:
@@ -8479,12 +8482,16 @@ class Course(pygame.sprite.Sprite):
                 course.scifi.loadStoryIcons()
                 if True:
 
+                    if "enemy1" in SF_holder and "enemy2" in SF_holder:
+                        courseLvl += 1
+
                     bckgr = screen.blit(SF_icons[0],[size_w/5,size_h/16])
 
                     if "enemy1" not in SF_holder:
                         enemy1 = screen.blit(SF_icons[2],[size_w/2.11,size_h/3.86])
                     else:
                         enemy1 = pygame.draw.rect(screen, color1, [1,1,0,0], width=0)
+                        screen.blit(SF_icons[5],[size_w/2.0,size_h/2.16])
                     if "enemy2" not in SF_holder:
                         enemy2 = screen.blit(SF_icons[1],[size_w/4.15,size_h/5.09])
                     else:
@@ -8499,7 +8506,12 @@ class Course(pygame.sprite.Sprite):
                             screen.blit(SF_icons[3],[mouse_pos[0]-SF_icons[3].get_width()/1.6,mouse_pos[1]-SF_icons[3].get_height()/30])
                             rectW = mouse_pos[0] - SF_icons[3].get_width()/6
                             rectH = mouse_pos[1] + SF_icons[3].get_height()/5
-                            width = (size_w/12)/10 * SF_iterator
+                            try:
+                                width = (size_w/12)/10 * SF_iterator
+                            except:
+                                if not isinstance(SF_iterator,int):
+                                    SF_iterator = 10
+                                width = width = (size_w/12)/10 * SF_iterator
                             pygame.draw.rect(screen, darker_gray, [rectW,rectH,size_w/12,size_h/50], 0)
                             pygame.draw.rect(screen, lt_blue, [rectW,rectH,width,size_h/50], 0)
                             pygame.draw.rect(screen, black, [rectW,rectH,size_w/12,size_h/50], size_w//350)
@@ -8523,6 +8535,44 @@ class Course(pygame.sprite.Sprite):
                             pygame.mouse.set_visible(True)
                     else:
                         pygame.mouse.set_visible(True)
+            elif courseLvl == 16:
+                if not isinstance(SF_iterator2,int):
+                    SF_iterator2 = 0
+                course.scifi.loadStoryIcons()
+                SF_holder.clear()
+                SF_iterator = ''
+                pygame.mouse.set_visible(True)
+
+                bckgr = screen.blit(SF_icons[0],[size_w/5,size_h/16])
+                screen.blit(SF_icons[5],[size_w/2.0,size_h/2.16])
+                screen.blit(SF_icons[4],[size_w/4,size_h/2.3])
+
+                if SF_iterator2 == 0:
+                    strs = [
+                        "You there? I heard enemies are",
+                        "somewhere near you, is",
+                        "everything all right?"
+                    ]
+                    txt = ["Enemy down",1.5]
+                else:
+                    strs = [
+                        "That's great! But there might",
+                        "be more of them, go to armory",
+                        "room and equip yourself"
+                    ]
+                    txt = ["Next",2]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],bckgr=True)
+
+
+                btn = course.centeredBtn(2.63,dark_green,txt[0],adjustToDialog=True,fontSize=txt[1])
+                if btn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.63,red,txt[0],adjustToDialog=True,fontSize=txt[1])
+                    course.centeredBtn(2.63,dark_red,"",adjustToDialog=True,border=size_w//250)
+                    if clicked:
+                        if SF_iterator2 > 0:
+                            courseLvl += 1
+                        else:
+                            SF_iterator2 += 1
 
 
     def lesson9():
