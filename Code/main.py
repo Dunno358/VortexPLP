@@ -2900,6 +2900,44 @@ class Course(pygame.sprite.Sprite):
                 def_soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated2.png")
                 def_soldier2 = pygame.transform.scale(def_soldier2, [int(size_w/13),int(size_h/22)])
                 SF_icons.append(def_soldier2)
+        def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True):
+            global SF_cords,SF_iterator,SF_points
+            if not isinstance(SF_iterator,int):
+                SF_iterator = 0
+            if not isinstance(SF_points,int):
+                SF_points = 0
+
+            it = SF_iterator
+
+            bckgr = pygame.draw.rect(screen, darker_gray, [size_w/4.5,size_h/5.49,size_w/1.6,size_h/1.7], 0,size_w//80)
+            pygame.draw.rect(screen, black, [size_w/4.5,size_h/5.49,size_w/1.6,size_h/1.7], size_w//350,size_w//80)
+            pygame.draw.rect(screen, lter_blue, [size_w/3.88,size_h/4.2,size_w/1.8,size_h/5], 0,size_w//80)
+            subScreen = pygame.draw.rect(screen, black, [size_w/3.88,size_h/4.2,size_w/1.8,size_h/5], size_w//350,size_w//80)
+            Write(round(size_w//100*questFontSize),questions[it],dark_blue,[size_w/1.87,size_h/2.92])
+
+            wdth = size_w/3.42
+            txtWdth = size_w/2.74
+            for x in range(3):
+                rect = pygame.draw.rect(screen, dark_gray, [wdth,size_h/1.82,size_w/7,size_h/6], 0,size_w//80)
+                pygame.draw.rect(screen, black, [wdth,size_h/1.82,size_w/7,size_h/6], size_w//350,size_w//80)
+                Write(round(size_w//100*answFontSize),answers[it][x],darkThemeMainCol,[txtWdth,size_h/1.58])
+                if rect not in SF_cords:
+                    SF_cords.append(rect)
+                wdth += size_w/6   
+                txtWdth += size_w/6   
+
+            if events:
+                for btn in SF_cords:
+                    if btn.collidepoint(mouse_pos):
+                        index = SF_cords.index(btn)
+                        rect = pygame.draw.rect(screen, dark_gray, btn, 0,size_w//80)
+                        pygame.draw.rect(screen, lt_gray, btn, size_w//350,size_w//80)  
+                        Write(round(size_w//100*answFontSize),answers[it][index],darkThemeMainCol,[btn[0]+btn[2]/1.95,size_h/1.58])   
+
+                        if clicked:
+                            if index == goodAnswers[it]:
+                                SF_points += 1
+                            SF_iterator += 1             
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -8150,7 +8188,7 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            miniGameLvls = [13,14,15.16]
+            miniGameLvls = [13,14,15,16]
             if courseLvl not in miniGameLvls:
                 course.standardLessonEvents("lesson8",99,condition=notBlocked)
             else:
@@ -8431,7 +8469,6 @@ class Course(pygame.sprite.Sprite):
                     pass
             elif courseLvl == 13: #attacked - shooting minigame and later __init__()
                 course.scifi.loadStoryIcons()
-
                 screen.blit(SF_icons[0],[size_w/5,size_h/16])
 
                 pygame.draw.rect(screen, color2, [size_w/3.06,size_h/12.59,size_w/2.4,size_h/9], 0,size_w//250)
@@ -8479,9 +8516,8 @@ class Course(pygame.sprite.Sprite):
                         courseLvl += 1
                         SF_iterator = 10
             elif courseLvl == 15:
-                course.scifi.loadStoryIcons()
                 if True:
-
+                    course.scifi.loadStoryIcons()
                     if "enemy1" in SF_holder and "enemy2" in SF_holder:
                         courseLvl += 1
 
@@ -8536,11 +8572,11 @@ class Course(pygame.sprite.Sprite):
                     else:
                         pygame.mouse.set_visible(True)
             elif courseLvl == 16:
+                course.scifi.loadStoryIcons()
                 if not isinstance(SF_iterator2,int):
                     SF_iterator2 = 0
-                course.scifi.loadStoryIcons()
                 SF_holder.clear()
-                SF_iterator = ''
+                SF_iterator = 0
                 pygame.mouse.set_visible(True)
 
                 bckgr = screen.blit(SF_icons[0],[size_w/5,size_h/16])
@@ -8571,10 +8607,48 @@ class Course(pygame.sprite.Sprite):
                     if clicked:
                         if SF_iterator2 > 0:
                             courseLvl += 1
+                            storedTimeValue = round(float(time.process_time()),2)
                         else:
                             SF_iterator2 += 1
+            elif courseLvl == 17:
+                notBlocked = False
+                storedTime = round(float(time.process_time()),2)
+                questions = [
+                    "To unlock the door you must answer the questions"
+                ]
+                answers = [
+                    ["Back","","Go"]
+                ]
+                goodAnswers = [
+                    1
+                ]
+                course.scifi.armoryConsole(questions,answers,goodAnswers,questFontSize=1.6,answFontSize=2.5,events=False)
 
+                if storedTime-storedTimeValue > 1:
+                    strs = [
+                        "Ah yes, I forgot this room is secured,",
+                        "To get through it I must teach you",
+                        "about __init__() and self value"
+                    ]
+                    course.dialogTop(6.41,strs[0],strs[1],strs[2],bckgr=True)
 
+                    nextBtn = pygame.draw.rect(screen, dark_green, [size_w/1.36,size_h/6.5,size_w/15,size_h/6.5], 0,size_w//150)
+                    Write(round(size_w//100*4),">",color1,[size_w/1.3,size_h/4.31])
+
+                    if nextBtn.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, green, [size_w/1.36,size_h/6.5,size_w/15,size_h/6.5], 0,size_w//150)
+                        pygame.draw.rect(screen, dark_green, [size_w/1.36,size_h/6.5,size_w/15,size_h/6.5], size_w//250,size_w//150)
+                        Write(round(size_w//100*4),">",color1,[size_w/1.3,size_h/4.31])
+                        if clicked:
+                            courseLvl += 1
+            elif courseLvl == 18: #__init()__
+                notBlocked = True
+                strs = [
+                    "So __init__() is a built-in function,",
+                    "that means you don't need to make it by",
+                    "yourself"
+                ]
+                course.dialogTop(6.41,strs[0])
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
