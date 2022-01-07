@@ -7,8 +7,8 @@
 -✓syntax(create class)
 -✓assign to var(object)
 -✓functions in class(object methods)
-|MINIGAME|ship attacked - making your way [In work - Stage:Pistol]
--__init__()
+|MINIGAME|ship attacked - making your way [In work - Stage:Armory room]
+-__init__()[In work]
 -self
 -modify object vars
 |MINIGAME|hacking - blocked hangar doors
