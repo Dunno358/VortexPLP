@@ -8715,10 +8715,10 @@ class Course(pygame.sprite.Sprite):
                     wdth += size_w/6   
                     txtWdth += size_w/6   
                 
-                for rect in SF_cords:
-                    if rect.collidepoint(mouse_pos):
-                        index = SF_cords.index(rect)
-                        pygame.draw.rect(screen, orange, rect, size_w//400,size_w//80)
+                for rectCord in SF_cords:
+                    if rectCord.collidepoint(mouse_pos):
+                        index = SF_cords.index(rectCord)
+                        pygame.draw.rect(screen, orange, rectCord, size_w//400,size_w//80)
 
                         pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.11,size_w/1.65,size_h/3],0,size_w//250)
                         pygame.draw.rect(screen,orange,[size_w/4.44,size_h/2.11,size_w/1.65,size_h/3],size_w//300,size_w//250)
@@ -8739,7 +8739,13 @@ class Course(pygame.sprite.Sprite):
                                     Write(round(size_w//100*1.65),txts[index][x],lt_blue,[size_w/1.8,hght])
                             hght += size_h/(len(txts[index])*3.7)
             elif courseLvl == 22: #self - start
-                test = True
+                strs = [
+                    "So much about this 'self' and we",
+                    "haven't yet told much about it,",
+                    "when it's really important to know",
+                    "what is it and how it works"
+                ]
+                course.dialogStandard(2.55,strs[0],strs[1],strs[2],strs[3],fontSize=1.9)
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
