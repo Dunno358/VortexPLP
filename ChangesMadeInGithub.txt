@@ -8,8 +8,8 @@
 -✓assign to var(object)
 -✓functions in class(object methods)
 |MINIGAME|ship attacked - making your way [In work - Stage:Armory room]
--__init__()[In work]
--self
+-✓__init__()
+-self[In work]
 -modify object vars
 |MINIGAME|hacking - blocked hangar doors
 -delete object properties(del object.property)
