@@ -8407,7 +8407,7 @@ class Course(pygame.sprite.Sprite):
                 storedTime = round(float(time.process_time()),2)
 
                 bckgr = pygame.draw.rect(screen, black, [size_w/4.14,size_h/3.38,size_w/1.7,size_h/2], 0,size_w//20)
-                if storedTime-storedTimeValue < 3:
+                if storedTime-storedTimeValue < 2:
                     #stars
                     if len(SF_cords)<1:
                         for x in range(300):
@@ -8467,7 +8467,7 @@ class Course(pygame.sprite.Sprite):
                             selected = 1
                 except:
                     pass
-            elif courseLvl == 13: #attacked - shooting minigame and later __init__()
+            elif courseLvl == 13: #attacked - start
                 course.scifi.loadStoryIcons()
                 screen.blit(SF_icons[0],[size_w/5,size_h/16])
 
@@ -8610,7 +8610,7 @@ class Course(pygame.sprite.Sprite):
                             storedTimeValue = round(float(time.process_time()),2)
                         else:
                             SF_iterator2 += 1
-            elif courseLvl == 17:
+            elif courseLvl == 17: #init - start
                 notBlocked = False
                 storedTime = round(float(time.process_time()),2)
                 questions = [
@@ -8641,14 +8641,105 @@ class Course(pygame.sprite.Sprite):
                         Write(round(size_w//100*4),">",color1,[size_w/1.3,size_h/4.31])
                         if clicked:
                             courseLvl += 1
-            elif courseLvl == 18: #__init()__
+            elif courseLvl == 18: 
                 notBlocked = True
                 strs = [
                     "So __init__() is a built-in function,",
-                    "that means you don't need to make it by",
-                    "yourself"
+                    "that is executed when an object is",
+                    "created out of class, see below"
                 ]
-                course.dialogTop(6.41,strs[0])
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                Write(round(size_w//100*2.3),"Let's suppose we have a class Example()",green,[size_w/1.95,size_h/2.15])
+                course.consoleExample("example = Example",1.95,color=dark_green)
+                Write(round(size_w//100*2.2),"Now variable example is an object",green,[size_w/1.95,size_h/1.35])
+            elif courseLvl == 19:
+                strs = [
+                    "So with creation of object, function",
+                    "__init__() has been called automatically",
+                    "and that's what always happens when",
+                    "making a new object"
+                ]
+                course.dialogStandard(2.55,strs[0],strs[1],strs[2],strs[3],fontSize=1.6)
+            elif courseLvl == 20:
+                strs = [
+                    "But what actually is this __init__()",
+                    "and what it does?"
+                ]
+
+                txt = [
+                    "__init__() is simply a constructor for",
+                    "objects, which means it is needed to be",
+                    "even able to make an object out of class"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+                course.definition(txt,title="What is __init()__?")
+            elif courseLvl == 21:
+                strs = [
+                    "You don't have to make this function",
+                    "inside your class, as it's built-in,",
+                    "but you can do it and it's often used"
+                ]
+                btnTxts = [
+                    "When is it used?",
+                    "How is it used?",
+                    "Syntax"
+                ]
+                txts = [
+                    ["__init__() can also be used to assign values to object properties:",
+                    "When class have given parameters they're still just values, so to",
+                    "make them object properties you need to assign them to property",
+                    "variable with self prefix, but more about it in a moment"],
+
+                    ["We're assigning specific value to variable with 'self' prefix",
+                    "and likely the same name as value(when value is a variable: not int,",
+                    "str, etc...). Let's take a look how assignment like it should look:",
+                    "self.name = name"
+                    ],
+
+                    ["class Person():",
+                    "def __init__(self,name,age):",
+                    "self.name = name",
+                    "self.age = age"
+                    ]
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                wdth = size_w/3.42
+                txtWdth = size_w/2.74
+                for x in range(3):
+                    rect = pygame.draw.rect(screen, color1, [wdth,size_h/2.64,size_w/7,size_h/14], 0,size_w//80)
+                    Write(round(size_w//100*1.3),btnTxts[x],color3,[txtWdth,size_h/2.41])
+                    if rect not in SF_cords:
+                        SF_cords.append(rect)
+                    wdth += size_w/6   
+                    txtWdth += size_w/6   
+                
+                for rect in SF_cords:
+                    if rect.collidepoint(mouse_pos):
+                        index = SF_cords.index(rect)
+                        pygame.draw.rect(screen, orange, rect, size_w//400,size_w//80)
+
+                        pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.11,size_w/1.65,size_h/3],0,size_w//250)
+                        pygame.draw.rect(screen,orange,[size_w/4.44,size_h/2.11,size_w/1.65,size_h/3],size_w//300,size_w//250)
+
+                        hght = size_h/1.91
+                        for x in range(len(txts[index])):
+                            if index<2:
+                                if index == 1 and x == 3:
+                                    Write(round(size_w//100*2.3),txts[index][x],lt_blue,[size_w/1.88,hght])
+                                else:
+                                    Write(round(size_w//100*1.55),txts[index][x],orange,[size_w/1.88,hght])
+                            else:
+                                if x==0:
+                                    Write(round(size_w//100*1.55),txts[index][x],green,[size_w/2.85,hght])
+                                elif x==1:    
+                                    Write(round(size_w//100*1.55),txts[index][x],orange,[size_w/2.2,hght])
+                                else:
+                                    Write(round(size_w//100*1.65),txts[index][x],lt_blue,[size_w/1.8,hght])
+                            hght += size_h/(len(txts[index])*3.7)
+            elif courseLvl == 22: #self - start
+                test = True
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
