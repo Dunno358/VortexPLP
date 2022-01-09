@@ -8746,6 +8746,77 @@ class Course(pygame.sprite.Sprite):
                     "what is it and how it works"
                 ]
                 course.dialogStandard(2.55,strs[0],strs[1],strs[2],strs[3],fontSize=1.9)
+            elif courseLvl == 23:
+                notBlocked = False
+                strs = [
+                    "I've already showed you the syntax,",
+                    "so let's go with what it really does"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+
+                mark = Write(round(size_w//100*10),"?",lt_blue,[size_w/1.85,size_h/2.29])
+                mark = mark.get_rect()
+
+                if mark.collidepoint(mouse_pos):
+                    courseLvl += 1
+            elif courseLvl == 24:
+                notBlocked = True
+
+                objCall = pygame.draw.rect(screen, dark_green, [size_w/1.59,size_h/8.44,size_w/5,size_h/20], 0,size_w//200)
+                Write(round(size_w//100*1.7),"Check object call",color1,[size_w/1.37,size_h/6.98])
+
+
+                if objCall.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, green, [size_w/1.59,size_h/8.44,size_w/5,size_h/20], 0,size_w//200)
+                    Write(round(size_w//100*1.7),"Object call Syntax",color3,[size_w/1.37,size_h/6.98])
+                    code = [
+                        "client = Person(30,\"Jack\")",
+                        "client.info()",
+                        "#Output: Jack 30"
+                    ]
+                else:
+                    code = [
+                        "class Person():",
+                        "def __init__(self,age,name):",
+                        "self.age = age",
+                        "self.name = name",
+                        "def info(self):",
+                        "print [self.name, self.age]"
+                    ]
+
+                pygame.draw.rect(screen,color1,[size_w/4.44,size_h/5.05,size_w/1.65,size_h/1.7],0,size_w//250)
+                pygame.draw.rect(screen,purple,[size_w/4.44,size_h/5.05,size_w/1.65,size_h/1.7],size_w//350,size_w//250)
+                Write(round(size_w//100*2.7),"Syntax",gold,[size_w/1.87,size_h/7.25])
+
+                hght = size_h/3.59
+                for line in code:
+                    index = code.index(line)
+                    if objCall.collidepoint(mouse_pos):
+                        Write(round(size_w//100*2),line,lt_blue,[size_w/1.9,hght])
+                        hght += size_h/14
+                    else:
+                        if index == 0:
+                            Write(round(size_w//100*1.8),line,green,[size_w/2.93,hght])
+                        elif index == 1:
+                            Write(round(size_w//100*1.8),line,orange,[size_w/2.3,hght])
+                        elif index == 2:
+                            Write(round(size_w//100*1.8),line,lt_blue,[size_w/2.35,hght])
+                        elif index == 3:
+                            Write(round(size_w//100*1.8),line,lt_blue,[size_w/2.25,hght])
+                        elif index == 4:
+                            Write(round(size_w//100*1.8),line,orange,[size_w/2.75,hght])
+                        elif index == 5:
+                            Write(round(size_w//100*1.8),line,lt_blue,[size_w/2,hght])
+                        else:
+                            Write(round(size_w//100*1.8),line,lt_blue,[size_w/1.9,hght])
+                        hght += size_h/14
+            elif courseLvl == 25: #what's left: left always first argument of func, self can be whatever name
+                strs = [
+                    "So 'self' is needed to pass values",
+                    "between functions in class and to",
+                    "reference them to class themselves"
+                ]
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2],fontSize=1.7)
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
