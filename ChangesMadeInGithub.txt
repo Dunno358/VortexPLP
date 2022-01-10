@@ -9,7 +9,7 @@
 -✓functions in class(object methods)
 |MINIGAME|ship attacked - making your way [In work - Stage:Armory room]
 -✓__init__()
--self[In work]
+-✓self
 -modify object vars
 |MINIGAME|hacking - blocked hangar doors
 -delete object properties(del object.property)
