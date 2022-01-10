@@ -2901,26 +2901,55 @@ class Course(pygame.sprite.Sprite):
                 def_soldier2 = pygame.transform.scale(def_soldier2, [int(size_w/13),int(size_h/22)])
                 SF_icons.append(def_soldier2)
         def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True):
-            global SF_cords,SF_iterator,SF_points
+            global SF_cords,SF_iterator,SF_points,courseLvl
             if not isinstance(SF_iterator,int):
                 SF_iterator = 0
             if not isinstance(SF_points,int):
                 SF_points = 0
 
-            it = SF_iterator
+            if SF_iterator < len(questions):
+                it = SF_iterator
+                scoreOk = False
+            else:
+                it = "done"
+                scoreOk = SF_points>(len(questions)*0.6)
+                if scoreOk:
+                    txt = "Open"
+                else:
+                    txt = "Try again"
 
             bckgr = pygame.draw.rect(screen, darker_gray, [size_w/4.5,size_h/5.49,size_w/1.6,size_h/1.7], 0,size_w//80)
             pygame.draw.rect(screen, black, [size_w/4.5,size_h/5.49,size_w/1.6,size_h/1.7], size_w//350,size_w//80)
             pygame.draw.rect(screen, lter_blue, [size_w/3.88,size_h/4.2,size_w/1.8,size_h/5], 0,size_w//80)
             subScreen = pygame.draw.rect(screen, black, [size_w/3.88,size_h/4.2,size_w/1.8,size_h/5], size_w//350,size_w//80)
-            Write(round(size_w//100*questFontSize),questions[it],dark_blue,[size_w/1.87,size_h/2.92])
+            if isinstance(it,int):    
+                if len(questions[it]) > 40 and events:
+                    heldQuest = f"{questions[it][:41]}-;{questions[it][41:]}"
+                    heldQuest = heldQuest.split(";")
+                    Write(round(size_w//100*questFontSize),heldQuest[0],dark_blue,[size_w/1.87,size_h/3.34])
+                    Write(round(size_w//100*questFontSize),heldQuest[1],dark_blue,[size_w/1.87,size_h/2.65])
+                else:
+                    Write(round(size_w//100*questFontSize),questions[it],dark_blue,[size_w/1.87,size_h/2.92])
+            else:
+                print(SF_iterator,len(questions))
+                perc = int((SF_points/len(questions))*100)
+                if SF_points>(len(questions)*0.6):
+                    Write(round(size_w//100*questFontSize),f"Access Granted: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
+                else:
+                    Write(round(size_w//100*questFontSize),f"Access Denied: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
 
             wdth = size_w/3.42
             txtWdth = size_w/2.74
             for x in range(3):
                 rect = pygame.draw.rect(screen, dark_gray, [wdth,size_h/1.82,size_w/7,size_h/6], 0,size_w//80)
                 pygame.draw.rect(screen, black, [wdth,size_h/1.82,size_w/7,size_h/6], size_w//350,size_w//80)
-                Write(round(size_w//100*answFontSize),answers[it][x],darkThemeMainCol,[txtWdth,size_h/1.58])
+                if isinstance(it,int):
+                    Write(round(size_w//100*answFontSize),answers[it][x],darkThemeMainCol,[txtWdth,size_h/1.58])
+                else:
+                    if x == 1:
+                        Write(round(size_w//100*answFontSize),txt,darkThemeMainCol,[txtWdth,size_h/1.58])
+                    else:
+                        pass
                 if rect not in SF_cords:
                     SF_cords.append(rect)
                 wdth += size_w/6   
@@ -2931,13 +2960,27 @@ class Course(pygame.sprite.Sprite):
                     if btn.collidepoint(mouse_pos):
                         index = SF_cords.index(btn)
                         rect = pygame.draw.rect(screen, dark_gray, btn, 0,size_w//80)
-                        pygame.draw.rect(screen, lt_gray, btn, size_w//350,size_w//80)  
-                        Write(round(size_w//100*answFontSize),answers[it][index],darkThemeMainCol,[btn[0]+btn[2]/1.95,size_h/1.58])   
+                        pygame.draw.rect(screen, lt_gray, btn, size_w//350,size_w//80) 
+                        if isinstance(it,int):
+                            Write(round(size_w//100*answFontSize),answers[it][index],darkThemeMainCol,[btn[0]+btn[2]/1.95,size_h/1.58])   
+                        else:
+                            if index == 1:
+                                Write(round(size_w//100*answFontSize),txt,darkThemeMainCol,[btn[0]+btn[2]/1.95,size_h/1.58])
+                            else:
+                                pass
 
                         if clicked:
-                            if index == goodAnswers[it]:
-                                SF_points += 1
-                            SF_iterator += 1             
+                            if isinstance(it,int):
+                                if index == goodAnswers[it]:
+                                    SF_points += 1
+                                SF_iterator += 1  
+                            else:
+                                if index == 1:
+                                    if scoreOk:
+                                        courseLvl += 1
+                                    else:
+                                        SF_iterator = 0  
+                                        SF_points = 0         
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -3474,8 +3517,10 @@ class Course(pygame.sprite.Sprite):
             except:
                 WriteItalic(round(size_w//100*fontSize),text, usingColor, [size_w/1.95,size_h/hght+size_h/11.15])
         return bckgr
-    def definition(strAsList,title="Definition",hghtPoint=2.09,titleFontSize=2.6,txtFontSize=2):
+    def definition(strAsList,title="Definition",hghtPoint=2.09,titleFontSize=2.6,txtFontSize=2,bord=False,bordCol=None):
         pygame.draw.rect(screen,color1,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],0,size_w//250)
+        if bord:
+            pygame.draw.rect(screen,bordCol,[size_w/4.44,size_h/2.98,size_w/1.65,size_h/2.3],size_w//350,size_w//250)
         hght = size_h/hghtPoint
         Write(round(size_w//100*titleFontSize),title,red,[size_w/1.92,size_h/2.51])
         for x in strAsList:
@@ -8662,6 +8707,7 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.55,strs[0],strs[1],strs[2],strs[3],fontSize=1.6)
             elif courseLvl == 20:
+                SF_cords.clear()
                 strs = [
                     "But what actually is this __init__()",
                     "and what it does?"
@@ -8781,7 +8827,7 @@ class Course(pygame.sprite.Sprite):
                         "self.age = age",
                         "self.name = name",
                         "def info(self):",
-                        "print [self.name, self.age]"
+                        "print (self.name, self.age)"
                     ]
 
                 pygame.draw.rect(screen,color1,[size_w/4.44,size_h/5.05,size_w/1.65,size_h/1.7],0,size_w//250)
@@ -8810,13 +8856,89 @@ class Course(pygame.sprite.Sprite):
                         else:
                             Write(round(size_w//100*1.8),line,lt_blue,[size_w/1.9,hght])
                         hght += size_h/14
-            elif courseLvl == 25: #what's left: left always first argument of func, self can be whatever name
+            elif courseLvl == 25: 
+                SF_cords.clear()
                 strs = [
                     "So 'self' is needed to pass values",
                     "between functions in class and to",
                     "reference them to class themselves"
                 ]
                 course.dialogStandard(2.6,strs[0],strs[1],strs[2],fontSize=1.7)
+            elif courseLvl == 26:
+                course.dialogTop(6.41,"There are two more important things about self",fontSize=1.3)
+                
+                wdth = size_w/2.16
+                for x in range(2):
+                    circ = pygame.draw.circle(screen, color1, [wdth,size_h/3.8], size_w//40, 0)
+                    Write(round(size_w//100*2.2),x+1,orange,[wdth,size_h/3.8])
+                    if circ not in SF_cords:
+                        SF_cords.append(circ)
+                    wdth += size_w/7
+
+                txt = [
+                    ["In every function you want to use self variables you",
+                    "need to pass 'self' as parameter of a function:",
+                    "def example(self): or",
+                    "def example(self,param1,param2...)"],
+                    ["'self' is named as it is by default and it's most used",
+                    "like that, but it doesn't have to be named like that!",
+                    "Your 'self' can be named as you want(following syntax),",
+                    "but apart from name the rest stay the same"]
+                ]
+
+                for circ in SF_cords:
+                    if circ.collidepoint(mouse_pos):
+                        index = SF_cords.index(circ)
+                        pygame.draw.circle(screen, orange, [circ[0]+circ[2]/2,size_h/3.8], size_w//40, size_w//350)
+                        course.definition(txt[index],title="",hghtPoint=2.6,txtFontSize=1.7,bord=True,bordCol=orange)
+            elif courseLvl == 27:
+                SF_cords.clear()
+                notBlocked = False
+                course.dialogStandard(2.7,"Ready to get into armory room?",fontSize=1.9)
+
+                readyBtn = pygame.draw.rect(screen, dark_green, [size_w/1.8,size_h/2.07,size_w/8,size_h/10], 0,size_w//150)
+                Write(round(size_w//100*2),"Ready",color1,[size_w/1.61,size_h/1.87])
+
+                if readyBtn.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, green, [size_w/1.8,size_h/2.07,size_w/8,size_h/10], 0,size_w//150)
+                    pygame.draw.rect(screen, dark_green, [size_w/1.8,size_h/2.07,size_w/8,size_h/10], size_w//250,size_w//150)
+                    Write(round(size_w//100*2),"Ready",color3,[size_w/1.61,size_h/1.87])
+                    if clicked:
+                        courseLvl += 1
+            elif courseLvl == 28: #quiz - armoryConsole
+                quests = [
+                    "__init__() is",
+                    "__init__() is called when creating",
+                    "object is",
+                    "what operation is needed to make a property out of value in object",
+                    "Proper use of assignment with self is",
+                    "Correct start of function using self is",
+                    "Name 'self' cannot be changed",
+                    "Can you give parameters to function after giving self as function parameter?",
+                    "Value assigned to class variable using self is called object"
+                ]
+                answs = [
+                    ["class","object","constructor"],
+                    ["object","class","function"],
+                    ["template","variable","function"],
+                    ["assignment","addition","comparison"],
+                    ["self x=x","self:x=x","self.x=x"],
+                    ["def x(self)","def x(self):","def [self]x():"],
+                    ["True","Don't know","False"],
+                    ["Yes","Sometimes","No"],
+                    ["Parameter","Property","Template"]
+                ]
+                goodAnsws = [2,0,1,0,2,1,2,0,1]
+
+                if SF_iterator == 3:
+                    questFont = 2
+                else:
+                    questFont = 2
+
+                answFont = 1.7
+                course.scifi.armoryConsole(quests,answs,goodAnsws,answFontSize=answFont,questFontSize=questFont)
+            elif courseLvl == 29: #armory room - entering and choosing weapon
+                test = True
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
