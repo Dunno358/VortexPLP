@@ -2931,7 +2931,6 @@ class Course(pygame.sprite.Sprite):
                 else:
                     Write(round(size_w//100*questFontSize),questions[it],dark_blue,[size_w/1.87,size_h/2.92])
             else:
-                print(SF_iterator,len(questions))
                 perc = int((SF_points/len(questions))*100)
                 if SF_points>(len(questions)*0.6):
                     Write(round(size_w//100*questFontSize),f"Access Granted: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
@@ -8906,6 +8905,7 @@ class Course(pygame.sprite.Sprite):
                     if clicked:
                         courseLvl += 1
             elif courseLvl == 28: #quiz - armoryConsole
+                notBlocked = False
                 quests = [
                     "__init__() is",
                     "__init__() is called when creating",
@@ -8930,11 +8930,7 @@ class Course(pygame.sprite.Sprite):
                 ]
                 goodAnsws = [2,0,1,0,2,1,2,0,1]
 
-                if SF_iterator == 3:
-                    questFont = 2
-                else:
-                    questFont = 2
-
+                questFont = 2
                 answFont = 1.7
                 course.scifi.armoryConsole(quests,answs,goodAnsws,answFontSize=answFont,questFontSize=questFont)
             elif courseLvl == 29: #armory room - entering and choosing weapon
