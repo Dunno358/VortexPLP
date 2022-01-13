@@ -8599,7 +8599,7 @@ class Course(pygame.sprite.Sprite):
                             try:
                                 width = (size_w/12)/10 * SF_iterator
                             except:
-                                if not isinstance(SF_iterator,int):
+                                if not isinstance(SF_iterator,int) or SF_iterator == 0:
                                     SF_iterator = 10
                                 width = width = (size_w/12)/10 * SF_iterator
                             pygame.draw.rect(screen, darker_gray, [rectW,rectH,size_w/12,size_h/50], 0)
