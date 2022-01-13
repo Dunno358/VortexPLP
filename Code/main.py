@@ -8982,22 +8982,57 @@ class Course(pygame.sprite.Sprite):
                     subHght +=size_h/3.6
                     hght +=size_h/3.7
 
-                for cord in SF_cords2:
-                    if cord.collidepoint(mouse_pos):
-                        index = SF_cords2.index(cord)
-                        if index not in SF_holder:
-                            course.shadowWrite("Click to open",[cord[0]+cord[2]/2,cord[1]+cord[3]/2],4,False)
-                        if clicked:
-                            if index not in SF_holder:
-                                SF_holder.append(index)
 
-                for cord in SF_cords3:
-                    try:
+                if SF_stage == 0:
+                    strs = [
+                        "Okay, So when we have it done",
+                        "open those chests and pick a",
+                        "weapon, so we can go futher"
+                    ]
+                    course.dialogTop(6.41,strs[0],strs[1],strs[2],bckgr=True)
+                    nextBtn = course.centeredBtn(2.7,dark_green,"Go",adjustToDialog=True)
+                    if nextBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(2.7,green,"Go",adjustToDialog=True)
+                        course.centeredBtn(2.7,dark_green,"",adjustToDialog=True,border=size_w//250)
+                        if clicked:
+                            SF_stage = 1
+                else:
+                    for cord in SF_cords2:
                         if cord.collidepoint(mouse_pos):
-                            pygame.draw.rect(screen, red, cord, size_w//600,size_w//50)
+                            index = SF_cords2.index(cord)
+                            if index not in SF_holder:
+                                course.shadowWrite("Click to open",[cord[0]+cord[2]/2,cord[1]+cord[3]/2],4,False)
+                            if clicked:
+                                if index not in SF_holder:
+                                    SF_holder.append(index)
+
+                    allRiflesUnlocked = 0 in SF_holder and 1 in SF_holder and 2 in SF_holder
+                    names = ["AHTR-1","KM10-SR","SLAC-63"]
+
+                    for cord in SF_cords3:
+                        if cord.collidepoint(mouse_pos):
+                            index = SF_cords3.index(cord)
+                            pygame.draw.rect(screen, red, cord, size_w//1000,size_w//50)
+                            Write(round(size_w/100*2),names[index],color3,[size_w/3.9,cord[1]+cord[3]/2])
+                            if clicked and allRiflesUnlocked:
+                                selected = index
+
+                    try:
+                        pygame.draw.rect(screen, lter_blue, SF_cords3[selected], 0,size_w//50)
+                        screen.blit(SF_icons[6+selected],[SF_cords3[selected][0]*1.03,SF_cords3[selected][1]])
+                        if selected in [0,1,2]:
+                            goBtn = pygame.draw.rect(screen, dark_green, [size_w/1.36,size_h/1.4,size_w/10,size_h/8],0,size_w//250)
+                            Write(round(size_w//100*2.3),"Take",color1,[size_w/1.27,size_h/1.28])
+                            if goBtn.collidepoint(mouse_pos):
+                                pygame.draw.rect(screen, green, [size_w/1.36,size_h/1.4,size_w/10,size_h/8],0,size_w//250)
+                                pygame.draw.rect(screen, dark_green, [size_w/1.36,size_h/1.4,size_w/10,size_h/8],size_w//250,size_w//250)
+                                Write(round(size_w//100*2.3),"Take",color3,[size_w/1.27,size_h/1.28])
+                                if clicked:
+                                    courseLvl += 1
                     except:
                         pass
-
+            elif courseLvl == 30:
+                test = True
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
