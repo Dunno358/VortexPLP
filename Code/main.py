@@ -8969,7 +8969,10 @@ class Course(pygame.sprite.Sprite):
                             rifle = screen.blit(SF_icons[6+x],[wdth,hght+size_h/20])
                         except:
                             pass
-                        rifleRect = pygame.draw.rect(screen, dark_gray, [rifle[0]*0.97,rifle[1],rifle[2]*1.05,rifle[3]], 0,size_w//50)
+                        if x == selected:
+                            rifleRect = pygame.draw.rect(screen, lter_blue, [rifle[0]*0.97,rifle[1],rifle[2]*1.05,rifle[3]], 0,size_w//50)
+                        else:
+                            rifleRect = pygame.draw.rect(screen, dark_gray, [rifle[0]*0.97,rifle[1],rifle[2]*1.05,rifle[3]], 0,size_w//50)
                         if rifleRect not in SF_cords3:
                             SF_cords3.append(rifleRect)
                         try:
@@ -9013,13 +9016,18 @@ class Course(pygame.sprite.Sprite):
                         if cord.collidepoint(mouse_pos):
                             index = SF_cords3.index(cord)
                             pygame.draw.rect(screen, red, cord, size_w//1000,size_w//50)
-                            Write(round(size_w/100*2),names[index],color3,[size_w/3.9,cord[1]+cord[3]/2])
+                            for cord2 in SF_cords2:
+                                if cord2.collidepoint(mouse_pos):
+                                    index2 = SF_cords2.index(cord2)
+                                    Write(round(size_w/100*2),names[index2],color3,[size_w/3.9,cord[1]+cord[3]/2])
                             if clicked and allRiflesUnlocked:
-                                selected = index
+                                for cord3 in SF_cords2:
+                                    if cord3.collidepoint(mouse_pos):
+                                        index3 = SF_cords2.index(cord3)
+                                selected = index3
+                                print(selected)
 
                     try:
-                        pygame.draw.rect(screen, lter_blue, SF_cords3[selected], 0,size_w//50)
-                        screen.blit(SF_icons[6+selected],[SF_cords3[selected][0]*1.03,SF_cords3[selected][1]])
                         if selected in [0,1,2]:
                             goBtn = pygame.draw.rect(screen, dark_green, [size_w/1.36,size_h/1.4,size_w/10,size_h/8],0,size_w//250)
                             Write(round(size_w//100*2.3),"Take",color1,[size_w/1.27,size_h/1.28])
