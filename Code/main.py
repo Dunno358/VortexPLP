@@ -40,7 +40,7 @@ lt_blue = (45, 119, 194)
 lter_blue = (125, 195, 227)
 orange = (161, 72, 0)
 lt_brown = (61, 55, 31)
-purple = (47,41,86)
+purple = (76, 63, 161)
 gold = (189, 153, 38)
 TD_darkGreen = (97,100,74)
 TD_pathColor = (191,178,134)
@@ -2884,22 +2884,31 @@ class Course(pygame.sprite.Sprite):
             if len(SF_icons)<1:
                 map1=pygame.image.load(f"{dirPath}/Images/Game/sf/map2.jpg")
                 map1 = pygame.transform.scale(map1, [int(size_w/1.5),int(size_h/1.1)])
-                SF_icons.append(map1)  
+                SF_icons.append(map1) #0
                 soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy1.png")
                 soldier1 = pygame.transform.scale(soldier1, [int(size_w/4.1),int(size_h/1.79)])
-                SF_icons.append(soldier1)
+                SF_icons.append(soldier1) #1
                 soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy2.png")
                 soldier2 = pygame.transform.scale(soldier2, [int(size_w/8),int(size_h/3.5)])
-                SF_icons.append(soldier2)
+                SF_icons.append(soldier2) #2
                 sight = pygame.image.load(f"{dirPath}/Images/Game/sf/pistol_sight3.png")
                 sight = pygame.transform.scale(sight, [int(size_w/4.2),int(size_h/2.5)])
-                SF_icons.append(sight)
+                SF_icons.append(sight) #3
                 def_soldier1 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated.png")
-                def_soldier1 = pygame.transform.scale(def_soldier1, [int(size_w/4.4),int(size_h/3.3)])
-                SF_icons.append(def_soldier1)
+                def_soldier1 = pygame.transform.scale(def_soldier1, [int(size_w/5.1),int(size_h/3.3)])
+                SF_icons.append(def_soldier1) #4
                 def_soldier2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated2.png")
                 def_soldier2 = pygame.transform.scale(def_soldier2, [int(size_w/13),int(size_h/22)])
-                SF_icons.append(def_soldier2)
+                SF_icons.append(def_soldier2) #5
+                rifle1 = pygame.image.load(f"{dirPath}/Images/Game/sf/rifle1Full.png")
+                rifle1 = pygame.transform.scale(rifle1, [int(size_w/3.69),int(size_h/5.26)])
+                SF_icons.append(rifle1) #6
+                rifle2 = pygame.image.load(f"{dirPath}/Images/Game/sf/rifle2Full.png")
+                rifle2 = pygame.transform.scale(rifle2, [int(size_w/4.46),int(size_h/5.26)])
+                SF_icons.append(rifle2) #7
+                rifle3 = pygame.image.load(f"{dirPath}/Images/Game/sf/rifle3Full.png")
+                rifle3 = pygame.transform.scale(rifle3, [int(size_w/3.81),int(size_h/5.26)])
+                SF_icons.append(rifle3) #8
         def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True):
             global SF_cords,SF_iterator,SF_points,courseLvl
             if not isinstance(SF_iterator,int):
@@ -3525,10 +3534,11 @@ class Course(pygame.sprite.Sprite):
         for x in strAsList:
             Write(round(size_w//100*txtFontSize),x,color3,[size_w/1.92,hght])
             hght += size_h/10
-    def shadowWrite(txt):
-        pygame.draw.rect(screen, dark_gray, [size_w/3.12,size_h/2.16,size_w/2.3,size_h/5], 0,size_w//150)
-        Write(round(size_w//100*8),txt,black,[size_w/1.85,size_h/1.77])
-        Write(round(size_w//100*8.5),txt,lt_gray,[size_w/1.85,size_h/1.77])
+    def shadowWrite(txt,pos=[size_w/1.85,size_h/1.77],size=8,rect=True):
+        if rect:
+            pygame.draw.rect(screen, dark_gray, [size_w/3.12,size_h/2.16,size_w/2.3,size_h/5], 0,size_w//150)
+        Write(round(size_w//100*size),txt,black,pos)
+        Write(round(size_w//100*(size+size*0.0625)),txt,lt_gray,pos)
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
         global bckgrMusicPlayed,soundEnabled,errorShowed
@@ -8601,13 +8611,16 @@ class Course(pygame.sprite.Sprite):
                                     SF_iterator -= 1
                                     if SF_iterator>0:
                                         pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
+                                        screen.blit(SF_icons[3],[mouse_pos[0]-SF_icons[3].get_width()/1.6,mouse_pos[1]-SF_icons[3].get_height()/50])
                                 if enemy1.collidepoint(mouse_pos):
                                     SF_holder.append("enemy1")
                                     pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
+                                    screen.blit(SF_icons[3],[mouse_pos[0]-SF_icons[3].get_width()/1.6,mouse_pos[1]-SF_icons[3].get_height()/50])
                                     SF_iterator -= 1
                                 if enemy2.collidepoint(mouse_pos):
                                     SF_holder.append("enemy2")
                                     pygame.mouse.set_pos([mouse_pos[0],mouse_pos[1]-size_h/30])
+                                    screen.blit(SF_icons[3],[mouse_pos[0]-SF_icons[3].get_width()/1.6,mouse_pos[1]-SF_icons[3].get_height()/50])
                                     SF_iterator -= 1
 
 
@@ -8934,7 +8947,57 @@ class Course(pygame.sprite.Sprite):
                 answFont = 1.7
                 course.scifi.armoryConsole(quests,answs,goodAnsws,answFontSize=answFont,questFontSize=questFont)
             elif courseLvl == 29: #armory room - entering and choosing weapon
-                test = True
+                course.scifi.loadStoryIcons()
+                notBlocked = False
+                
+                hght = size_h/9.97
+                subHght = size_h/4.86
+                subWdth = size_w/2.01
+                for x in range(3):
+                    bckgr = pygame.draw.rect(screen, darker_gray, [size_w/3.19,hght,size_w/2.45,size_h/3.9], 0,size_w//350)
+                    if bckgr not in SF_cords2:
+                        SF_cords2.append(bckgr)
+
+                    if x not in SF_holder:
+                        pygame.draw.rect(screen, gold, [subWdth,subHght,size_w/20,size_h/40], 0,size_w//200)
+                        pygame.draw.line(screen, dark_gray, [size_w/3.19,subHght], [size_w/1.39,subHght], size_w//200)
+                    else:
+                        wdth = size_w/2.64
+                        if x == 1:
+                            wdth = size_w/2.55
+                        try:
+                            rifle = screen.blit(SF_icons[6+x],[wdth,hght+size_h/20])
+                        except:
+                            pass
+                        rifleRect = pygame.draw.rect(screen, dark_gray, [rifle[0]*0.97,rifle[1],rifle[2]*1.05,rifle[3]], 0,size_w//50)
+                        if rifleRect not in SF_cords3:
+                            SF_cords3.append(rifleRect)
+                        try:
+                            screen.blit(SF_icons[6+x],[wdth,hght+size_h/20])
+                        except:
+                            pass
+
+                    pygame.draw.rect(screen, darkThemeMainCol, [size_w/3.19,hght,size_w/2.45,size_h/3.8], size_w//250,size_w//350)
+                    
+                    subHght +=size_h/3.6
+                    hght +=size_h/3.7
+
+                for cord in SF_cords2:
+                    if cord.collidepoint(mouse_pos):
+                        index = SF_cords2.index(cord)
+                        if index not in SF_holder:
+                            course.shadowWrite("Click to open",[cord[0]+cord[2]/2,cord[1]+cord[3]/2],4,False)
+                        if clicked:
+                            if index not in SF_holder:
+                                SF_holder.append(index)
+
+                for cord in SF_cords3:
+                    try:
+                        if cord.collidepoint(mouse_pos):
+                            pygame.draw.rect(screen, red, cord, size_w//600,size_w//50)
+                    except:
+                        pass
+
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
@@ -9142,7 +9205,9 @@ class Settings(pygame.sprite.Sprite):
                             TD_icon = ""
                             SR_icons.clear()
                             SF_icons.clear()
-                            SF_cords = SF_cords2 = SF_cords3 = []
+                            SF_cords.clear()
+                            SF_cords2.clear()
+                            SF_cords3.clear()
                             SR_cords.clear()
                             storedCords.clear()
                             storedItems.clear()
