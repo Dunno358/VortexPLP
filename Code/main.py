@@ -2909,6 +2909,18 @@ class Course(pygame.sprite.Sprite):
                 rifle3 = pygame.image.load(f"{dirPath}/Images/Game/sf/rifle3Full.png")
                 rifle3 = pygame.transform.scale(rifle3, [int(size_w/3.81),int(size_h/5.26)])
                 SF_icons.append(rifle3) #8
+                map2=pygame.image.load(f"{dirPath}/Images/Game/sf/map1.jpg")
+                map2 = pygame.transform.scale(map2, [int(size_w/1.5),int(size_h/1.1)])
+                SF_icons.append(map2) #9
+                r1_sight = pygame.image.load(f"{dirPath}/Images/Game/sf/rifle1_sight.png")
+                r1_sight = pygame.transform.scale(r1_sight, [int(size_w/3),int(size_h/2)])
+                SF_icons.append(r1_sight) #10
+                r2_sight = pygame.image.load(f"{dirPath}/Images/Game/sf/rifle2_sight.png")
+                r2_sight = pygame.transform.scale(r2_sight, [int(size_w/3.4),int(size_h/2)])
+                SF_icons.append(r2_sight) #11
+                r3_sight = pygame.image.load(f"{dirPath}/Images/Game/sf/rifle3_sight.png")
+                r3_sight = pygame.transform.scale(r3_sight, [int(size_w/3.4),int(size_h/3)])
+                SF_icons.append(r3_sight) #12
         def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True):
             global SF_cords,SF_iterator,SF_points,courseLvl
             if not isinstance(SF_iterator,int):
@@ -2989,6 +3001,19 @@ class Course(pygame.sprite.Sprite):
                                     else:
                                         SF_iterator = 0  
                                         SF_points = 0         
+        def countDown(amount,pos,color,fontSize=2):
+            global courseLvl,activeLesson,activities,storedTimeValue
+            if str(activeLesson)[17:-23]=="lesson8" and courseLvl == 31 and activities[0]:
+                if isinstance(storedTimeValue,str):
+                    storedTimeValue = round(float(time.process_time()),2)
+                secs = round(float(time.process_time())-storedTimeValue,2)
+                pygame.draw.rect(screen, color2, [size_w/2.12,size_h/1.78,size_w/8,size_h/8], 0)
+                if 3-int(secs)>0:
+                    Write(round(size_w//100*fontSize),3-int(secs),color,pos)
+                else:
+                    Write(round(size_w//100*fontSize),"0",color,pos)
+                if secs == amount:
+                    courseLvl += 1
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -8242,7 +8267,7 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            miniGameLvls = [13,14,15,16]
+            miniGameLvls = [13,14,15,16,32]
             if courseLvl not in miniGameLvls:
                 course.standardLessonEvents("lesson8",99,condition=notBlocked)
             else:
@@ -9040,7 +9065,79 @@ class Course(pygame.sprite.Sprite):
                     except:
                         pass
             elif courseLvl == 30:
-                test = True
+                notBlocked = False
+                storedTimeValue = ''
+                strs = [
+                    "I've got new intel a while ago,",
+                    "enemy fighters are going to attack",
+                    "command bridge and hangar is",
+                    "occupied by enemies, you need to",
+                    "get there as soon as possible"
+                ]
+                course.dialogStandard(2.55,strs[0],strs[1],strs[2],strs[3],strs[4],fontSize=1.9)
+
+                goTxt = Write(round(size_w//100*6),"Go ->",dark_green,[size_w/1.55,size_h/1.23])
+                goTxt = goTxt.get_rect()
+
+                if goTxt.collidepoint(mouse_pos):
+                    Write(round(size_w//100*6),"Go ->",green,[size_w/1.55,size_h/1.23])
+                    if clicked:
+                        courseLvl += 1
+            elif courseLvl == 31:
+                notBlocked = False
+                strs = [
+                    "I've spotted enemies in front",
+                    "of you, get your weapon ready"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+
+                Write(round(size_w//100*6),"Get ready...",dark_green,[size_w/1.85,size_h/2.25])
+            elif courseLvl == 32:
+                course.scifi.loadStoryIcons()
+                if isinstance(selected,str):
+                    selected = 0
+                bckgr = screen.blit(SF_icons[9],[size_w/5,size_h/16])
+                screen.blit(SF_icons[2],[size_w/2.18,size_h/2.95])
+                screen.blit(SF_icons[2],[size_w/1.68,size_h/2.88])
+                screen.blit(SF_icons[1],[size_w/2.13,size_h/3.44])
+                screen.blit(SF_icons[1],[size_w/4.65,size_h/3.45])
+
+                if bckgr.collidepoint(mouse_pos):
+                    pygame.mouse.set_visible(False)
+                    #pygame.mouse.set_visible(True)
+                    selected = 2
+                    if selected == 0:
+                        wStart = mouse_pos[0]-SF_icons[10].get_width()/1.9
+                        hStart = mouse_pos[1]-SF_icons[10].get_height()/5
+                        wLimitL = size_w/2.92
+                        wLimitR = size_w/1.41
+                        hLimitTop = size_h/10.52
+                        hLimitBot = size_h/1.8
+                    elif selected == 1:
+                        wStart = mouse_pos[0]-SF_icons[10].get_width()/2.25
+                        hStart = mouse_pos[1]-SF_icons[10].get_height()/3 
+                        wLimitL = size_w/2.45
+                        wLimitR = size_w/1.34
+                        hLimitTop = size_h/5.37
+                        hLimitBot = size_h/1.58
+                    elif selected == 2:
+                        wStart = mouse_pos[0]-SF_icons[10].get_width()/2.35
+                        hStart = mouse_pos[1]-SF_icons[10].get_height()/20 
+                        wLimitL = size_w/2.93
+                        wLimitR = size_w/1.4
+                        hLimitTop = size_h/12.19
+                        hLimitBot = size_h/1.52                                            
+                    try:
+                        wCorrect = wLimitL<mouse_pos[0]<wLimitR
+                        hCorrect = hLimitTop<mouse_pos[1]<hLimitBot
+                        if wCorrect and hCorrect:
+                            screen.blit(SF_icons[10+selected],[wStart,hStart])
+                        else:
+                            pygame.mouse.set_visible(True)
+                    except:
+                        pass
+                else:
+                    pygame.mouse.set_visible(True)
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
@@ -9738,6 +9835,7 @@ while running:
     course.shooting_range.counting()
     course.shooting_range.doubleForRectDraw()
     course.scifi.usingLamps()
+    course.scifi.countDown(3,[size_w/1.89,size_h/1.61],green,5)
     start.finishBar()
     start.courseLvlBar()
     start.guide()
