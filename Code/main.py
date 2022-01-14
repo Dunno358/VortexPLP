@@ -9105,7 +9105,7 @@ class Course(pygame.sprite.Sprite):
                 if bckgr.collidepoint(mouse_pos):
                     pygame.mouse.set_visible(False)
                     #pygame.mouse.set_visible(True)
-                    selected = 2
+                    #selected = 2
                     if selected == 0:
                         wStart = mouse_pos[0]-SF_icons[10].get_width()/1.9
                         hStart = mouse_pos[1]-SF_icons[10].get_height()/5
