@@ -3015,7 +3015,8 @@ class Course(pygame.sprite.Sprite):
                     Write(round(size_w//100*fontSize),3-int(secs),color,pos)
                 else:
                     Write(round(size_w//100*fontSize),"0",color,pos)
-                if secs == amount:
+                print(secs,amount)
+                if secs > amount:
                     courseLvl += 1
     def lessons():
         course.lesson1()
@@ -9104,16 +9105,20 @@ class Course(pygame.sprite.Sprite):
                     enemy1 = screen.blit(SF_icons[2],[size_w/2.18,size_h/2.95])
                 else:
                     enemy1 = pygame.draw.rect(screen, color1, [1,1,1,1], 0)
+                    #back left shot soldier here, lying one so sf_icons[13]
 
                 if "enemy2" not in SF_holder2:
                     enemy2 = screen.blit(SF_icons[2],[size_w/1.68,size_h/2.88])
                 else:
                     enemy2 = pygame.draw.rect(screen, color1, [1,1,1,1], 0)
+                    def_soldier_sit = pygame.transform.scale(SF_icons[4], [int(size_w/9),int(size_h/5.2)])
+                    screen.blit(def_soldier_sit,[size_w/1.68,size_h/2.31]) #very bad quality, fix needed
 
                 if "enemy3" not in SF_holder2:
                     enemy3 = screen.blit(SF_icons[1],[size_w/2.13,size_h/3.44])
                 else:
                     enemy3 = pygame.draw.rect(screen, color1, [1,1,1,1], 0)
+                    screen.blit(SF_icons[13],[size_w/2.05,size_h/1.5])
 
                 if "enemy4" not in SF_holder2:
                     enemy4 = screen.blit(SF_icons[1],[size_w/4.65,size_h/3.45])
