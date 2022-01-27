@@ -4,10 +4,12 @@
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 
 [Class lesson] 
+[FIXES TODO]
+|bad image quality at scaling SF_icons[5] in making your way|
 -✓syntax(create class)
 -✓assign to var(object)
 -✓functions in class(object methods)
-|MINIGAME|ship attacked - making your way [In work - Stage: Making your way w. Rifle]
+-✓|MINIGAME|ship attacked - making your way
 -✓__init__()
 -✓self
 -modify object vars
