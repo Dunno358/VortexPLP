@@ -2927,6 +2927,9 @@ class Course(pygame.sprite.Sprite):
                 map2=pygame.image.load(f"{dirPath}/Images/Game/sf/map4.jpg")
                 map2 = pygame.transform.scale(map2, [int(size_w/1.5),int(size_h/1.1)])
                 SF_icons.append(map2) #14
+                map3=pygame.image.load(f"{dirPath}/Images/Game/sf/map3.jpg")
+                map3 = pygame.transform.scale(map3, [int(size_w/1.5),int(size_h/1.1)])
+                SF_icons.append(map3) #15
         def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True):
             global SF_cords,SF_iterator,SF_points,courseLvl
             if not isinstance(SF_iterator,int):
@@ -8274,7 +8277,7 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            miniGameLvls = [13,14,15,16,32,33]
+            miniGameLvls = [13,14,15,16,32,33,34]
             if courseLvl not in miniGameLvls:
                 course.standardLessonEvents("lesson8",99,condition=notBlocked)
             else:
@@ -9339,7 +9342,110 @@ class Course(pygame.sprite.Sprite):
                             SF_holder.clear()
                             SF_holder2.clear()    
             elif courseLvl == 34:
-                test = True #last map with rifle shooting - hangar doors
+                course.scifi.loadStoryIcons()
+                if isinstance(selected,str):
+                    selected = 0
+                bckgr = screen.blit(SF_icons[15],[size_w/5,size_h/16])
+
+                defeatedEnemies = []
+
+                if "enemy1" not in SF_holder2:
+                    enemy1 = screen.blit(SF_icons[2],[size_w/2.28,size_h/2.93])
+                else:
+                    enemy1 = pygame.draw.rect(screen, color1, [1,1,1,1], 0)
+                    def_soldier_sit = pygame.transform.scale(SF_icons[4], [int(size_w/9),int(size_h/5.2)])
+                    screen.blit(def_soldier_sit,[size_w/2.24,size_h/2.31])
+                    if 1 not in defeatedEnemies:
+                        defeatedEnemies.append(1)
+
+                if "enemy2" not in SF_holder2:
+                    enemy2 = screen.blit(SF_icons[2],[size_w/1.71,size_h/2.93])
+                else:
+                    enemy2 = pygame.draw.rect(screen, color1, [1,1,1,1], 0)
+                    def_soldier_sit = pygame.transform.scale(SF_icons[4], [int(size_w/9),int(size_h/5.2)])
+                    screen.blit(def_soldier_sit,[size_w/1.7,size_h/2.31])
+                    if 2 not in defeatedEnemies:
+                        defeatedEnemies.append(2)
+
+                if "enemy4" not in SF_holder2:
+                    enemy4 = screen.blit(SF_icons[1],[size_w/1.76,size_h/3.7])
+                else:
+                    enemy4 = pygame.draw.rect(screen, color1, [1,1,1,1], 0)
+                    screen.blit(SF_icons[13],[size_w/1.59,size_h/1.5])
+                    if 4 not in defeatedEnemies:
+                        defeatedEnemies.append(4)
+
+                allDefeated = 1 in defeatedEnemies and 2 in defeatedEnemies and 4 in defeatedEnemies
+
+                if not allDefeated:
+                    if bckgr.collidepoint(mouse_pos):
+                        pygame.mouse.set_visible(False)
+                        if selected == 0:
+                            wStart = mouse_pos[0]-SF_icons[10].get_width()/1.9
+                            hStart = mouse_pos[1]-SF_icons[10].get_height()/5
+                            wLimitL = size_w/2.92
+                            wLimitR = size_w/1.41
+                            hLimitTop = size_h/10.52
+                            hLimitBot = size_h/1.8
+                        elif selected == 1:
+                            wStart = mouse_pos[0]-SF_icons[10].get_width()/2.25
+                            hStart = mouse_pos[1]-SF_icons[10].get_height()/3 
+                            wLimitL = size_w/3
+                            wLimitR = size_w/1.34
+                            hLimitTop = size_h/5.37
+                            hLimitBot = size_h/1.58
+                        elif selected == 2:
+                            wStart = mouse_pos[0]-SF_icons[10].get_width()/2.35
+                            hStart = mouse_pos[1]-SF_icons[10].get_height()/20 
+                            wLimitL = size_w/2.93
+                            wLimitR = size_w/1.4
+                            hLimitTop = size_h/12.19
+                            hLimitBot = size_h/1.52                                            
+                        
+                        try:
+                            wCorrect = wLimitL<mouse_pos[0]<wLimitR
+                            hCorrect = hLimitTop<mouse_pos[1]<hLimitBot
+                            if wCorrect and hCorrect:
+                                screen.blit(SF_icons[10+selected],[wStart,hStart])
+                                if clicked:
+                                    screen.blit(SF_icons[10+selected],[wStart,hStart*1.02])
+                                    pygame.mouse.set_pos([mouse_pos[0], mouse_pos[1]*0.95])
+
+                                onEnemy1 = enemy1.collidepoint(mouse_pos)
+                                onEnemy2 = enemy2.collidepoint(mouse_pos)
+                                onEnemy4 = enemy4.collidepoint(mouse_pos)
+
+                                if onEnemy4:
+                                    print(4)
+                                    if clicked:
+                                        SF_holder2.append("enemy4")
+                                elif onEnemy1 and not onEnemy4:
+                                    print(1)
+                                    if clicked:
+                                        SF_holder2.append("enemy1")
+                                elif onEnemy2 and not onEnemy4:
+                                    print(2)
+                                    if clicked:
+                                        SF_holder2.append("enemy2")
+
+                            else:
+                                pygame.mouse.set_visible(True)
+                        except:
+                            pass
+                    else:
+                        pygame.mouse.set_visible(True)
+                else:
+                    pygame.mouse.set_visible(True)
+                    course.dialogTop(6.41,"It seems you're clear now,","let's get to the hangar",bckgr=True)
+                    nextBtn = course.centeredBtn(3.3,dark_green,"Ready",adjustToDialog=True)
+
+                    if nextBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(3.3,red,"Ready",adjustToDialog=True)
+                        course.centeredBtn(3.3,dark_red,"",adjustToDialog=True,border=size_w//250)
+                        if clicked:
+                            courseLvl += 1
+                            SF_holder.clear()
+                            SF_holder2.clear()  
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
