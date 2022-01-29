@@ -2930,7 +2930,7 @@ class Course(pygame.sprite.Sprite):
                 map3=pygame.image.load(f"{dirPath}/Images/Game/sf/map3.jpg")
                 map3 = pygame.transform.scale(map3, [int(size_w/1.5),int(size_h/1.1)])
                 SF_icons.append(map3) #15
-        def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True,questColor=dark_blue,letNextLvl=False):
+        def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True,questColor=dark_blue,onlyGoodAnsws=False,customTxt="",customBtn=""):
             global SF_cords,SF_iterator,SF_points,courseLvl
             if not isinstance(SF_iterator,int):
                 SF_iterator = 0
@@ -2944,7 +2944,10 @@ class Course(pygame.sprite.Sprite):
                 it = "done"
                 scoreOk = SF_points>(len(questions)*0.6)
                 if scoreOk:
-                    txt = "Open"
+                    if len(customBtn)>0:
+                        txt = customBtn
+                    else:
+                        txt = "Open"
                 else:
                     txt = "Try again"
 
@@ -2963,7 +2966,10 @@ class Course(pygame.sprite.Sprite):
             else:
                 perc = int((SF_points/len(questions))*100)
                 if SF_points>(len(questions)*0.6):
-                    Write(round(size_w//100*questFontSize),f"Access Granted: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
+                    if len(customTxt)>0:
+                        Write(round(size_w//100*questFontSize),customTxt,dark_blue,[size_w/1.87,size_h/2.92])
+                    else:
+                        Write(round(size_w//100*questFontSize),f"Access Granted: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
                 else:
                     Write(round(size_w//100*questFontSize),f"Access Denied: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
             
@@ -3002,11 +3008,17 @@ class Course(pygame.sprite.Sprite):
                             if isinstance(it,int):
                                 if index == goodAnswers[it]:
                                     SF_points += 1
-                                SF_iterator += 1  
+                                    if onlyGoodAnsws:
+                                        SF_iterator += 1
+                                if not onlyGoodAnsws:
+                                    SF_iterator += 1  
                             else:
                                 if index == 1:
                                     if scoreOk:
                                         courseLvl += 1
+                                        SF_cords.clear()
+                                        SF_points = 0
+                                        SF_iterator = 0
                                     else:
                                         SF_iterator = 0  
                                         SF_points = 0         
@@ -9344,6 +9356,9 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 34:
                 storedTime = ""
                 storedTimeValue = ""
+                SF_cords.clear()
+                SF_iterator = ""
+                SF_points = ""
                 course.scifi.loadStoryIcons()
                 if isinstance(selected,str):
                     selected = 0
@@ -9449,6 +9464,7 @@ class Course(pygame.sprite.Sprite):
                             SF_holder.clear()
                             SF_holder2.clear()  
             elif courseLvl == 35:
+                notBlocked = False
                 if isinstance(storedTimeValue,str):
                     storedTimeValue = round(float(time.process_time()),2)
                 storedTime = round(float(time.process_time()),2)
@@ -9470,12 +9486,61 @@ class Course(pygame.sprite.Sprite):
                             SF_points = ""
                             SF_iterator = ""
             elif courseLvl == 36:
+                notBlocked = False
                 title = ["Main Hangar | Section 13 | Unavaible     System Critical Failure"]
                 buttons = [["Details","","Admin"]]
                 btnIndex = [0]
-                course.scifi.armoryConsole(title,buttons,btnIndex,questColor=dark_red,letNextLvl=True)   
+                course.scifi.armoryConsole(title,buttons,btnIndex,questColor=dark_red,onlyGoodAnsws=True)   
             elif courseLvl == 37:
-                test = True #list of properties to del or modify in a minigame soon              
+                notBlocked = False
+                errors = [
+                    "hangar13.doors.allowed is False",
+                    "hangar13.blockade.manage not responding",
+                    "hangar13.systems.scan equals failure",
+                    "hangar13.control.ai status: damaged",
+                    "hangar13.control.manual is False",
+                    "hangar13.blockade.force_block is True"
+                ]       
+
+                btns = [
+                    ["","","Next"],
+                    ["","","Next"],
+                    ["","","Next"],
+                    ["","","Next"],
+                    ["","","Next"],
+                    ["","","Next"]
+                ]  
+
+                goodBtns = [2,2,2,2,2,2]
+
+                txt = "Systems Integrity: 68%"
+                btnTxt = "Next"
+                course.scifi.armoryConsole(errors,btns,goodBtns,onlyGoodAnsws=True,questColor=dark_red,customTxt=txt,customBtn=btnTxt)
+            elif courseLvl == 38:
+                notBlocked = False
+                title = ["Main Hangar | Section 13 | Unavaible     System Critical Failure"]
+                buttons = [["Details","","Admin"]]
+                btnIndex = [2]
+                course.scifi.armoryConsole(title,buttons,btnIndex,events=False,questColor=dark_red)    
+
+                txt = [
+                    "Okay, you can fix this,",
+                    "but first you must know how to",
+                    "change or delete object property"
+                ]
+                course.dialogTop(6.41,txt[0],txt[1],txt[2],bckgr=True) 
+                nextBtn = course.centeredBtn(2.71,dark_green,"Next",adjustToDialog=True)
+
+                if nextBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.71,green,"Next",adjustToDialog=True)
+                    course.centeredBtn(2.71,dark_green,"",adjustToDialog=True,border=size_w//250)
+                    if clicked:
+                        courseLvl += 1
+                        SF_cords.clear()
+                        SF_points = ""
+                        SF_iterator = ""
+            elif courseLvl == 39:
+                test = True #lessons about how to change and delete a property
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
