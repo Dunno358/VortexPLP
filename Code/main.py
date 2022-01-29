@@ -2930,7 +2930,7 @@ class Course(pygame.sprite.Sprite):
                 map3=pygame.image.load(f"{dirPath}/Images/Game/sf/map3.jpg")
                 map3 = pygame.transform.scale(map3, [int(size_w/1.5),int(size_h/1.1)])
                 SF_icons.append(map3) #15
-        def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True):
+        def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True,questColor=dark_blue,letNextLvl=False):
             global SF_cords,SF_iterator,SF_points,courseLvl
             if not isinstance(SF_iterator,int):
                 SF_iterator = 0
@@ -2953,20 +2953,20 @@ class Course(pygame.sprite.Sprite):
             pygame.draw.rect(screen, lter_blue, [size_w/3.88,size_h/4.2,size_w/1.8,size_h/5], 0,size_w//80)
             subScreen = pygame.draw.rect(screen, black, [size_w/3.88,size_h/4.2,size_w/1.8,size_h/5], size_w//350,size_w//80)
             if isinstance(it,int):    
-                if len(questions[it]) > 40 and events:
+                if len(questions[it]) > 40:
                     heldQuest = f"{questions[it][:41]}-;{questions[it][41:]}"
                     heldQuest = heldQuest.split(";")
-                    Write(round(size_w//100*questFontSize),heldQuest[0],dark_blue,[size_w/1.87,size_h/3.34])
-                    Write(round(size_w//100*questFontSize),heldQuest[1],dark_blue,[size_w/1.87,size_h/2.65])
+                    Write(round(size_w//100*questFontSize),heldQuest[0],questColor,[size_w/1.87,size_h/3.34])
+                    Write(round(size_w//100*questFontSize),heldQuest[1],questColor,[size_w/1.87,size_h/2.65])
                 else:
-                    Write(round(size_w//100*questFontSize),questions[it],dark_blue,[size_w/1.87,size_h/2.92])
+                    Write(round(size_w//100*questFontSize),questions[it],questColor,[size_w/1.87,size_h/2.92])
             else:
                 perc = int((SF_points/len(questions))*100)
                 if SF_points>(len(questions)*0.6):
                     Write(round(size_w//100*questFontSize),f"Access Granted: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
                 else:
                     Write(round(size_w//100*questFontSize),f"Access Denied: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
-
+            
             wdth = size_w/3.42
             txtWdth = size_w/2.74
             for x in range(3):
@@ -9342,6 +9342,8 @@ class Course(pygame.sprite.Sprite):
                             SF_holder.clear()
                             SF_holder2.clear()    
             elif courseLvl == 34:
+                storedTime = ""
+                storedTimeValue = ""
                 course.scifi.loadStoryIcons()
                 if isinstance(selected,str):
                     selected = 0
@@ -9436,16 +9438,44 @@ class Course(pygame.sprite.Sprite):
                         pygame.mouse.set_visible(True)
                 else:
                     pygame.mouse.set_visible(True)
-                    course.dialogTop(6.41,"It seems you're clear now,","let's get to the hangar",bckgr=True)
-                    nextBtn = course.centeredBtn(3.3,dark_green,"Ready",adjustToDialog=True)
+                    course.dialogTop(6.41,"It seems you're clear now,","let's enter the hangar",bckgr=True)
+                    nextBtn = course.centeredBtn(3.3,dark_green,"Console",adjustToDialog=True)
 
                     if nextBtn.collidepoint(mouse_pos):
-                        course.centeredBtn(3.3,red,"Ready",adjustToDialog=True)
+                        course.centeredBtn(3.3,red,"Console",adjustToDialog=True)
                         course.centeredBtn(3.3,dark_red,"",adjustToDialog=True,border=size_w//250)
                         if clicked:
                             courseLvl += 1
                             SF_holder.clear()
                             SF_holder2.clear()  
+            elif courseLvl == 35:
+                if isinstance(storedTimeValue,str):
+                    storedTimeValue = round(float(time.process_time()),2)
+                storedTime = round(float(time.process_time()),2)
+                title = ["Main Hangar | Section 13 | Unavaible     System Critical Failure"]
+                buttons = [["Details","","Admin"]]
+                btnIndex = [2]
+                course.scifi.armoryConsole(title,buttons,btnIndex,events=False,questColor=dark_red)    
+
+                if storedTime-storedTimeValue>1.5:
+                    course.dialogTop(6.41,"That's unfortunate, let's check out","what happened - click Details",bckgr=True) 
+                    nextBtn = course.centeredBtn(3.43,dark_green,"Got it!",adjustToDialog=True)
+
+                    if nextBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(3.43,green,"Got it!",adjustToDialog=True)
+                        course.centeredBtn(3.43,dark_green,"",adjustToDialog=True,border=size_w//250)
+                        if clicked:
+                            courseLvl += 1
+                            SF_cords.clear()
+                            SF_points = ""
+                            SF_iterator = ""
+            elif courseLvl == 36:
+                title = ["Main Hangar | Section 13 | Unavaible     System Critical Failure"]
+                buttons = [["Details","","Admin"]]
+                btnIndex = [0]
+                course.scifi.armoryConsole(title,buttons,btnIndex,questColor=dark_red,letNextLvl=True)   
+            elif courseLvl == 37:
+                test = True #list of properties to del or modify in a minigame soon              
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
