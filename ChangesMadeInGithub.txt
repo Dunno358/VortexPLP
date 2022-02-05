@@ -12,11 +12,10 @@
 -✓|MINIGAME|ship attacked - making your way
 -✓__init__()
 -✓self
--modify object vars
-|MINIGAME|hacking - blocked hangar doors
--delete object properties(del object.property)
--delete object(del object)
--pass
+-✓modify object vars
+|MINIGAME|hacking - blocked hangar doors[IN PROGRESS]
+-✓delete object properties(del object.property)
+-✓pass
 |MINIGAME|starfighter - dogfight
 
  ✓
