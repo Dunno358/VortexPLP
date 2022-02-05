@@ -3036,6 +3036,66 @@ class Course(pygame.sprite.Sprite):
                 print(secs,amount)
                 if secs > amount:
                     courseLvl += 1
+        def hacking(commands,answers,correctAnswersIndexes,maxViols):
+            global SF_iterator,SF_points,courseLvl
+
+            if isinstance(SF_iterator,str):
+                SF_iterator = 0
+            if isinstance(SF_points,str):
+                SF_points = 0
+
+            if SF_iterator-SF_points<3:
+                main=pygame.draw.line(screen, lter_blue, [size_w/1.92,size_h/1.42], [size_w/1.92,size_h/2.05], size_w//250)
+                pygame.draw.line(screen, lter_blue, [size_w/2.04,size_h/2.05], [size_w/1.8,size_h/2.05], size_w//250)
+
+                lineCords = [
+                    [[size_w/2.04,size_h/2.05], [size_w/2.59,size_h/3.25]],
+                    [[size_w/1.92,size_h/2.065], [size_w/1.92,size_h/3.25]],
+                    [[size_w/1.8,size_h/2.05], [size_w/1.52,size_h/3.25]]
+                ]
+
+                Write(round(size_w//100*1.4),"Protocol",red,[size_w/3.61,size_h/1.61])
+                Write(round(size_w//100*1.4),"violations",red,[size_w/3.61,size_h/1.49])
+                violations = SF_iterator-SF_points
+                Write(round(size_w//100*3.8),f"|{violations}|",red,[size_w/3.65,size_h/1.33])
+
+                line1=pygame.draw.line(screen, lter_blue, lineCords[0][0], lineCords[0][1], size_w//250)
+                line2=pygame.draw.line(screen, color2, lineCords[1][0], lineCords[1][1], size_w//25)
+                pygame.draw.line(screen, lter_blue, lineCords[1][0], lineCords[1][1], size_w//250)
+                line3=pygame.draw.line(screen, lter_blue, lineCords[2][0], lineCords[2][1], size_w//250)
+                lines = [line1,line2,line3]
+
+                try:
+                    Write(round(size_w//100*2),commands[SF_iterator],red,[size_w/1.93,size_h/1.17])
+                    for line in lines:
+                        if line.collidepoint(mouse_pos) and SF_iterator<len(answers):
+                            index = lines.index(line)
+                            pygame.draw.line(screen, lt_blue, lineCords[index][0], lineCords[index][1], size_w//250)
+                            txt=WriteItalic(round(size_w//100*2.1),answers[SF_iterator][index],purple,[size_w/1.93,size_h/5.65])
+                            txt=txt.get_rect()
+                            pygame.draw.rect(screen, logoBlue, [txt[0]-size_w//30,txt[1]-size_h/50,txt[2]+size_w//18,txt[3]+size_h/28], size_w//250,size_w//80)
+                            if clicked:
+                                if index==correctAnswersIndexes[SF_iterator]:
+                                    SF_points += 1
+                                SF_iterator += 1
+                except:
+                    pass
+            else:
+                pygame.draw.rect(screen, dark_red, [size_w/4.31,size_h/4.15,size_w/1.7,size_h/2], 0,size_w//200)
+                WriteItalic(round(size_w//100*3.3)," ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ",red,[size_w/1.93,size_h/3.16])
+                pygame.draw.line(screen, red, [size_w/4.31,size_h/2.73], [size_w/1.22,size_h/2.73], size_w//250)
+                WriteItalic(round(size_w//100*3.3),"Sensed too many protocol violations",red,[size_w/1.93,size_h/2.49])
+                WriteItalic(round(size_w//100*3.3),"System is going to reset",red,[size_w/1.93,size_h/1.96])
+                pygame.draw.line(screen, red, [size_w/4.31,size_h/1.77], [size_w/1.22,size_h/1.77], size_w//250)
+    
+                okBtn = course.centeredBtn(1.64,red,"OK",txtCol=dark_red,fontSize=3.3)
+
+                if okBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.64,dark_red,"OK",txtCol=red,fontSize=3.3)
+                    if clicked:
+                        SF_iterator=0
+                        SF_points=0
+
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -3540,13 +3600,17 @@ class Course(pygame.sprite.Sprite):
                             text += chr(event.key)
                     except:
                         pass
-    def centeredBtn(hStart,color,text,border=0,fontSize=2,adjustToDialog=False):
+    def centeredBtn(hStart,color,text,border=0,fontSize=2,adjustToDialog=False,txtCol="def"):
+        if txtCol=="def":
+            coltxt=color1
+        else:
+            coltxt = txtCol
         if adjustToDialog:
             showBtn = pygame.draw.rect(screen, color, [size_w/2.02,size_h/hStart,size_w/8,size_h/10], border,15)
-            Write(round(size_w//100*fontSize),text,color1,[size_w/1.79,size_h/hStart+size_h/19])
+            Write(round(size_w//100*fontSize),text,coltxt,[size_w/1.79,size_h/hStart+size_h/19])
         else:
             showBtn = pygame.draw.rect(screen, color, [size_w/2.16,size_h/hStart,size_w/8,size_h/10], border,15)
-            Write(round(size_w//100*fontSize),text,color1,[size_w/1.9,size_h/hStart+size_h/19])
+            Write(round(size_w//100*fontSize),text,coltxt,[size_w/1.9,size_h/hStart+size_h/19])
         return showBtn
     def eventsReset():
         events = [MOUSEMOTION,MOUSEBUTTONUP,MOUSEBUTTONDOWN,MOUSEWHEEL,KEYDOWN,KEYUP]
@@ -9535,12 +9599,90 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(2.71,green,"Next",adjustToDialog=True)
                     course.centeredBtn(2.71,dark_green,"",adjustToDialog=True,border=size_w//250)
                     if clicked:
+                        start.useScreenDef(True)
                         courseLvl += 1
                         SF_cords.clear()
                         SF_points = ""
                         SF_iterator = ""
             elif courseLvl == 39:
-                test = True #lessons about how to change and delete a property
+                strs = [
+                    "So let's start with essentials and take",
+                    "a look at object property path"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+
+                Write(round(size_w//100*2.5),"Object.subclass.property",green,[size_w/1.88,size_h/2.4])
+                arrow = WriteItalic(round(size_w//100*8),u"\u2193",dark_green,[size_w/1.88,size_h/2])
+                arrow = arrow.get_rect()
+                if SF_iterator == 1:
+                    Write(round(size_w//100*2.5),"hangar13.control.manual",green,[size_w/1.88,size_h/1.45])
+                    notBlocked = True
+                else:
+                    notBlocked = False
+
+                if arrow.collidepoint(mouse_pos):
+                    WriteItalic(round(size_w//100*8),u"\u2193",orange,[size_w/1.88,size_h/2])
+                    if clicked:
+                        SF_iterator = 1
+            elif courseLvl == 40:
+                SF_iterator = ""
+                strs = [
+                    "Knowing a path to object property allows you",
+                    "to change value of this property and that's",
+                    "very simple to do, just assign new value"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],fontSize=1.4)
+
+                Write(round(size_w//100*2.9),"Object.subclass.property = new value",orange,[size_w/1.89,size_h/1.83])
+            elif courseLvl == 41:
+                strs = [
+                    "Not so hard, isn't it? You just need",
+                    "to know the path, because that's all",
+                    "what you need to delete property as well"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],fontSize=1.4)
+
+                Write(round(size_w//100*3),"del Object.subclass.property",orange,[size_w/1.89,size_h/1.83])
+            elif courseLvl == 42:
+                notBlocked = False
+                course.dialogStandard(2.65,"Let's take care of this door,","shall we?")
+                arrow = WriteItalic(round(size_w//100*8),u"\u2192",color2,[size_w/1.41,size_h/1.75])
+                arrow = arrow.get_rect()
+
+                if arrow.collidepoint(mouse_pos):
+                    WriteItalic(round(size_w//100*8.5),u"\u2192",dark_green,[size_w/1.41,size_h/1.75])
+                    if clicked:
+                        courseLvl += 1
+                        SF_points = ""
+                        SF_iterator = ""
+
+                WriteItalic(round(size_w//100*8),u"\u2192",green,[size_w/1.41,size_h/1.75])
+            elif courseLvl == 43:
+                notBlocked = False
+                
+                errors = [
+                    "hangar13.doors.allowed = False",
+                    "hangar13.blockade.manage failed",
+                    "hangar13.systems.scan = False",
+                    "hangar13.control.ai damaged",
+                    "hangar13.control.manual = False",
+                    "hangar13.blockade.force_block = True"                    
+                ]
+                answers = [
+                    ["hangar13.doors.allowed = True","hangar13.doors.allowed == True","hangar13.doors.allowed + True"],
+                    ["delete hangar13.blockade.manage","del hangar13.blockade.manage","rm -hangar13.blockade.manage"],
+                    ["hangar13.systems.scan = Truth","hangar13.systems.scan = true","hangar13.systems.scan = True"],
+                    ["del hangar13.control.ai","remove hangar13.control.ai","end hangar13.control.ai"],
+                    ["hangar13.control.manual -= True","hangar13.control.manual = True","hangar13.control.manual += True"],
+                    ["hangar13.blockade.force_block = Fail","hangar13.blockade.force_block = off","hangar13.blockade.force_block = False"]
+                ]
+                goodIndexes = [
+                    0,1,2,0,1,2
+                ]
+                course.scifi.hacking(errors,answers,goodIndexes,3)
+                #todo:
+                #dialog before minigame
+                #action when ending minigame with positive result
     def lesson9():
         course.standardLessonEvents("lesson9",99)
 class LookFor(pygame.sprite.Sprite):
