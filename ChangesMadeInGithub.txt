@@ -2,20 +2,18 @@
 [todo-PRIZE/SETTINGS] name can be too long to fit at Prize and Settings
 [TODO-GENERAL] Epilepsy Warning
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
+[FIXES TODO-Lesson8] bad image quality at scaling SF_icons[5] in making your way
 
-[Class lesson] 
-[FIXES TODO]
-|bad image quality at scaling SF_icons[5] in making your way|
--✓syntax(create class)
--✓assign to var(object)
--✓functions in class(object methods)
--✓|MINIGAME|ship attacked - making your way
--✓__init__()
--✓self
--✓modify object vars
-|MINIGAME|hacking - blocked hangar doors[IN PROGRESS]
--✓delete object properties(del object.property)
--✓pass
-|MINIGAME|starfighter - dogfight
+[Lesson 9] 
+(Concept, mentor is someone mysterious who is behind getting you into learning it with earlier mentors)
+
+-open()
+-read()
+-read() but only parts
+-readline()
+-iterating through object made with open()
+-close()
+-write()
+-create file with open(path,x), 
 
  ✓
