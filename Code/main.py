@@ -1048,17 +1048,23 @@ class Start(pygame.sprite.Sprite):
                 if adminWriting:
                     pygame.draw.rect(screen, color3, [size_w/1.12,size_h/3.61,size_w/12,size_h/14], size_w//300,size_w//250)
                     if event.type == KEYDOWN:
-                        if event.key == pygame.K_BACKSPACE:
-                            try:
-                                adminText=adminText[:-1]                      
-                            except:
-                                pass
-                        if event.key == pygame.K_RETURN:
-                            try:
-                                courseLvl = int(adminText)
-                            except:
-                                pass
-                        elif len(adminText) < 3 and event.key!=K_BACKSPACE:
+                        try:
+                            if event.key == pygame.K_BACKSPACE:
+                                try:
+                                    adminText=adminText[:-1]                      
+                                except:
+                                    pass
+                        except:
+                            pass
+                        try:
+                            if event.key == pygame.K_RETURN:
+                                try:
+                                    courseLvl = int(adminText)
+                                except:
+                                    pass
+                        except:
+                            pass
+                        if len(adminText) < 2 and event.key!=K_BACKSPACE:
                             if keys[K_LSHIFT]:
                                 if event.key==K_9:
                                     adminText += "("
@@ -3044,6 +3050,9 @@ class Course(pygame.sprite.Sprite):
             if isinstance(SF_points,str):
                 SF_points = 0
 
+            if SF_iterator == len(answers):
+                courseLvl += 1
+
             if SF_iterator-SF_points<3:
                 main=pygame.draw.line(screen, lter_blue, [size_w/1.92,size_h/1.42], [size_w/1.92,size_h/2.05], size_w//250)
                 pygame.draw.line(screen, lter_blue, [size_w/2.04,size_h/2.05], [size_w/1.8,size_h/2.05], size_w//250)
@@ -3092,10 +3101,10 @@ class Course(pygame.sprite.Sprite):
 
                 if okBtn.collidepoint(mouse_pos):
                     course.centeredBtn(1.64,dark_red,"OK",txtCol=red,fontSize=3.3)
+                    course.centeredBtn(1.64,red,"",txtCol=red,fontSize=3.3,border=size_w//250)
                     if clicked:
                         SF_iterator=0
                         SF_points=0
-
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -8353,11 +8362,11 @@ class Course(pygame.sprite.Sprite):
         global SF_icons,SF_cords,SF_holder,SF_item,SF_holder2,SF_cords2,SF_cords3,SF_stage
         global SF_iterator,SF_iterator2,SF_points
         if activeMain and not errorShowed:
-            miniGameLvls = [13,14,15,16,32,33,34]
+            miniGameLvls = [13,14,15,16,32,33,34,46,47,48]
             if courseLvl not in miniGameLvls:
-                course.standardLessonEvents("lesson8",99,condition=notBlocked)
+                course.standardLessonEvents("lesson8",49,condition=notBlocked)
             else:
-                course.standardLessonEvents("lesson8",99,condition=notBlocked,events=False)
+                course.standardLessonEvents("lesson8",49,condition=notBlocked,events=False)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson8" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/alien.png".format(dirPath))
@@ -9426,7 +9435,10 @@ class Course(pygame.sprite.Sprite):
                 course.scifi.loadStoryIcons()
                 if isinstance(selected,str):
                     selected = 0
-                bckgr = screen.blit(SF_icons[15],[size_w/5,size_h/16])
+                try:
+                    bckgr = screen.blit(SF_icons[15],[size_w/5,size_h/16])
+                except:
+                    print("Lesson8 lvl34 bckgr blit error")
 
                 defeatedEnemies = []
 
@@ -9659,6 +9671,27 @@ class Course(pygame.sprite.Sprite):
                 WriteItalic(round(size_w//100*8),u"\u2192",green,[size_w/1.41,size_h/1.75])
             elif courseLvl == 43:
                 notBlocked = False
+                strs = [
+                    "Hack the console by choosing",
+                    "way, that is correct to solve a",
+                    "problem below data tree"
+                ]
+                
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2])
+                
+                arrow = WriteItalic(round(size_w//100*8),u"\u2192",color2,[size_w/1.41,size_h/1.75])
+                arrow = arrow.get_rect()
+
+                if arrow.collidepoint(mouse_pos):
+                    WriteItalic(round(size_w//100*8.5),u"\u2192",dark_green,[size_w/1.41,size_h/1.75])
+                    if clicked:
+                        courseLvl += 1
+                        SF_points = ""
+                        SF_iterator = ""
+
+                WriteItalic(round(size_w//100*8),u"\u2192",green,[size_w/1.41,size_h/1.75])
+            elif courseLvl == 44:
+                notBlocked = False
                 
                 errors = [
                     "hangar13.doors.allowed = False",
@@ -9680,11 +9713,136 @@ class Course(pygame.sprite.Sprite):
                     0,1,2,0,1,2
                 ]
                 course.scifi.hacking(errors,answers,goodIndexes,3)
+                print(SF_iterator,SF_points)
                 #todo:
                 #dialog before minigame
                 #action when ending minigame with positive result
-    def lesson9():
-        course.standardLessonEvents("lesson9",99)
+            elif courseLvl == 45:
+                notBlocked = False
+                strs = [
+                    "Great job! I have just detected",
+                    "Twelve ships heading for bridge,",
+                    "Get on a ship and get rid of them!"
+                ]
+                
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                goBtn = course.centeredBtn(2.34,dark_green,"Enter ship",adjustToDialog=True,fontSize=1.9)
+
+                if goBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.34,green,"Enter ship",adjustToDialog=True,fontSize=1.9)
+                    course.centeredBtn(2.34,dark_green,"",adjustToDialog=True,fontSize=1.9,border=size_w//250)
+                    if clicked:
+                        courseLvl += 1
+            elif courseLvl == 46:
+                if len(SF_icons)<1:
+                    cockpit=pygame.image.load(f"{dirPath}/Images/Game/sf/cockpit.png")
+                    cockpit = pygame.transform.scale(cockpit, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(cockpit)   
+                    map3=pygame.image.load(f"{dirPath}/Images/Game/sf/map3.jpg")
+                    map3 = pygame.transform.scale(map3, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(map3) 
+
+                bckgr = screen.blit(SF_icons[1],[size_w/5,size_h/16])    
+                screen.blit(SF_icons[0],[size_w/5,size_h/16])  
+
+                pygame.draw.circle(screen, logoBlue, [size_w/1.82,size_h/1.84], size_w//50, size_w//400)
+                pygame.draw.circle(screen, logoBlue, [size_w/1.82,size_h/1.84], size_w//500, 0)    
+
+                strs = [
+                    "I figured out that this ship got",
+                    "damaged too and is able to fly,",
+                    "but you can have some difficulties",
+                    "with controling it when in space"
+                ]
+                
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],bckgr=True)  
+
+                goBtn = course.centeredBtn(2.15,dark_green,"Start",adjustToDialog=True,fontSize=2)
+
+                if goBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.15,green,"Start",adjustToDialog=True,fontSize=2)
+                    course.centeredBtn(2.15,dark_green,"",adjustToDialog=True,border=size_w//250)
+                    if clicked:
+                        courseLvl += 1
+                        SF_icons.clear()
+            elif courseLvl == 47:
+                course.scifi.dogfight(12,True)
+            elif courseLvl == 48:
+                if len(SF_icons)<1:
+                    cockpit=pygame.image.load(f"{dirPath}/Images/Game/sf/cockpit.png")
+                    cockpit = pygame.transform.scale(cockpit, [int(size_w/1.5),int(size_h/1.1)])
+                    SF_icons.append(cockpit)   
+                    cruiser = pygame.image.load(r"{}/Images/Game/sf/Destroyer.png".format(dirPath))
+                    cruiser = pygame.transform.scale(cruiser, [int(size_w/2),int(size_h/5)])
+                    SF_icons.append(cruiser)
+
+                pygame.draw.rect(screen, black, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                
+                if not done:
+                    for x in range(100):
+                        wdth = uniform(size_w/4.91,size_w/1.16)
+                        hght = uniform(size_h/1.27,size_h/4.13)
+                        SF_cords.append([wdth,hght])
+                    else:
+                        done = True  
+
+                for cord in SF_cords:  
+                    pygame.draw.circle(screen, lt_gray, cord, size_w//800, 0)  
+                screen.blit(SF_icons[1],[size_w/4.08,size_h/3.75])               
+                screen.blit(SF_icons[0],[size_w/5,size_h/16])  
+
+                strs = [
+                    "Great job! Our reinforcements",
+                    "arrived and enemies are",
+                    "retreating, we won! Now head",
+                    "back to the ship"
+                ]
+                
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],bckgr=True)  
+
+                goBtn = course.centeredBtn(2.15,purple,"To ship",adjustToDialog=True,fontSize=2)
+                
+                if goBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(2.15,lt_blue,"To ship",adjustToDialog=True,fontSize=2)
+                    course.centeredBtn(2.15,purple,"",adjustToDialog=True,border=size_w//250)
+                    if clicked:
+                        courseLvl += 1
+                        SF_icons.clear()
+            elif courseLvl == 49:
+                if len(SF_icons)<1:
+                    medal=pygame.image.load(f"{dirPath}/Images/Game/sf/medal.png")
+                    medal = pygame.transform.scale(medal, [int(size_w/11.19),int(size_h/3.49)])
+                    SF_icons.append(medal)                     
+
+                strs = [
+                    "You are pretty much a hero, but don't",
+                    "let it go to your head! Tho you deserve",
+                    "something for your actions, take it and",
+                    "consider yourself my best student"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3])
+
+                medal = screen.blit(SF_icons[0],[size_w/2,size_h/2.12])
+                if medal.collidepoint(mouse_pos):
+                    Write(round(size_w//100*2.2),"Medal for Valor",color3,[size_w/1.38,size_h/1.83])
+
+                finishBtn = course.centeredBtn(1.27,dark_green,"Finish")
+
+                if finishBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.27,green,"Finish")
+                    course.centeredBtn(1.27,dark_green,"",border=size_w//250)
+                    if clicked:
+                        if getCourseLvl() < 9:
+                            changeCourselvl(9)
+                        activeMenu = True
+                        courseLvl = 1
+                        bckgrMusicPlayed = False
+    def lesson9(): #todo, 8 done
+        global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
+        global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
+        if activeMain and not errorShowed:
+            course.standardLessonEvents("lesson9",99,condition=notBlocked)
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
@@ -10188,7 +10346,7 @@ class Prize(pygame.sprite.Sprite):
                     "Graduate's medal",
                     "Dogtag",
                     "Sniper Rifle",
-                    "None",
+                    "Medal for Valor",
                 ]
             else:
                 names = [
@@ -10199,7 +10357,7 @@ class Prize(pygame.sprite.Sprite):
                     "Medal ukończenia",
                     "Nieśmiertelnik",
                     "Snajperka",
-                    "None",
+                    "Medal Odwagi",
                 ]
             
             try:
@@ -10219,7 +10377,9 @@ class Prize(pygame.sprite.Sprite):
                     sniperL = pygame.image.load(r"{}/Images/Game/sf/sniper_locked.png".format(dirPath))
                     sniperL = pygame.transform.scale(sniperL, [int(size_w/7.8),int(size_h/17)]) 
                     sniperL = pygame.transform.rotate(sniperL, -45)
-                    iconsLocked = [cupL,axeL,potionL,bookL,medalL,dogtagL,sniperL]
+                    sfMedalL = pygame.image.load(r"{}/Images/Game/sf/medal_locked.png".format(dirPath))
+                    sfMedalL = pygame.transform.scale(sfMedalL, [int(size_w/14.6),int(size_h/6)]) 
+                    iconsLocked = [cupL,axeL,potionL,bookL,medalL,dogtagL,sniperL,sfMedalL]
 
                 if len(iconsUnlock) < 1:
                     cup = pygame.image.load(r"{}/Images/install/cup.png".format(dirPath))
@@ -10237,7 +10397,9 @@ class Prize(pygame.sprite.Sprite):
                     sniper = pygame.image.load(r"{}/Images/Game/sf/sniper.png".format(dirPath))
                     sniper = pygame.transform.scale(sniper, [int(size_w/7.8),int(size_h/17)]) 
                     sniper = pygame.transform.rotate(sniper, -45)
-                    iconsUnlock = [cup,axe,potion,book,medal,dogtag,sniper]
+                    sfMedal = pygame.image.load(r"{}/Images/Game/sf/medal.png".format(dirPath))
+                    sfMedal = pygame.transform.scale(sfMedal, [int(size_w/14.6),int(size_h/6)])
+                    iconsUnlock = [cup,axe,potion,book,medal,dogtag,sniper,sfMedal]
             except:
                 errorInit("Failed to load icons at prize.startScreen()",fontSize=1.7)
 
