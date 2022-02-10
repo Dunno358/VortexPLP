@@ -5,7 +5,7 @@
 [FIXES TODO-Lesson8] bad image quality at scaling SF_icons[5] in making your way
 
 [Lesson 9] 
-(Concept, mentor is someone mysterious who is behind getting you into learning it with earlier mentors)
+(Concept, mentor is someone mysterious who is behind getting you into learning it with earlier mentors - mysterious_man.png in Image/Game)
 
 -open()
 -read()
