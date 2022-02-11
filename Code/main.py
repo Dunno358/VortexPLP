@@ -18,6 +18,7 @@ print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]),p
 print("Init_Start_Time: ",str(datetime.now())[10:])
 print("Witaj {}!".format(os.getlogin()))# - RETURNS NAME OF CURRENT USER
 
+
 #COLORS
 darkThemeMainCol = (30,30,30)
 darkThemeSubCol = (45,45,45)
@@ -2804,6 +2805,8 @@ class Course(pygame.sprite.Sprite):
                 notBlocked = False
                 if isinstance(SF_iterator,str):
                     SF_iterator = 6
+                if isinstance(SF_iterator2,str):
+                    SF_iterator2 = 0
                 if len(SF_icons)<1:
                     cockpit=pygame.image.load(f"{dirPath}/Images/Game/sf/cockpit.png")
                     cockpit = pygame.transform.scale(cockpit, [int(size_w/1.5),int(size_h/1.1)])
@@ -9869,17 +9872,14 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.6,strs[0],strs[1],strs[2],strs[3],fontSize=1.7)
 
-                arrow = WriteItalic(round(size_w//100*8),u"\u2192",color2,[size_w/1.4,size_h/1.66])
-                arrow = arrow.get_rect()
+                quest = WriteItalic(round(size_w//100*9),"?",color2,[size_w/1.4,size_h/3.88])
+                quest = quest.get_rect()
 
-                if arrow.collidepoint(mouse_pos):
-                    WriteItalic(round(size_w//100*8.5),u"\u2192",lt_blue,[size_w/1.4,size_h/1.66])
-                    Write(round(size_w//100*6),")",lt_blue,[size_w/1.31,size_h/1.62])
-                    if clicked:
-                        courseLvl += 1
-                        done = True
+                if quest.collidepoint(mouse_pos):
+                    courseLvl += 1
+                    done = True
 
-                WriteItalic(round(size_w//100*8),u"\u2192",purple,[size_w/1.4,size_h/1.66])
+                WriteItalic(round(size_w//100*9),"?",purple,[size_w/1.4,size_h/3.88])
             elif courseLvl == 2:
                 notBlocked = True
                 if not done:
