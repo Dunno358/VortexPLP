@@ -18,8 +18,6 @@ print("\nPygame init: {}/7 Succed and {} failed".format(pygInit[0],pygInit[1]),p
 print("Init_Start_Time: ",str(datetime.now())[10:])
 print("Witaj {}!".format(os.getlogin()))# - RETURNS NAME OF CURRENT USER
 
-#14.09.2021
-
 #COLORS
 darkThemeMainCol = (30,30,30)
 darkThemeSubCol = (45,45,45)
