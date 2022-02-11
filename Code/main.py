@@ -672,7 +672,7 @@ class Start(pygame.sprite.Sprite):
                     writeToFile = nameFile.write(cipher(name.capitalize()))
                     nameFile.close() 
                     start.useScreenDef()                     
-                elif len(name) < 18 and event.key!=K_BACKSPACE:
+                elif len(name) < 14 and event.key!=K_BACKSPACE:
                     try:
                         name += chr(event.key)
                     except:
@@ -695,7 +695,7 @@ class Start(pygame.sprite.Sprite):
 
             Write(round(size_w//100*1.8),strs[1],color3,[size_w/1.8,size_h/1.5])
             guideBtn = pygame.draw.rect(screen, dark_green, [size_w/2.2,size_h/1.35,size_w/6,size_h/8],0,10)
-            guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.86,size_h/1.24])
+            guideBtnTxt = Write(round(size_w//100*2.5),"Guide",color3,[size_w/1.86,size_h/1.24])
 
             logoName = "Vortex"
 
@@ -719,7 +719,10 @@ class Start(pygame.sprite.Sprite):
                 if guideBtn.collidepoint(mouse_pos):
                     guideBtn = pygame.draw.rect(screen, green, [size_w/2.2,size_h/1.35,size_w/6,size_h/8],0,10)
                     guideBtnBrd = pygame.draw.rect(screen, dark_green, [size_w/2.2,size_h/1.35,size_w/6,size_h/8],size_w//675,10)
-                    guideBtnTxt = Write(round(size_w//100*2.5),"Start",color3,[size_w/1.86,size_h/1.24])      
+                    guideBtnTxt = Write(round(size_w//100*2.5),"Guide",color3,[size_w/1.86,size_h/1.24])   
+
+                    Write(round(size_w/100*9),"{",green,[size_w/2.34,size_h/1.23])   
+                    Write(round(size_w/100*9),"}",green,[size_w/1.56,size_h/1.23])   
             elif event.type == MOUSEBUTTONDOWN and guideBtn.collidepoint(mouse_pos):
                 guideMode = True
     def finishBar():
@@ -3654,11 +3657,14 @@ class Course(pygame.sprite.Sprite):
         for x in strAsList:
             Write(round(size_w//100*txtFontSize),x,color3,[size_w/1.92,hght])
             hght += size_h/10
-    def shadowWrite(txt,pos=[size_w/1.85,size_h/1.77],size=8,rect=True):
+    def shadowWrite(txt,pos=[size_w/1.85,size_h/1.77],size=8,rect=True,txtCol="def"):
         if rect:
             pygame.draw.rect(screen, dark_gray, [size_w/3.12,size_h/2.16,size_w/2.3,size_h/5], 0,size_w//150)
         Write(round(size_w//100*size),txt,black,pos)
-        Write(round(size_w//100*(size+size*0.0625)),txt,lt_gray,pos)
+        if txtCol == "def":
+            Write(round(size_w//100*(size+size*0.0625)),txt,lt_gray,pos)
+        else:
+            Write(round(size_w//100*(size+size*0.0625)),txt,txtCol,pos)
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
         global bckgrMusicPlayed,soundEnabled,errorShowed
@@ -9734,6 +9740,7 @@ class Course(pygame.sprite.Sprite):
                     course.centeredBtn(2.34,dark_green,"",adjustToDialog=True,fontSize=1.9,border=size_w//250)
                     if clicked:
                         courseLvl += 1
+                        SF_icons.clear()
             elif courseLvl == 46:
                 if len(SF_icons)<1:
                     cockpit=pygame.image.load(f"{dirPath}/Images/Game/sf/cockpit.png")
@@ -9766,9 +9773,11 @@ class Course(pygame.sprite.Sprite):
                     if clicked:
                         courseLvl += 1
                         SF_icons.clear()
+                        SF_points = 0
             elif courseLvl == 47:
                 course.scifi.dogfight(12,True)
             elif courseLvl == 48:
+                pygame.mouse.set_visible(True)
                 if len(SF_icons)<1:
                     cockpit=pygame.image.load(f"{dirPath}/Images/Game/sf/cockpit.png")
                     cockpit = pygame.transform.scale(cockpit, [int(size_w/1.5),int(size_h/1.1)])
@@ -9838,11 +9847,55 @@ class Course(pygame.sprite.Sprite):
                         activeMenu = True
                         courseLvl = 1
                         bckgrMusicPlayed = False
+                        done = False
     def lesson9(): #todo, 8 done
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson9",99,condition=notBlocked)
+        if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson9" and not errorShowed:
+            try:
+                mentorIcon = pygame.image.load(r"{}/Images/Game/mysterious_man.png".format(dirPath))
+                mentorIcon = pygame.transform.scale(mentorIcon, [int(size_w/10.6),int(size_h/6)])
+            except:
+                errorInit("Failed to load mentor icon!",fontSize=1.8)
+            language = getLang()
+
+            if courseLvl == 1:
+                notBlocked = False
+                strs = [
+                    f"Hello {getName()}!",
+                    "We meet at last, you must be",
+                    "wondering who I am and what am I",
+                    "doing here, so let's not wait"
+                ]
+                course.dialogStandard(2.6,strs[0],strs[1],strs[2],strs[3],fontSize=1.7)
+
+                arrow = WriteItalic(round(size_w//100*8),u"\u2192",color2,[size_w/1.4,size_h/1.66])
+                arrow = arrow.get_rect()
+
+                if arrow.collidepoint(mouse_pos):
+                    WriteItalic(round(size_w//100*8.5),u"\u2192",lt_blue,[size_w/1.4,size_h/1.66])
+                    Write(round(size_w//100*6),")",lt_blue,[size_w/1.31,size_h/1.62])
+                    if clicked:
+                        courseLvl += 1
+                        done = True
+
+                WriteItalic(round(size_w//100*8),u"\u2192",purple,[size_w/1.4,size_h/1.66])
+            elif courseLvl == 2:
+                notBlocked = True
+                if not done:
+                    courseLvl -= 1
+
+                strs = [
+                    "You can call me Dunno, those lessons and",
+                    "challenges were all made by me and I'm",
+                    "more than glad you managed to finish",
+                    "them, but there's one more thing left"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],fontSize=1.4)
+
+                course.shadowWrite("Text Files",pos=[size_w/1.85,size_h/1.53],rect=False,txtCol=red)
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
