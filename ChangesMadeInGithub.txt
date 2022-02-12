@@ -6,8 +6,8 @@
 
 [Lesson 9] 
 
--open()[IN WORK]
--read()
+-✓open()
+-read()[IN WORK]
 -read() but only parts
 -readline()
 -iterating through object made with open()
