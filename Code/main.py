@@ -9895,6 +9895,7 @@ class Course(pygame.sprite.Sprite):
 
                 course.shadowWrite("Text Files",pos=[size_w/1.85,size_h/1.53],rect=False,txtCol=red)
             elif courseLvl == 3:
+                notBlocked = False
                 strs = [
                     "Let's get straight to this, we will",
                     "start with function named open()"
@@ -9919,11 +9920,32 @@ class Course(pygame.sprite.Sprite):
                             index = storedCords.index(rect)
                             iterator = index
 
+                modes = [
+                    "r - opens file only for reading",
+                    "a - opens file for appending text",
+                    "w - opens file for writing",
+                    "x - creates file"
+                ]
+                info = [
+                    "| Default value",
+                    "",
+                    "| existing text is overwrited",
+                    ""                        
+                ]
+
+                mark = WriteItalic(round(size_w//100*9),"?",purple,[size_w/1.27,size_h/4.95])
+                mark = mark.get_rect()
+
+                if mark.collidepoint(mouse_pos):
+                    WriteItalic(round(size_w//100*9),"?",lt_blue,[size_w/1.27,size_h/4.95])
+                    if clicked:
+                        courseLvl += 1
+
                 if iterator == 0:
                     strs = [
                         "You can use open() function to:",
-                        "create a file or open existing",
-                        "file in chosen mode"
+                        "create a file or open an existing one",
+                        "open file in chosen mode"
                     ]
 
                     Write(round(size_w//100*1.6),strs[0],color3,[size_w/1.86,size_h/2.04])
@@ -9932,12 +9954,39 @@ class Course(pygame.sprite.Sprite):
                     for x in range(2):
                         mark = Write(round(size_w//100*2),"?",lt_blue,[size_w/3.04,hght])
                         mark = mark.get_rect()
-                        Write(round(size_w//100*1.7),strs[x+1],orange,[mark[0]+size_w/6,hght])
+                        Write(round(size_w//100*1.7),strs[x+1],orange,[mark[0]+size_w/5,hght])
                         hght += size_h/17
+
+                    pygame.draw.line(screen, orange, [size_w/3.13,size_h/1.85], [size_w/3.77,size_h/1.85], size_w//250)
+                    pygame.draw.line(screen, orange, [size_w/3.77,size_h/1.85], [size_w/3.77,size_h/1.4], size_w//250)
+                    pygame.draw.line(screen, orange, [size_w/3.77,size_h/1.4], [size_w/3.07,size_h/1.4], size_w//250)
+
+                    Write(round(size_w//100*2),"Modes for creating file:",orange,[size_w/1.86,size_h/1.38])
+                    WriteItalic(round(size_w//100*1.6),'"a" | "w" | "x"',orange,[size_w/1.86,size_h/1.26])                
                 elif iterator==1:
                     Write(round(size_w//100*4),"open(filename, mode)",orange,[size_w/1.88,size_h/1.77])
+                    Write(round(size_w//100*1.7),"filename - path to file or alone file name with extension",orange,[size_w/1.88,size_h/1.55])
+                    Write(round(size_w//100*1.7),"mode - adapt file to a specified operation",orange,[size_w/1.88,size_h/1.41])              
                 elif iterator == 2:
-                    Write(round(size_w//100*4),"TEST",orange,[size_w/1.88,size_h/1.77])
+                    hght = size_h/1.96
+                    for mode in modes:
+                        index = modes.index(mode)
+                        Write(round(size_w//100*1.7),f"{mode} {info[index]}",orange,[size_w/1.88,hght])
+                        hght += size_h/12
+            elif courseLvl == 4:
+                strs = [
+                    "The next one is read() function that is",
+                    "usable after using open() with 'r' mode",
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+                #txt showed on mousemotion
+                #? step1
+                #? step2
+                #? step3
+                #? step4
+                #? step5
+                #? step6
+                #? step7
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
