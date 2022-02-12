@@ -9894,6 +9894,50 @@ class Course(pygame.sprite.Sprite):
                 course.dialogTop(6.41,strs[0],strs[1],strs[2],strs[3],fontSize=1.4)
 
                 course.shadowWrite("Text Files",pos=[size_w/1.85,size_h/1.53],rect=False,txtCol=red)
+            elif courseLvl == 3:
+                strs = [
+                    "Let's get straight to this, we will",
+                    "start with function named open()"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+
+                txts = ["Use","Syntax","Modes"]
+                wdth = size_w/3.74
+                for x in range(3):
+                    if iterator == x:
+                        rect = pygame.draw.rect(screen, orange, [wdth,size_h/2.66,size_w/6,size_h/16], size_w//250, size_w//80)
+                    else:
+                        rect = pygame.draw.rect(screen, color1, [wdth,size_h/2.66,size_w/6,size_h/16], size_w//250, size_w//80)
+                    storedCords.append(rect)
+                    Write(round(size_w//100*1.4),txts[x],color3,[wdth+size_w/12,size_h/2.45])
+                    wdth += size_w/5.5
+
+                for rect in storedCords:
+                    if rect.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, orange, rect, size_w//250, size_w//80)
+                        if clicked:
+                            index = storedCords.index(rect)
+                            iterator = index
+
+                if iterator == 0:
+                    strs = [
+                        "You can use open() function to:",
+                        "create a file or open existing",
+                        "file in chosen mode"
+                    ]
+
+                    Write(round(size_w//100*1.6),strs[0],color3,[size_w/1.86,size_h/2.04])
+
+                    hght = size_h/1.83
+                    for x in range(2):
+                        mark = Write(round(size_w//100*2),"?",lt_blue,[size_w/3.04,hght])
+                        mark = mark.get_rect()
+                        Write(round(size_w//100*1.7),strs[x+1],orange,[mark[0]+size_w/6,hght])
+                        hght += size_h/17
+                elif iterator==1:
+                    Write(round(size_w//100*4),"open(filename, mode)",orange,[size_w/1.88,size_h/1.77])
+                elif iterator == 2:
+                    Write(round(size_w//100*4),"TEST",orange,[size_w/1.88,size_h/1.77])
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
