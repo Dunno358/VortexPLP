@@ -7,9 +7,9 @@
 [Lesson 9] 
 
 -✓open()
--read()[IN WORK]
--read() but only parts
--readline()
+-✓read()
+-✓read() but only parts
+-readline() [IN WORK]
 -iterating through object made with open()
 -close()
 -write()
