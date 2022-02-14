@@ -10,9 +10,9 @@
 -✓read()
 -✓read() but only parts
 -✓readline()
--iterating through object made with open() [IN WORK]
+-✓iterating through object made with open()
+-write()[IN WORK]
+-create file with open(path,x)
 -close()
--write()
--create file with open(path,x), 
 
  ✓
