@@ -9940,6 +9940,7 @@ class Course(pygame.sprite.Sprite):
                     WriteItalic(round(size_w//100*9),"?",lt_blue,[size_w/1.27,size_h/4.95])
                     if clicked:
                         courseLvl += 1
+                        storedCords.clear()
 
                 if iterator == 0:
                     strs = [
@@ -9978,15 +9979,64 @@ class Course(pygame.sprite.Sprite):
                     "The next one is read() function that is",
                     "usable after using open() with 'r' mode",
                 ]
-                course.dialogTop(6.41,strs[0],strs[1])
-                #txt showed on mousemotion
-                #? step1
-                #? step2
-                #? step3
-                #? step4
-                #? step5
-                #? step6
-                #? step7
+                descs = [
+                    "Make an object out of correct open() call",
+                    "get a read() function from object"
+                ]
+                examps = [
+                    "var = open(file,\"r\")",
+                    "var.read()"
+                ]
+                if 0 in storedItems and 1 in storedItems:
+                    course.dialogTop(6.41,"you can print var.read() or assign it","to new variable which will hold the text")
+                    notBlocked = True
+                else:
+                    course.dialogTop(6.41,strs[0],strs[1])
+                    notBlocked = False
+
+                hght = size_h/2.53
+                for x in range(2):
+                    mark = WriteItalic(round(size_w//100*5),"?",purple,[size_w/3.09,hght])
+                    mark = mark.get_rect()
+                    if x in storedItems:
+                        WriteItalic(round(size_w//100*2),descs[x],orange,[(mark[0]+mark[2]+size_w/4),hght])
+                        WriteItalic(round(size_w//100*2),examps[x],lt_blue,[(mark[0]+mark[2]+size_w/4),hght+size_h/10])
+                    storedCords.append(mark)
+                    hght += size_h/4
+
+                for mark in storedCords:
+                    if mark.collidepoint(mouse_pos):
+                        WriteItalic(round(size_w//100*5),"?",lt_blue,[mark[0]+mark[2]/2,mark[1]+mark[3]/2])
+                        if clicked:
+                            index = storedCords.index(mark)
+                            if index not in storedItems:
+                                storedItems.append(index)
+            elif courseLvl == 5:
+                notBlocked = False
+                strs = [
+                    "You can read only a part of file if you",
+                    "want to, just enter how many chars you",
+                    "want to be readed from beggining"
+                ]
+
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                Write(round(size_w/100*2.3),"Hello world",lt_blue,[size_w/1.79,size_h/2.39])
+                Write(round(size_w/100*2.3),"\/",orange,[size_w/1.79,size_h/2.12])
+                Write(round(size_w/100*2.3),"text.read(5) > Hello",orange,[size_w/1.79,size_h/1.82])
+
+                okBtn = course.centeredBtn(1.57,dark_green,"OK",adjustToDialog=True)
+
+                if okBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.57,green,"OK",adjustToDialog=True)
+                    course.centeredBtn(1.57,dark_green,"",adjustToDialog=True,border=size_w//250)
+                    if clicked:
+                        courseLvl += 1
+                        storedItems.clear()
+                        storedCords.clear()
+            elif courseLvl == 6:
+                test = True
+                #readlines()
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
