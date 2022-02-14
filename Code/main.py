@@ -10044,10 +10044,14 @@ class Course(pygame.sprite.Sprite):
                 else:
                     notBlocked = False
 
+                pygame.draw.circle(screen, orange, [size_w/3.85,size_h/1.32], size_w//80, size_w//800)
+                WriteItalic(round(size_w//100*1.2),"i",orange,[size_w/3.85,size_h/1.32])
+                Write(round(size_w//100*1.6),"\\n means breaking to new line",orange,[size_w/2.25,size_h/1.32])
+
                 strs= [
                     "Both methods results a text as a one",
-                    "string variable, what if you want it",
-                    "seperate in lines like in file? readline()"
+                    "string variable, what if you want to",
+                    "seperate in lines like in file? readlines()"
                 ]
                 course.dialogTop(6.41,strs[0],strs[1],strs[2])
 
@@ -10057,12 +10061,13 @@ class Course(pygame.sprite.Sprite):
                 if read.collidepoint(mouse_pos):
                     Write(round(size_w//100*2.8),"text.read()",purple,[size_w/2.79,size_h/2.29])
                     if clicked:
-                        myst_holder.append(0)
+                        if 0 not in myst_holder:
+                            myst_holder.append(0)
 
                 if 0 in myst_holder:
                     Write(round(size_w//100*2.8),"\/",orange,[size_w/2.81,size_h/1.96])
                     WriteItalic(round(size_w//100*1.8),"String",orange,[size_w/2.81,size_h/1.78])
-                    Write(round(size_w//100*1.8),"\"line1 line2 line3\"",orange,[size_w/2.81,size_h/1.58])
+                    Write(round(size_w//100*1.8),"\"line1\\nline2\\nline3\"",orange,[size_w/2.81,size_h/1.58])
 
 
 
@@ -10073,13 +10078,14 @@ class Course(pygame.sprite.Sprite):
 
 
 
-                readline = Write(round(size_w//100*2.4),"text.readline()",orange,[size_w/1.4,size_h/2.29])
+                readline = Write(round(size_w//100*2.4),"text.readlines()",orange,[size_w/1.4,size_h/2.29])
                 readline = readline.get_rect()
 
                 if readline.collidepoint(mouse_pos):
-                    Write(round(size_w//100*2.4),"text.readline()",purple,[size_w/1.4,size_h/2.29])
+                    Write(round(size_w//100*2.4),"text.readlines()",purple,[size_w/1.4,size_h/2.29])
                     if clicked:
-                        myst_holder.append(1)
+                        if 1 not in myst_holder:
+                            myst_holder.append(1)
 
                 if 1 in myst_holder:
                     Write(round(size_w//100*3,5),"\/",orange,[size_w/1.41,size_h/1.96])
@@ -10095,11 +10101,62 @@ class Course(pygame.sprite.Sprite):
                         else:
                             pre = ""
                             suf = ","
-                        Write(round(size_w//100*1.8),f"{pre}\"line{x+1}\"{suf}",orange,[size_w/1.41,hght])
+                        Write(round(size_w//100*1.8),f"{pre}\"line{x+1}\\n\"{suf}",orange,[size_w/1.41,hght])
                         hght += size_h/14
             elif courseLvl == 7:
+                strs = [
+                    "With that knowledge we can go futher",
+                    "and learn how to access those variables",
+                    "either from read() or readlines()"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                Write(round(size_w//100*3),"index",orange,[size_w/2.79,size_h/2.2])
+
+                pygame.draw.line(screen, orange, [size_w/3.26,size_h/2.21], [size_w/3.93,size_h/2.21], size_w//300)
+                pygame.draw.line(screen, orange, [size_w/3.93,size_h/2.21], [size_w/3.93,size_h/1.87], size_w//300)
+                Write(round(size_w//100*1.5),"read()",orange,[size_w/3.95,size_h/1.72])
+                pygame.draw.line(screen, orange, [size_w/3.93,size_h/1.63], [size_w/3.93,size_h/1.47], size_w//300)
+                Write(round(size_w//100*1.5),"str index",orange,[size_w/3.95,size_h/1.38])
+                
+                pygame.draw.line(screen, orange, [size_w/2.43,size_h/2.21], [size_w/2.22,size_h/2.21], size_w//300)
+                pygame.draw.line(screen, orange, [size_w/2.22,size_h/2.21], [size_w/2.22,size_h/1.87], size_w//300)
+                Write(round(size_w//100*1.5),"readlines()",orange,[size_w/2.23,size_h/1.72])
+                pygame.draw.line(screen, orange, [size_w/2.22,size_h/1.63], [size_w/2.22,size_h/1.47], size_w//300)
+                Write(round(size_w//100*1.5),"list index",orange,[size_w/2.23,size_h/1.38])
+
+
+                pygame.draw.line(screen, purple, [size_w/1.99,size_h/2.57], [size_w/1.99,size_h/1.2], size_w//200)
+
+
+                Write(round(size_w//100*3),"for loop",orange,[size_w/1.5,size_h/2.2])
+
+                pygame.draw.line(screen, orange, [size_w/1.7,size_h/2.21], [size_w/1.8,size_h/2.21], size_w//300)
+                pygame.draw.line(screen, orange, [size_w/1.8,size_h/2.21], [size_w/1.8,size_h/1.87], size_w//300)
+                Write(round(size_w//100*1.5),"read()",orange,[size_w/1.815,size_h/1.72])
+                pygame.draw.line(screen, orange, [size_w/1.8,size_h/1.63], [size_w/1.8,size_h/1.47], size_w//300)
+                Write(round(size_w//100*1.3),"str iteration",orange,[size_w/1.78,size_h/1.38])
+                
+                pygame.draw.line(screen, orange, [size_w/1.35,size_h/2.21], [size_w/1.26,size_h/2.21], size_w//300)
+                pygame.draw.line(screen, orange, [size_w/1.26,size_h/2.21], [size_w/1.26,size_h/1.87], size_w//300)
+                Write(round(size_w//100*1.5),"readlines()",orange,[size_w/1.27,size_h/1.72])
+                pygame.draw.line(screen, orange, [size_w/1.26,size_h/1.63], [size_w/1.26,size_h/1.47], size_w//300)
+                Write(round(size_w//100*1.3),"list iteration",orange,[size_w/1.27,size_h/1.38])      
+
+                Write(round(size_w//100*1.3),"(Inclucing \\n which is break to new line)",lter_blue,[size_w/1.99,size_h/1.13])         
+
+                nextMark = Write(round(size_w//100*3),"?",purple,[size_w/1.27,size_h/1.14])  
+                nextMark = nextMark.get_rect()
+                if nextMark.collidepoint(mouse_pos):
+                    Write(round(size_w//100*3.1),"?",purple,[size_w/1.27,size_h/1.14])
+                    if clicked:
+                        courseLvl += 1
+                        myst_holder.clear()
+                        storedCords.clear()
+                        storedItems.clear()
+            elif courseLvl == 8:
                 test = True
-                #iterating
+                #write()            
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
