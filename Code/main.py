@@ -10104,6 +10104,7 @@ class Course(pygame.sprite.Sprite):
                         Write(round(size_w//100*1.8),f"{pre}\"line{x+1}\\n\"{suf}",orange,[size_w/1.41,hght])
                         hght += size_h/14
             elif courseLvl == 7:
+                notBlocked = False
                 strs = [
                     "With that knowledge we can go futher",
                     "and learn how to access those variables",
