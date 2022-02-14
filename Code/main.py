@@ -242,6 +242,9 @@ SF_iterator = ""
 SF_iterator2 = 0
 SF_points = 0
 
+#Mysterious
+myst_holder = []
+
 #PRIZE
 iconsUnlock = []
 iconsLocked = []
@@ -9852,6 +9855,7 @@ class Course(pygame.sprite.Sprite):
     def lesson9(): #todo, 8 done
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
+        global myst_holder
         if activeMain and not errorShowed:
             course.standardLessonEvents("lesson9",99,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson9" and not errorShowed:
@@ -10035,8 +10039,67 @@ class Course(pygame.sprite.Sprite):
                         storedItems.clear()
                         storedCords.clear()
             elif courseLvl == 6:
+                if 0 in myst_holder and 1 in myst_holder:
+                    notBlocked = True
+                else:
+                    notBlocked = False
+
+                strs= [
+                    "Both methods results a text as a one",
+                    "string variable, what if you want it",
+                    "seperate in lines like in file? readline()"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                read = Write(round(size_w//100*2.8),"text.read()",orange,[size_w/2.79,size_h/2.29])
+                read = read.get_rect()
+
+                if read.collidepoint(mouse_pos):
+                    Write(round(size_w//100*2.8),"text.read()",purple,[size_w/2.79,size_h/2.29])
+                    if clicked:
+                        myst_holder.append(0)
+
+                if 0 in myst_holder:
+                    Write(round(size_w//100*2.8),"\/",orange,[size_w/2.81,size_h/1.96])
+                    WriteItalic(round(size_w//100*1.8),"String",orange,[size_w/2.81,size_h/1.78])
+                    Write(round(size_w//100*1.8),"\"line1 line2 line3\"",orange,[size_w/2.81,size_h/1.58])
+
+
+
+                hght = size_h/2.31
+                for x in range(3):
+                    Write(round(size_w//100*2.5),f"line{x+1}",lt_blue,[size_w/1.86,hght])
+                    hght += size_h/14
+
+
+
+                readline = Write(round(size_w//100*2.4),"text.readline()",orange,[size_w/1.4,size_h/2.29])
+                readline = readline.get_rect()
+
+                if readline.collidepoint(mouse_pos):
+                    Write(round(size_w//100*2.4),"text.readline()",purple,[size_w/1.4,size_h/2.29])
+                    if clicked:
+                        myst_holder.append(1)
+
+                if 1 in myst_holder:
+                    Write(round(size_w//100*3,5),"\/",orange,[size_w/1.41,size_h/1.96])
+                    WriteItalic(round(size_w//100*1.8),"List",orange,[size_w/1.41,size_h/1.78])
+                    hght = size_h/1.58
+                    for x in range(3):
+                        if x == 0:
+                            pre = "["
+                            suf = ","
+                        elif x == 2:
+                            pre = ""
+                            suf = "]"
+                        else:
+                            pre = ""
+                            suf = ","
+                        Write(round(size_w//100*1.8),f"{pre}\"line{x+1}\"{suf}",orange,[size_w/1.41,hght])
+                        hght += size_h/14
+            elif courseLvl == 7:
                 test = True
-                #readlines()
+                #iterating
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
