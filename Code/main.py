@@ -248,6 +248,7 @@ myst_holder = []
 #PRIZE
 iconsUnlock = []
 iconsLocked = []
+specialIcon = []
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
         pygame.sprite.Sprite.__init__(self)
@@ -3177,7 +3178,10 @@ class Course(pygame.sprite.Sprite):
                         circle = pygame.draw.circle(screen, dark_gray, [circleW,circleH], size_w//20, 0)
                     else:
                         circle = pygame.draw.circle(screen, green, [circleW,circleH], size_w//20, 0)
-                    pygame.draw.circle(screen, dark_green, [circleW,circleH], size_w//20, 3)
+                    if getCourseLvl()<10:
+                        pygame.draw.circle(screen, dark_green, [circleW,circleH], size_w//20, 3)
+                    else:
+                        pygame.draw.circle(screen, gold, [circleW,circleH], size_w//20, 3)
                     circleNr = Write(size_w//100*3,it,color1,[circleW,circleH])
                     circles.append(circle)
                     circlesCords.append([circleW,circleH])
@@ -3226,7 +3230,10 @@ class Course(pygame.sprite.Sprite):
                         pygame.draw.circle(screen, green, circlesCords[index], size_w//20, 0)
                     else:
                         pygame.draw.circle(screen, dark_gray, circlesCords[index], size_w//20, 0)
-                    pygame.draw.circle(screen, dark_green, circlesCords[index], size_w//20, size_w//450)
+                    if getCourseLvl()<10:
+                        pygame.draw.circle(screen, dark_green, circlesCords[index], size_w//20, size_w//450)
+                    else:
+                        pygame.draw.circle(screen, gold, circlesCords[index], size_w//20, size_w//450)
                     Write(size_w//100*3,it,color1,circlesCords[index])
                 it += 1
         elif event.type == MOUSEBUTTONDOWN and activities[0] and activeMenu:
@@ -3537,6 +3544,7 @@ class Course(pygame.sprite.Sprite):
                     if multipleAnswers:
                         for answer in answersList:
                             if text.lower().replace(" ","") == answer.lower().replace(" ",""):
+                                print(text.lower().replace(" ",""),answer.lower().replace(" ",""))
                                 text = ""
                                 iterator += 1
                     else:
@@ -3666,9 +3674,10 @@ class Course(pygame.sprite.Sprite):
             pygame.draw.rect(screen, dark_gray, [size_w/3.12,size_h/2.16,size_w/2.3,size_h/5], 0,size_w//150)
         Write(round(size_w//100*size),txt,black,pos)
         if txtCol == "def":
-            Write(round(size_w//100*(size+size*0.0625)),txt,lt_gray,pos)
+            shadowTxt = Write(round(size_w//100*(size+size*0.0625)),txt,lt_gray,pos)
         else:
-            Write(round(size_w//100*(size+size*0.0625)),txt,txtCol,pos)
+            shadowTxt = Write(round(size_w//100*(size+size*0.0625)),txt,txtCol,pos)
+        return shadowTxt
     def lesson1():
         global activeMenu,courseLvl,mentorIcon,activeLesson,theme,language,iterator,notBlocked,storedItems
         global bckgrMusicPlayed,soundEnabled,errorShowed
@@ -9857,7 +9866,7 @@ class Course(pygame.sprite.Sprite):
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
         global myst_holder
         if activeMain and not errorShowed:
-            course.standardLessonEvents("lesson9",99,condition=notBlocked)
+            course.standardLessonEvents("lesson9",13,condition=notBlocked)
         if activities[0] and not activeMenu and str(activeLesson)[17:-23]=="lesson9" and not errorShowed:
             try:
                 mentorIcon = pygame.image.load(r"{}/Images/Game/mysterious_man.png".format(dirPath))
@@ -10146,18 +10155,213 @@ class Course(pygame.sprite.Sprite):
 
                 Write(round(size_w//100*1.3),"(Inclucing \\n which is break to new line)",lter_blue,[size_w/1.99,size_h/1.13])         
 
-                nextMark = Write(round(size_w//100*3),"?",purple,[size_w/1.27,size_h/1.14])  
+                nextMark = WriteItalic(round(size_w//100*4.5),"?",purple,[size_w/1.27,size_h/1.14])  
                 nextMark = nextMark.get_rect()
                 if nextMark.collidepoint(mouse_pos):
-                    Write(round(size_w//100*3.1),"?",purple,[size_w/1.27,size_h/1.14])
+                    WriteItalic(round(size_w//100*4.6),"?",lt_blue,[size_w/1.27,size_h/1.14])
                     if clicked:
                         courseLvl += 1
                         myst_holder.clear()
                         storedCords.clear()
                         storedItems.clear()
             elif courseLvl == 8:
-                test = True
-                #write()            
+                strs = [
+                    "So that's how you read text from file,",
+                    "how to write something to the file tho?",
+                    "one of the methods is write()"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                if 0 not in storedItems:
+                    mark1 = WriteItalic(round(size_w//100*5),"?",purple,[size_w/1.83,size_h/2.33])
+                    mark1 = mark1.get_rect()
+                    if mark1.collidepoint(mouse_pos):
+                        WriteItalic(round(size_w//100*5.1),"?",lt_blue,[size_w/1.83,size_h/2.33])
+                        if clicked:
+                            storedItems.append(0)
+                elif 1 not in storedItems:
+                    mark2 = WriteItalic(round(size_w//100*5),"?",purple,[size_w/1.83,size_h/1.82])
+                    mark2 = mark2.get_rect()
+                    if mark2.collidepoint(mouse_pos):
+                        WriteItalic(round(size_w//100*5.1),"?",lt_blue,[size_w/1.83,size_h/1.82])
+                        if clicked:
+                            storedItems.append(1)
+                elif 2 not in storedItems:
+                    mark3 = WriteItalic(round(size_w//100*5),"?",purple,[size_w/1.83,size_h/1.49])
+                    mark3 = mark3.get_rect()
+                    if mark3.collidepoint(mouse_pos):
+                        WriteItalic(round(size_w//100*5.1),"?",lt_blue,[size_w/1.83,size_h/1.49])
+                        if clicked:
+                            storedItems.append(2)                    
+
+
+                if 0 in storedItems:
+                    Write(round(size_w//100*2.3),"file = open(file.txt,\"w\")",orange,[size_w/1.83,size_h/2.33])
+                    Write(round(size_w//100*2.3),"\/",orange,[size_w/1.83,size_h/2.03])
+
+                    inf = pygame.draw.circle(screen, lter_blue, [size_w/1.28,size_h/2.33], size_w//50, size_w//350)
+                    WriteItalic(round(size_w//100*2.3),"i",lter_blue,[size_w/1.28,size_h/2.33])
+                    if inf.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, color1, [size_w/3.57,size_h/2.09,size_w/2,size_h/6], 0, size_w//250)
+                        Write(round(size_w//100*2.3),"note that used open() mode is \"w\"",color3,[size_w/1.88,size_h/1.77])
+                if 1 in storedItems:
+                    if not inf.collidepoint(mouse_pos):
+                        Write(round(size_w//100*2.3),"file.write(text)",orange,[size_w/1.83,size_h/1.78])
+                        Write(round(size_w//100*2.3),"\/",orange,[size_w/1.83,size_h/1.63]) 
+                if 2 in storedItems:
+                    Write(round(size_w//100*1.8),"if any text existed in file it has been overwrited",orange,[size_w/1.83,size_h/1.47])  
+                    
+                    inf = pygame.draw.circle(screen, lter_blue, [size_w/3.54,size_h/2.33], size_w//50, size_w//350)
+                    WriteItalic(round(size_w//100*2.3),"i",lter_blue,[size_w/3.54,size_h/2.33])
+                    if inf.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, color1, [size_w/3.57,size_h/2.09,size_w/2,size_h/6], 0, size_w//250)
+                        Write(round(size_w//100*1.8),"if you want to add text to file without over-",color3,[size_w/1.88,size_h/1.9])
+                        Write(round(size_w//100*1.8),"writing, use file.append(text) with \"a\" mode",color3,[size_w/1.88,size_h/1.7])
+
+                    nextMark = WriteItalic(round(size_w//100*4.5),"?",purple,[size_w/1.27,size_h/1.14])  
+                    nextMark = nextMark.get_rect()
+                    if nextMark.collidepoint(mouse_pos):
+                        WriteItalic(round(size_w//100*4.6),"?",lt_blue,[size_w/1.27,size_h/1.14])
+                        if clicked:
+                            courseLvl += 1
+                            storedItems.clear()    
+            elif courseLvl == 9:
+                notBlocked = True
+                strs = [
+                    "we have already mentioned making file",
+                    "but let's have a closer look"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+
+                modes = [
+                    "open(file,\"w\")",
+                    "open(file,\"a\")",
+                    "open(file,\"x\")"
+                ]
+
+                wdth = size_w/3.06
+                for x in range(3):
+                    Write(round(size_w/100*2.5),modes[x],lt_blue,[wdth,size_h/2.46])
+                    mark = WriteItalic(round(size_w/100*3.9),"?",purple,[wdth,size_h/2.94])
+                    if mark.get_rect() not in storedItems:
+                        storedItems.append(mark.get_rect())
+                    wdth += size_w/5
+
+                for mark in storedItems:
+                    if mark.collidepoint(mouse_pos):
+                        pygame.draw.rect(screen, color2, [size_w/4.27,size_h/2.19,size_w/1.75,size_h/3], 0)
+                        index = storedItems.index(mark)
+                        WriteItalic(round(size_w/100*4),"?",lt_blue,[mark[0]+mark[2]/2,mark[1]+mark[3]/2])
+
+                        if index != 2:
+                            Write(round(size_w/100*3),"Open file if it exists",orange,[size_w/1.89,size_h/1.89])
+                        else:
+                            Write(round(size_w/100*3),"Return error if file exists",orange,[size_w/1.89,size_h/1.89])
+
+                        Write(round(size_w/100*3),"Make file if it doesn't exist",orange,[size_w/1.89,size_h/1.43])
+            elif courseLvl == 10:
+                strs = [
+                    "Now what's left is how to close file",
+                    "when we're done doing anything"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1])
+
+                Write(round(size_w//100*2.5),"file = open(file,\"mode\")",orange,[size_w/1.82,size_h/2.8])
+                Write(round(size_w//100*2.5),"\/",orange,[size_w/1.82,size_h/2.42])
+                Write(round(size_w//100*2.2),"file.read() | file.write(text) | file.append(text)",orange,[size_w/1.82,size_h/2.13])
+                Write(round(size_w//100*2.5),"\/",orange,[size_w/1.82,size_h/1.86])
+                Write(round(size_w//100*2.5),"file.close()",orange,[size_w/1.82,size_h/1.68])
+
+                if 0 not in myst_holder:
+                    notBlocked = False
+                    mark = WriteItalic(round(size_w//100*6),"?",purple,[size_w/1.84,size_h/1.3])
+                    mark = mark.get_rect()
+                    if mark.collidepoint(mouse_pos):
+                        WriteItalic(round(size_w//100*6.1),"?",lt_blue,[size_w/1.84,size_h/1.3])     
+                        if clicked:
+                            myst_holder.append(0)
+                            storedItems.clear()           
+                else:
+                    Write(round(size_w//100*2.5),"Simple, isn't it?",lt_blue,[size_w/1.84,size_h/1.3])
+                    notBlocked = True
+            elif courseLvl == 11:
+                notBlocked = False
+                strs = [
+                    "Let's test if you get it,",
+                    "shall we?"
+                ]
+                course.dialogStandard(2.65,strs[0],strs[1])
+
+                wdth = size_w/1.61
+                for x in range(10):
+                    mark1 = Write(round(size_w//100*1.5),"?",purple,[wdth,size_h/1.8])
+                    if mark1 not in storedCords:
+                        storedCords.append(mark1.get_rect())
+                    if x==9:
+                        mark2 = Write(round(size_w//100*6),"?",purple,[wdth+size_w/50,size_h/1.8])
+                        if mark2 not in storedCords:
+                            storedCords.append(mark2.get_rect())
+                    wdth += size_w/100
+
+                for mark in storedCords:
+                    if mark.collidepoint(mouse_pos):
+                        wdth = size_w/1.61
+                        for x in range(10):
+                            mark1 = Write(round(size_w//100*1.5),"?",lt_blue,[wdth,size_h/1.8])
+                            if x==9:
+                                mark2 = Write(round(size_w//100*6),"?",lt_blue,[wdth+size_w/50,size_h/1.8])
+                            wdth += size_w/100  
+                        if clicked:
+                            courseLvl += 1
+                            storedCords.clear() 
+                            iterator = 0                     
+            elif courseLvl == 12:
+                todo = [
+                    'open file.txt in "r" mode',
+                    'read text from: file = open(file.txt,"r")',
+                    'open file.txt in "w" mode',
+                    'use write(text) on: file = open(file.txt,"w")',
+                    'close file that is opened as variable file'
+                ]
+                answers = [
+                    'open(file.txt,"r")',
+                    'file.read()',
+                    'open(file.txt,"w")',
+                    'file.write(text)',
+                    'file.close()'
+                ]
+                try:
+                    course.consoleGame(todo[iterator],"",multipleAnswers=True,answersList=answers,btnText="Check")
+                except:
+                    courseLvl += 1
+                    storedCords.clear()
+            elif courseLvl == 13:
+                if len(storedCords)<1:
+                    plate = pygame.image.load(r"{}/Images/Game/winner_plate.png".format(dirPath))
+                    plate = pygame.transform.scale(plate, [int(size_w/3),int(size_h/5)])
+                    storedCords.append(plate)
+                strs = [
+                    "Congratulations on finishing course!",
+                    "I'm very proud of you and my will is",
+                    "you to take this, it was a pleasure"
+                ]
+                course.dialogTop(6.41,strs[0],strs[1],strs[2])
+
+                screen.blit(storedCords[0],[size_w/2.7,size_h/2.37])
+
+                finishBtn = course.centeredBtn(1.27,dark_green,"Finish")
+
+                if finishBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.27,green,"Finish")
+                    course.centeredBtn(1.27,dark_green,"",border=size_w//250)
+                    if clicked:
+                        if getCourseLvl() < 10:
+                            changeCourselvl(10)
+                        activeMenu = True
+                        courseLvl = 1
+                        bckgrMusicPlayed = False
+                        done = False
+                        storedCords.clear()
 class LookFor(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
@@ -10369,6 +10573,9 @@ class Settings(pygame.sprite.Sprite):
                             SR_cords.clear()
                             storedCords.clear()
                             storedItems.clear()
+                            iconsLocked.clear()
+                            iconsUnlock.clear()
+                            specialIcon.clear()
                             hp1 = size_w/2.66
                             hp2 = size_w/6
                             course.tower_defence.reset()
@@ -10639,11 +10846,18 @@ class Prize(pygame.sprite.Sprite):
                 pygame.draw.rect(screen, dark_brown, [size_w/4.11,size_h/16,size_w/1.7,size_h/1.1],0,0)
                 pygame.draw.rect(screen, lt_brown, [size_w/3.03,size_h/16,size_w/2.44,size_h/1.1],0,0)
             
-            if language == "ENG":
-                Write(round(size_w//100*2.5),f"Checking your collection {getName()}?",color3,[size_w/1.8,size_h/8.83])
+            if getCourseLvl()<10:
+                if language == "ENG":
+                    Write(round(size_w//100*2.5),f"Checking your collection {getName()}?",color3,[size_w/1.8,size_h/8.83])
+                else:
+                    Write(round(size_w//100*2.5),f"Jak tam twoja kolekcja {getName()}?",color3,[size_w/1.8,size_h/8.83])
             else:
-                Write(round(size_w//100*2.5),f"Jak tam twoja kolekcja {getName()}?",color3,[size_w/1.8,size_h/8.83])
-            
+                if len(specialIcon)<1:
+                    plate = pygame.image.load(r"{}/Images/Game/winner_plate.png".format(dirPath))
+                    plate = pygame.transform.scale(plate, [int(size_w/3),int(size_h/5)])
+                    specialIcon.append(plate)
+                screen.blit(specialIcon[0],[size_w/2.75,size_h/11.13])
+
             try:
                 table = pygame.image.load(r"{}/Images/Game/table.png".format(dirPath))
                 table = pygame.transform.scale(table, [int(size_w/1.7),int(size_h/4)])
