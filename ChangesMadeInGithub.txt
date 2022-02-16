@@ -3,14 +3,7 @@
 [TODO-GENERAL] Epilepsy Warning
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 [FIXES TODO-Lesson8] bad image quality at scaling SF_icons[5] in making your way
+[LESSON6, LVL2] Definition of while loop, where definition of for loop should be
 
-[Lesson 9] 
-
--✓open()
--✓read()
--✓read() but only parts
--✓readline()
--✓iterating through object made with open()
--✓write()
--✓create file with open(path,x)
--✓close()
+[metadata/definitions.txt] - will be used in look for section
+lesson8 and lesson9 definitions to add
