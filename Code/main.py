@@ -249,6 +249,9 @@ myst_holder = []
 iconsUnlock = []
 iconsLocked = []
 specialIcon = []
+
+#LOOK FOR
+LF_holder = []
 class Write(pygame.sprite.Sprite):
     def __init__(self,size,text,color,center):
         pygame.sprite.Sprite.__init__(self)
@@ -10363,8 +10366,18 @@ class Course(pygame.sprite.Sprite):
                         done = False
                         storedCords.clear()
 class LookFor(pygame.sprite.Sprite):
+    def getDefs():
+        deciphered = []
+        nameFile = open(r"{}/metaData/definitions.txt".format(dirPath),"r")
+        readFile = nameFile.read()
+        readFile=readFile.splitlines()
+        nameFile.close() 
+        for line in readFile:
+            name = decipher(line)
+            deciphered.append(name)
+        return deciphered
     def startScreen():
-        global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching
+        global activeAny,inputBox,searchBox,activeWriting,lookForPhrase,clearBtn,searching,LF_holder
         if activities[1]:
             if pygame.event.get_blocked(MOUSEMOTION):
                 pygame.event.set_allowed(MOUSEMOTION)
@@ -10392,13 +10405,33 @@ class LookFor(pygame.sprite.Sprite):
                         inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Enter text here...",color2,[size_w/1.9,size_h/3.2])
                     else:
                         inputBoxTxt = WriteItalic(round(size_w//100*3.5),"Wpisz tekst tutaj...",color2,[size_w/1.9,size_h/3.2])
+                    LF_holder.clear()
                 else:
                     inputBoxTxt = Write(round(size_w//100*3),lookForPhrase,color3,[size_w/1.9,size_h/3.2])
-            if searching and len(lookForPhrase)>0:
-                if language == "ENG":
-                    WriteItalic(round(size_w//100*5),"None results found",color3,[size_w/1.9,size_h/1.6])
+            
+            if searching and len(lookForPhrase)>0: #GETTING RESULT
+                if len(LF_holder)<1:
+                    if language == "ENG":
+                        WriteItalic(round(size_w//100*5),"None results found",color3,[size_w/1.9,size_h/1.6])
+                    else:
+                        WriteItalic(round(size_w//100*5),"Nie znaleziono wyników",color3,[size_w/1.9,size_h/1.6])
                 else:
-                    WriteItalic(round(size_w//100*5),"Nie znaleziono wyników",color3,[size_w/1.9,size_h/1.6])
+                    pygame.draw.rect(screen, color1, [size_w/4.15,size_h/2.44,size_w/1.7,size_h/2], 0, size_w//200)
+                    pygame.draw.rect(screen, dark_gray, [size_w/4.15,size_h/2.44,size_w/1.7,size_h/2], size_w//250, size_w//200)
+                    if len(LF_holder[1])>53:
+                        if LF_holder[1].count(";")<1:
+                            LF_holder[1] = LF_holder[1][:53]+";"+LF_holder[1][53:]
+                        if len(LF_holder[1])>106:
+                            if LF_holder[1].count(";")<2:
+                                LF_holder[1] = LF_holder[1][:106]+";"+LF_holder[1][106:]
+
+                        hght = size_h/1.9
+                        for desc in LF_holder[1].split(";"):
+                            Write(round(size_w//100*1.8),desc,color3,[size_w/1.85,hght])
+                            hght += size_h/10
+                    else:
+                        Write(round(size_w//100*1.8),LF_holder[1],color3,[size_w/1.85,size_h/2.06])
+            
             if event.type == MOUSEBUTTONDOWN and activities[1]:
                 if activities[1]:   
                     inputBox = pygame.draw.rect(screen, color1, [size_w/3.1,size_h/4,size_w/2.5,size_h/8],0,10)
@@ -10429,13 +10462,28 @@ class LookFor(pygame.sprite.Sprite):
                             if clearBtn.collidepoint(mouse_pos):
                                 lookForPhrase = ""
                                 searching = False
+                                LF_holder.clear()
                             else:
                                 pygame.draw.rect(screen, dark_red, [size_w/4.28,size_h/4,size_w/15,size_h/8],0,10)
                                 Write(round(size_w//100*4),"X",color1,[size_w/3.75,size_h/3.13])                        
                     except:
                         pass
-                    if searchBox.collidepoint(mouse_pos) and len(lookForPhrase)>0:
+                    if searchBox.collidepoint(mouse_pos):
+                        LF_holder.clear()
                         searching = True
+                        activeWriting = False
+                        phrases = LookFor.getDefs()
+                        for phrase in phrases:
+                            if phrase.split(" - ")[0].lower()==lookForPhrase.lower():
+                                LF_holder.append(phrase.split(" - ")[0])
+                                LF_holder.append(phrase.split(" - ")[1])
+
+                        if LF_holder==[]:
+                            for phrase in phrases:
+                                if lookForPhrase.lower() in phrase.split(" - ")[0].lower():
+                                    LF_holder.append("")
+                                    LF_holder.append(f'Did you meant {phrase.split(" - ")[0]}?')  
+
             if event.type == MOUSEMOTION and activities[1]:
                 if searchBox.collidepoint(mouse_pos):
                     searchBox = pygame.draw.rect(screen, color1, [size_w/1.35,size_h/4,size_w/12,size_h/8],0,10)
@@ -10456,8 +10504,20 @@ class LookFor(pygame.sprite.Sprite):
                 elif event.key == pygame.K_ESCAPE:
                     activeWriting = False
                 elif event.key == pygame.K_RETURN:
+                    LF_holder.clear()
                     searching = True
                     activeWriting = False
+                    phrases = LookFor.getDefs()
+                    for phrase in phrases:
+                        if phrase.split(" - ")[0].lower()==lookForPhrase.lower():
+                            LF_holder.append(phrase.split(" - ")[0])
+                            LF_holder.append(phrase.split(" - ")[1])
+
+                    if LF_holder==[]:
+                        for phrase in phrases:
+                            if lookForPhrase.lower() in phrase.split(" - ")[0].lower():
+                                LF_holder.append("")
+                                LF_holder.append(f'Did you meant {phrase.split(" - ")[0]}?')
                 elif event.key!=K_BACKSPACE and keys[K_LSHIFT] or keys[K_RSHIFT]:
                     if event.key==K_9:
                         lookForPhrase += "("
@@ -10492,7 +10552,10 @@ class LookFor(pygame.sprite.Sprite):
                     elif event.key == K_MINUS:
                         lookForPhrase += "_"
                     else:
-                        lookForPhrase += chr(event.key)
+                        try:
+                            lookForPhrase += chr(event.key)
+                        except:
+                            pass
                 elif event.key!=K_BACKSPACE and keys[K_LSHIFT] or keys[K_RSHIFT]:
                     if event.key == K_z:
                         lookForPhrase += "ż"
