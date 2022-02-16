@@ -5,5 +5,4 @@
 [FIXES TODO-Lesson8] bad image quality at scaling SF_icons[5] in making your way
 [LESSON6, LVL2] Definition of while loop, where definition of for loop should be
 
-[metadata/definitions.txt] - will be used in look for section
-lesson8 and lesson9 definitions to add
+[TODO] CONTACTS OPTION AND HOME BUTTON IN SETTINGS
