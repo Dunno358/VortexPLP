@@ -1,5 +1,4 @@
 [todo-DUNGEON] entering settings while on Tower Defense Lvls need to adjust allowing events(KEYDOWN) to queue
-[todo-PRIZE/SETTINGS] name can be too long to fit at Prize and Settings
 [TODO-GENERAL] Epilepsy Warning
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
 [FIXES TODO-Lesson8] bad image quality at scaling SF_icons[5] in making your way
