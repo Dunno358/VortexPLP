@@ -119,6 +119,8 @@ eventsBlocked = False
 searching = False
 selectingDisplay = False
 exiting = False
+copied = False
+epWarnShowed = True
 
 #LEVELS
 courseLvl = 1
@@ -493,6 +495,9 @@ def errorHandling():
                 activeMain = True
                 errorShowed = False
                 start.welcomeScreen()
+def addToClipBoard(text):
+    command = 'echo ' + text.strip() + '| clip'
+    os.system(command)
 
 class Start(pygame.sprite.Sprite):
     global language
@@ -606,83 +611,117 @@ class Start(pygame.sprite.Sprite):
                         activities[actIndex] = False
                     activities[index] = True
     def setNameScreen():
-        global name,readFile
+        global name,readFile,epWarnShowed
         nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"r")
         readFile = nameFile.read()
         nameFile.close()
         if len(readFile) < 1:
-            if language == "ENG":
-                strs = [
-                    "Hi, how do you want me to call you?",
-                    "Skip",
-                    "Confirm",
-                    "Note: if you skip this part name of your account will be used"
-                ]
+            if not epWarnShowed:
+                if language == "ENG":
+                    strs = [
+                        "Hi, how do you want me to call you?",
+                        "Skip",
+                        "Confirm",
+                        "Note: if you skip this part name of your account will be used"
+                    ]
+                else:
+                    strs = [
+                        "Cześć, jak mam się do ciebie zwracać?",
+                        "Pomiń",
+                        "Potwierdź",
+                        "Notka: jeśli pominiesz tą część nazwa twojego konta będzie użyta"
+                    ]
+                pygame.draw.rect(screen, color1, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
+                Write(size_w//100*3,strs[0],color3,[size_w/1.8,size_h/3.5])
+
+                inputBox = pygame.draw.rect(screen, color2, [size_w/3,size_h/2.5,size_w/2.5,size_h/4],0,10)
+
+                skipBtn = pygame.draw.rect(screen, dark_red, [size_w/2.8,size_h/1.5,size_w/6,size_h/8],0,10)
+                skipBtnTxt = Write(size_w//100*2,strs[1],color3,[size_w/2.28,size_h/1.37])
+
+                confirmBtn = pygame.draw.rect(screen, dark_green, [size_w/1.85,size_h/1.5,size_w/6,size_h/8],0,10)
+                confirmBtnTxt = Write(size_w//100*2,strs[2],color3,[size_w/1.60,size_h/1.37])
+
+                Write(size_w//100,strs[3],color3,[size_w/1.9,size_h/1.1])
+
+
+                pygame.draw.rect(screen, color2, [size_w/3,size_h/2.5,size_w/2.5,size_h/4],0,10)
+                
+                Write(size_w//100*2,name+"|",color3,[size_w/1.9,size_h/1.9])
+
+                if event.type == MOUSEMOTION:
+                    if skipBtn.collidepoint(mouse_pos):
+                        skipBtn = pygame.draw.rect(screen, red, [size_w/2.8,size_h/1.5,size_w/6,size_h/8],0,10)
+                        skipBtnTxt = Write(size_w//100*2,strs[1],color3,[size_w/2.28,size_h/1.37])
+                    else:
+                        skipBtn = pygame.draw.rect(screen, dark_red, [size_w/2.8,size_h/1.5,size_w/6,size_h/8],0,10)
+                        skipBtnTxt = Write(size_w//100*2,strs[1],color3,[size_w/2.28,size_h/1.37])
+                    if confirmBtn.collidepoint(mouse_pos):
+                        confirmBtn = pygame.draw.rect(screen, green, [size_w/1.85,size_h/1.5,size_w/6,size_h/8],0,10)
+                        confirmBtnTxt = Write(size_w//100*2,strs[2],color3,[size_w/1.60,size_h/1.37])      
+                    else:
+                        confirmBtn = pygame.draw.rect(screen, dark_green, [size_w/1.85,size_h/1.5,size_w/6,size_h/8],0,10)
+                        confirmBtnTxt = Write(size_w//100*2,strs[2],color3,[size_w/1.60,size_h/1.37])  
+                elif event.type == MOUSEBUTTONDOWN:
+                    if skipBtn.collidepoint(mouse_pos) and event.button == 1:
+                        nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"w")
+                        writeToFile = nameFile.write(cipher(str(os.getlogin())))
+                        nameFile.close() 
+                        start.useScreenDef() 
+                    elif confirmBtn.collidepoint(mouse_pos) and event.button==1:
+                        nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"w")
+                        writeToFile = nameFile.write(cipher(name.capitalize()))
+                        nameFile.close() 
+                        start.useScreenDef() 
+                elif event.type == KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        try:
+                            name=name[:-1]                      
+                        except:
+                            pass
+                    elif event.key == K_RETURN:
+                        nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"w")
+                        writeToFile = nameFile.write(cipher(name.capitalize()))
+                        nameFile.close() 
+                        start.useScreenDef()                     
+                    elif len(name) < 14 and event.key!=K_BACKSPACE:
+                        try:
+                            name += chr(event.key)
+                        except:
+                            pass
             else:
+                pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
                 strs = [
-                    "Cześć, jak mam się do ciebie zwracać?",
-                    "Pomiń",
-                    "Potwierdź",
-                    "Notka: jeśli pominiesz tą część nazwa twojego konta będzie użyta"
+                    "A very small percentage of individuals may experience epileptic seizures",
+                    "when exposed to certain light patterns or flashing lights. Exposure to",
+                    "certain patterns or backgrounds on a computer screen, or while playing",
+                    "video games, may induce an epileptic seizure in these ndividuals. Certain",
+                    "conditions may induce previously undetected epileptic symptoms even in",
+                    "persons who have no history of prior seizures or epilepsy. If you, or anyone",
+                    "in your family, have an epileptic condition, consult your physician prior to",
+                    "playing. If you experience any of the following symptoms while playing a",
+                    "video or computer game - dizziness, altered vision, eye or muscle twitches,",
+                    "loss of awareness, disorientation, any involuntary movement, or convulsions -",
+                    "IMMEDIATELY discontinue use and consult your physician before resuming play.",
                 ]
-            pygame.draw.rect(screen, color1, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
-            Write(size_w//100*3,strs[0],color3,[size_w/1.8,size_h/3.5])
 
-            inputBox = pygame.draw.rect(screen, color2, [size_w/3,size_h/2.5,size_w/2.5,size_h/4],0,10)
+                Write(round(size_w//100*3),"Epilepsy warning",purple,[size_w/1.9,size_h/7.68])
+                WriteItalic(round(size_w//100*2),"Read before playing!",color3,[size_w/1.9,size_h/4.47])
 
-            skipBtn = pygame.draw.rect(screen, dark_red, [size_w/2.8,size_h/1.5,size_w/6,size_h/8],0,10)
-            skipBtnTxt = Write(size_w//100*2,strs[1],color3,[size_w/2.28,size_h/1.37])
+                pygame.draw.rect(screen, color1, [size_w/3.6,size_h/3.71,size_w/2,size_h/1.7], 0,size_w//150)
+                
+                hght = size_h/3.25
+                for string in strs:
+                    WriteItalic(round(size_w//100*1.3),string,color3,[size_w/1.9,hght])
+                    hght += size_h/20
 
-            confirmBtn = pygame.draw.rect(screen, dark_green, [size_w/1.85,size_h/1.5,size_w/6,size_h/8],0,10)
-            confirmBtnTxt = Write(size_w//100*2,strs[2],color3,[size_w/1.60,size_h/1.37])
+                okBtn = course.centeredBtn(1.16,dark_green,"OK")
 
-            Write(size_w//100,strs[3],color3,[size_w/1.9,size_h/1.1])
-
-
-            pygame.draw.rect(screen, color2, [size_w/3,size_h/2.5,size_w/2.5,size_h/4],0,10)
-            
-            Write(size_w//100*2,name+"|",color3,[size_w/1.9,size_h/1.9])
-
-            if event.type == MOUSEMOTION:
-                if skipBtn.collidepoint(mouse_pos):
-                    skipBtn = pygame.draw.rect(screen, red, [size_w/2.8,size_h/1.5,size_w/6,size_h/8],0,10)
-                    skipBtnTxt = Write(size_w//100*2,strs[1],color3,[size_w/2.28,size_h/1.37])
-                else:
-                    skipBtn = pygame.draw.rect(screen, dark_red, [size_w/2.8,size_h/1.5,size_w/6,size_h/8],0,10)
-                    skipBtnTxt = Write(size_w//100*2,strs[1],color3,[size_w/2.28,size_h/1.37])
-                if confirmBtn.collidepoint(mouse_pos):
-                    confirmBtn = pygame.draw.rect(screen, green, [size_w/1.85,size_h/1.5,size_w/6,size_h/8],0,10)
-                    confirmBtnTxt = Write(size_w//100*2,strs[2],color3,[size_w/1.60,size_h/1.37])      
-                else:
-                    confirmBtn = pygame.draw.rect(screen, dark_green, [size_w/1.85,size_h/1.5,size_w/6,size_h/8],0,10)
-                    confirmBtnTxt = Write(size_w//100*2,strs[2],color3,[size_w/1.60,size_h/1.37])  
-            elif event.type == MOUSEBUTTONDOWN:
-                if skipBtn.collidepoint(mouse_pos) and event.button == 1:
-                    nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"w")
-                    writeToFile = nameFile.write(cipher(str(os.getlogin())))
-                    nameFile.close() 
-                    start.useScreenDef() 
-                elif confirmBtn.collidepoint(mouse_pos) and event.button==1:
-                    nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"w")
-                    writeToFile = nameFile.write(cipher(name.capitalize()))
-                    nameFile.close() 
-                    start.useScreenDef() 
-            elif event.type == KEYDOWN:
-                if event.key == pygame.K_BACKSPACE:
-                    try:
-                        name=name[:-1]                      
-                    except:
-                        pass
-                elif event.key == K_RETURN:
-                    nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"w")
-                    writeToFile = nameFile.write(cipher(name.capitalize()))
-                    nameFile.close() 
-                    start.useScreenDef()                     
-                elif len(name) < 14 and event.key!=K_BACKSPACE:
-                    try:
-                        name += chr(event.key)
-                    except:
-                        pass
+                if okBtn.collidepoint(mouse_pos):
+                    course.centeredBtn(1.16,green,"OK")
+                    course.centeredBtn(1.16,dark_green,"",border=size_w//250)
+                    if clicked:
+                        epWarnShowed = False
     def welcomeScreen():
         global activeAny,guideMode
         if len(getName()) > 0 and not activeAny:
@@ -10576,7 +10615,7 @@ class Settings(pygame.sprite.Sprite):
                 pygame.event.set_allowed(MOUSEMOTION)
             bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
             if language == "ENG":
-                Write(size_w//100*2,"Want to change anything {}?".format(getName()),color3,[size_w/1.8,size_h/8])
+                Write(size_w//100*2,"Want to change anything?",color3,[size_w/1.8,size_h/8])
             else:
                 Write(size_w//100*2,"Chcesz coś zmienić {}?".format(getName()),color3,[size_w/1.8,size_h/8])
             isCorrectActivity()                   
@@ -11036,12 +11075,45 @@ class Prize(pygame.sprite.Sprite):
             isCorrectActivity()
 class Contacts(pygame.sprite.Sprite):
     def startScreen():
-        global activeAny
+        global activeAny,copied,storedTimeValue
         if activities[4]:
             if pygame.event.get_blocked(MOUSEMOTION):
                 pygame.event.set_allowed(MOUSEMOTION)
             bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
-            Write(size_w//100*3,"CONTACTS OPTION",color3,[size_w/1.8,size_h/5])
+
+            pygame.draw.rect(screen, dark_gray, [size_w/4.26,size_h/4.54,size_w/1.65,size_h/5], 0, size_w//100)
+            WriteItalic(round(size_w//100*2.3),f"Hello {getName()}!",color3,[size_w/1.84,size_h/7.76])
+            pygame.draw.line(screen, color3, [size_w/2.17,size_h/6.3], [size_w/1.61,size_h/6.3], size_w//400)
+            pygame.draw.line(screen, color3, [size_w/2.16,size_h/5.75], [size_w/1.6,size_h/5.75], size_w//400)
+            
+            Write(round(size_w//100*3.2),f"Do you want to report a bug?",red,[size_w/1.84,size_h/3.76])
+            Write(round(size_w//100*1.8),f"or maybe propose something you would like to see?",color3,[size_w/1.84,size_h/2.8])
+            
+            Write(round(size_w//100*2.5),"Use this address to send an e-mail",color3,[size_w/1.84,size_h/1.65])
+            Write(round(size_w//100*2.5),"\/",color3,[size_w/1.84,size_h/1.51])
+            mailTxt = Write(round(size_w//100*2.85),"vortexplp@gmail.com",purple,[size_w/1.84,size_h/1.34])
+            mailTxt = mailTxt.get_rect()
+            copyBtn = course.centeredBtn(1.23,dark_green,"Copy")
+
+            if copied:
+                WriteItalic(round(size_w//100*3),"*Copied Successfully!*",green,[size_w/1.84,size_h/1.99])
+                if round(float(time.process_time()),1)-storedTimeValue > 2:
+                    copied = False
+
+            if mailTxt.collidepoint(mouse_pos):
+                Write(round(size_w//100*2.85),"vortexplp@gmail.com",lt_blue,[size_w/1.84,size_h/1.34])
+                if clicked:
+                    addToClipBoard("vortexplp@gmail.com")
+                    copied = True
+                    storedTimeValue = round(float(time.process_time()),1)
+            elif copyBtn.collidepoint(mouse_pos):
+                course.centeredBtn(1.23,green,"Copy")
+                course.centeredBtn(1.23,dark_green,"",border=size_w//250)
+                if clicked:
+                   addToClipBoard("vortexplp@gmail.com") 
+                   copied = True
+                   storedTimeValue = round(float(time.process_time()),1)
+            
             isCorrectActivity()
 class Music():
     def init():
