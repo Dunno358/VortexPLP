@@ -10766,6 +10766,19 @@ class Settings(pygame.sprite.Sprite):
                     else:
                         activeMain = False
                         confirmed = False
+    def home():
+        global activeAny,activities
+        if activities[2]:
+            homeRect = pygame.draw.rect(screen, color1, [size_w/1.58,size_h/1.3,size_w/6,size_h/7], size_w//270,5)
+            Write(round(size_w//100*3.5),"Home",color1,[size_w/1.4,size_h/1.18])
+
+            if homeRect.collidepoint(mouse_pos):
+                Write(round(size_w//100*3.5),"Home",color3,[size_w/1.4,size_h/1.18])
+
+                if clicked:
+                    activities[2] = False
+                    activeAny = False
+                    start.welcomeScreen()
     def language():
         if activities[2]:
             plBtn = pygame.draw.rect(screen, color2, [size_w/4.63,size_h/11.29,size_w/20,size_h/12], 0,20)
@@ -11116,6 +11129,7 @@ while running:
             settings.resizing()
             settings.resetName()
             settings.isAdmin()
+            settings.home()
             settings.language()
             #settings.displayStyle()
             settings.isSoundEnabled()
