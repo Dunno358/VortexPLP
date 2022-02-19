@@ -1008,6 +1008,14 @@ class Start(pygame.sprite.Sprite):
                     for txt in desc:
                         Write(round(size_w//100*1.3),txt,color3,[size_w/1.87,hght])
                         hght += size_h/20
+    def outOfLoopHandling():
+        start.finishBar()
+        start.courseLvlBar()
+        start.guide()        
+    def inLoopHandling():
+        start.sideBarEvents()
+        start.setNameScreen()
+        start.welcomeScreen()        
     class adminTools(pygame.sprite.Sprite):
         global admin
         def iterators():
@@ -1165,6 +1173,10 @@ class Start(pygame.sprite.Sprite):
                     Write(round(size_w//100*1.3),adminText,color3,[size_w/1.07,size_h/3.19])
                 else:
                     Write(round(size_w//100*1.3),courseLvl,lter_blue,[size_w/1.07,size_h/3.19])
+        def handlingEvents():
+            start.adminTools.changingCourseLvl()
+            start.adminTools.iterators()
+            start.adminTools.changingLvl()            
 class Course(pygame.sprite.Sprite):
     global actualLesson
     actualLesson = str(activeLesson)[17:-23]
@@ -1680,7 +1692,6 @@ class Course(pygame.sprite.Sprite):
                 global TD_enemy,TD_enemy2,TD_guardSubRects,TD_circs,TD_guardRects,TD_active,TD_done,TD_eventRects
                 global iterator,TD_hp,TD_hp2,TD_round,TD_consoleTxts,TD_friends,TD_enemies,TD_actualEnemy2,TD_actualEnemy
                 global TD_added,TD_added2,TD_toDefeat,TD_unitsPassed,TD_friendsLvl,TD_iterator2,TD_lvlType
-                print(TD_hp,(size_w/19)/3)
                 if not TD_done:
                     if TD_lvlType == "mixed":
                         TD_iterator2 = (size_w/19)/25
@@ -2153,6 +2164,10 @@ class Course(pygame.sprite.Sprite):
                     iterator += 2 #9
                 #if not TD_btnClicked:
                 #    course.dialogTop(6.41,"Click anywhere when you're ready","to start final wave",bckgr=False)
+        def outOfLoopHandling():
+            course.tower_defence.enemiesPath(storedTime)
+            course.tower_defence.targeting()
+            course.tower_defence.handlingFinalLvl()            
     class shooting_range():
         class quiz():
             def start(questionsList,allAnswersList,correctAnswersIndexes):
@@ -2590,6 +2605,13 @@ class Course(pygame.sprite.Sprite):
                                     wdth += size_w/35
                             wdth = size_w/2.18
                             hght += size_h/25               
+        def handlingEvents():
+            course.shooting_range.loopExample()
+            course.shooting_range.continueTimer()
+            course.shooting_range.drawingCircles()
+            course.shooting_range.rangeOfRects()
+            course.shooting_range.counting()
+            course.shooting_range.doubleForRectDraw()            
     class scifi():
         def shooting_ships(indexOfShip,text):
             if True:
@@ -3158,6 +3180,9 @@ class Course(pygame.sprite.Sprite):
                     if clicked:
                         SF_iterator=0
                         SF_points=0
+        def handlingOutOfLoopEvents():
+            course.scifi.usingLamps()
+            course.scifi.countDown(3,[size_w/1.89,size_h/1.61],green,5)
     def lessons():
         course.lesson1()
         course.lesson2()
@@ -5520,6 +5545,9 @@ class Course(pygame.sprite.Sprite):
                     course.standardLessonEvents("lesson4",19,condition=notBlocked,standard=False,customCol=TD_darkGreen) 
                 else:
                     course.standardLessonEvents("lesson4",19,condition=notBlocked) 
+            if courseLvl in range(9,18):
+                if not pygame.event.get_blocked(KEYDOWN):
+                    pygame.event.set_blocked(KEYDOWN)
             if courseLvl == 1:
                 if language == "ENG":
                     txts = [
@@ -10617,6 +10645,8 @@ class Settings(pygame.sprite.Sprite):
             language = getLang()
             if pygame.event.get_blocked(MOUSEMOTION):
                 pygame.event.set_allowed(MOUSEMOTION)
+            if pygame.event.get_blocked(KEYDOWN):
+                pygame.event.set_allowed(KEYDOWN)
             bckgr = pygame.draw.rect(screen, color2, [size_w/5,size_h/16,size_w/1.5,size_h/1.1],0,10)
             if language == "ENG":
                 Write(size_w//100*2,"Want to change anything?",color3,[size_w/1.8,size_h/8])
@@ -10948,6 +10978,15 @@ class Settings(pygame.sprite.Sprite):
                             print(f"start {dirPath}/Code/dist/main/main.exe") 
                 except:
                     pass       
+    def handlingEvents():
+        settings.theme()
+        settings.resizing()
+        settings.resetName()
+        settings.isAdmin()
+        settings.home()
+        #settings.language() - currently under development
+        #settings.displayStyle() - currently under development
+        #settings.isSoundEnabled() - currently under development
 class Prize(pygame.sprite.Sprite):
     def startScreen():
         global activeAny,name
@@ -11163,7 +11202,11 @@ class Music():
         else:
             fantasyChannel.stop()
             magicChannel.stop()
-
+def startScreens():
+    course.startScreen()
+    lookFor.startScreen()
+    settings.startScreen()
+    contacts.startScreen()
 
 running = True
 start=Start
@@ -11189,44 +11232,20 @@ while running:
     for event in pygame.event.get():
         clicked = event.type == MOUSEBUTTONDOWN and event.button == 1
         errorHandling()
-        start.sideBarEvents()
-        start.setNameScreen()
-        start.welcomeScreen()
-        start.adminTools.changingCourseLvl()
-        start.adminTools.iterators()
-        start.adminTools.changingLvl()
+        start.inLoopHandling()
+        start.adminTools.handlingEvents()
         if len(getName()) > 0:
-            course.startScreen()
-            lookFor.startScreen()
-            settings.startScreen()
-            contacts.startScreen()
+            startScreens()
             course.lessons()
-            settings.theme()
-            settings.resizing()
-            settings.resetName()
-            settings.isAdmin()
-            settings.home()
-            settings.language()
-            #settings.displayStyle()
-            settings.isSoundEnabled()
+            settings.handlingEvents()
             prize.startScreen()
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
     #EVENTS THAT NEED TO BE REFRESHED FASTER THAN EVENT LOOP
-    course.tower_defence.enemiesPath(storedTime)
-    course.tower_defence.targeting()
-    course.tower_defence.handlingFinalLvl()
-    course.shooting_range.loopExample()
-    course.shooting_range.continueTimer()
-    course.shooting_range.drawingCircles()
-    course.shooting_range.rangeOfRects()
-    course.shooting_range.counting()
-    course.shooting_range.doubleForRectDraw()
-    course.scifi.usingLamps()
-    course.scifi.countDown(3,[size_w/1.89,size_h/1.61],green,5)
-    start.finishBar()
-    start.courseLvlBar()
-    start.guide()
+    course.tower_defence.outOfLoopHandling()
+    course.shooting_range.handlingEvents()
+    course.scifi.handlingOutOfLoopEvents()
+    start.outOfLoopHandling()
     if pygame.display.get_init():
         pygame.display.update()
