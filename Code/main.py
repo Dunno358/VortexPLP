@@ -2986,6 +2986,9 @@ class Course(pygame.sprite.Sprite):
                 map3=pygame.image.load(f"{dirPath}/Images/Game/sf/map3.jpg")
                 map3 = pygame.transform.scale(map3, [int(size_w/1.5),int(size_h/1.1)])
                 SF_icons.append(map3) #15
+                def_soldier_sit2 = pygame.image.load(f"{dirPath}/Images/Game/sf/enemy_defeated.png")
+                def_soldier_sit2 = pygame.transform.scale(def_soldier_sit2, [int(size_w/9),int(size_h/5.2)])
+                SF_icons.append(def_soldier_sit2) #16
         def armoryConsole(questions,answers,goodAnswers,questFontSize=2,answFontSize=1.8,events=True,questColor=dark_blue,onlyGoodAnsws=False,customTxt="",customBtn=""):
             global SF_cords,SF_iterator,SF_points,courseLvl
             if not isinstance(SF_iterator,int):
@@ -7033,10 +7036,11 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 2:
                 course.dialogTop(6.41,"Let's get some theory at first")
                 strs = [
-                    "while loop is a control flow statement for",
-                    "specifying iteration which allows code to be", 
-                    "be executed repeatedly"
-                ] 
+                    "For loop is a control flow statement that is",
+                    "used to repeatedly execute a group of statements",
+                    "as long as the condition is satisfied."
+                ]
+
                 course.definition(strs)
             elif courseLvl == 3:
                 notBlocked = False
@@ -9269,8 +9273,8 @@ class Course(pygame.sprite.Sprite):
                     enemy2 = screen.blit(SF_icons[2],[size_w/1.68,size_h/2.88])
                 else:
                     enemy2 = pygame.draw.rect(screen, color1, [1,1,1,1], 0)
-                    def_soldier_sit = pygame.transform.scale(SF_icons[4], [int(size_w/9),int(size_h/5.2)])
-                    screen.blit(def_soldier_sit,[size_w/1.68,size_h/2.31]) #very bad quality, fix needed
+                    #def_soldier_sit = pygame.transform.scale(SF_icons[4], [int(size_w/9),int(size_h/5.2)])
+                    screen.blit(SF_icons[16],[size_w/1.68,size_h/2.31]) #very bad quality, fix needed
                     if 2 not in defeatedEnemies:
                         defeatedEnemies.append(2)
 
@@ -9903,7 +9907,7 @@ class Course(pygame.sprite.Sprite):
                         courseLvl = 1
                         bckgrMusicPlayed = False
                         done = False
-    def lesson9(): #todo, 8 done
+    def lesson9():
         global mentorIcon,activeMain,held,courseLvl,notBlocked,iterator,activeMenu,done
         global bckgrMusicPlayed,errorShowed,storedItems,storedCords,chosen,selected,storedTime,storedTimeValue
         global myst_holder
