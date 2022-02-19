@@ -1,6 +1,2 @@
 [todo-DUNGEON] entering settings while on Tower Defense Lvls need to adjust allowing events(KEYDOWN) to queue
 [IDEA] Make funcktion that triggers all fucntions(shooting range, tower defense etc) out of event loop at main loop | less code space used in main loop
-[FIXES TODO-Lesson8] bad image quality at scaling SF_icons[5] in making your way
-[LESSON6, LVL2] Definition of while loop, where definition of for loop should be
-
-[TODO] CONTACTS OPTION AND HOME BUTTON IN SETTINGS
