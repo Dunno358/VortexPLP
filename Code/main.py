@@ -98,8 +98,7 @@ clock = pygame.time.Clock()
 #ADMIN
 adminWriting = False
 adminText = ""
-#admin = False
-admin = True
+admin = False
 
 #GUIDE
 guideMode = False
@@ -283,6 +282,17 @@ def isCorrectActivity():
     if it > 1:
         print("SideBarEctivities:::::STATUS_ERROR:\nExpected: 1\nGet: {}".format(it))
 def getName():
+    clearNeeded = False
+    nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"r")
+    readFile = nameFile.read()
+    if readFile.startswith(chr(10)):
+        clearNeeded = True
+    nameFile.close()
+
+    if clearNeeded:
+        nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"w")
+        nameFile.close()
+
     nameFile = open(r"{}/metaData/userInfo/Name.txt".format(dirPath),"r")
     readFile = nameFile.read()
     nameFile.close() 
@@ -4634,6 +4644,7 @@ class Course(pygame.sprite.Sprite):
                     if showBtn.collidepoint(mouse_pos) and iterator == 1:
                         iterator = 2
                         notBlocked = True
+                        storedItems.clear()
             elif courseLvl == 14:
                 if len(storedItems)<1:
                     dragonMR = pygame.image.load(r"{}/Images/Game/dragonMarkedRed.png".format(dirPath))  
