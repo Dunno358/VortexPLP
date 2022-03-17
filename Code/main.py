@@ -7624,7 +7624,7 @@ class Course(pygame.sprite.Sprite):
                 if SR_holder==0:
                     SR_holder = 1
                 dgtag = screen.blit(SR_icons[0],[size_w/3.16,size_h/3])
-                name = WriteItalic(round(size_w//100*SR_holder),getName(),darker_gray,[size_w/3.16+dgtag.get_width()*0.65,size_h/3+dgtag.get_height()*0.75])
+                name = WriteItalic(round(size_w//100*SR_holder),getName(),darker_gray,[size_w/3.16+dgtag[0]*0.75,size_h/3+dgtag[1]*0.85])
                 nameRect = name.get_rect()
                 if (nameRect[0]+nameRect[2])<size_w/1.66:
                     SR_holder += 2/len(getName())
