@@ -174,6 +174,7 @@ storedCords = []
 
 #Dungeon
 DG_icons = []
+DG_infAccepted = False
 
 #Tower Defense
 TD_circs = []
@@ -570,7 +571,7 @@ class Start(pygame.sprite.Sprite):
             screen.blit(icon,(sideBarRctWStart+size_w/120,it))  #int(size_w/29)
             it+=sideBar_h/5.6        
 
-        Write(size_w//100,"V0.0.0.9",color3,[size_w/1.81,10]) 
+        Write(size_w//100,"V1.0.2",color3,[size_w/1.81,10]) 
         if not blind:
             logoTxt1 = WriteItalic(round(size_w//100*6),"Vortex",logoBlue,[size_w/2,size_h/5.15])
             logoTxt1 = WriteItalic(round(size_w//100*4),"PLP",red,[size_w/1.59,size_h/5.5])
@@ -1201,7 +1202,7 @@ class Course(pygame.sprite.Sprite):
             icoW = icons[0].get_width()
             icoH = icons[0].get_height()
         def singleUnitDraw(hitBoxCords,dialogHght,textListIfNotDialog,dialogText,dialogTop=True,textRect=False):
-            global inFight
+            global inFight, DG_infAccepted
             global endBtn,fightBtn,rects
             rects = []
             cords = hitBoxCords
@@ -1228,7 +1229,17 @@ class Course(pygame.sprite.Sprite):
                 else:
                     Write(size_w//100*2,"Walka",color1,[size_w/1.97,size_h/1.13])
             else:
-                screen.blit(icons[0],[wdth,hght])
+                if DG_infAccepted:
+                    screen.blit(icons[0],[wdth,hght])
+                else:
+                    pygame.draw.rect(screen, color1, [size_w/3.58,size_h/2.74,size_w/2,size_h/3], 0, size_w//200)
+                    Write(round(size_w//100*2),"Attack an enemy by clicking on it",color3,[size_w/1.89,size_h/2.21])
+                    okBtn = course.centeredBtn(1.86,dark_red,"OK")
+                    if okBtn.collidepoint(mouse_pos):
+                        course.centeredBtn(1.86,red,"OK")
+                        course.centeredBtn(1.86,dark_red,"",border=size_w//250)
+                        if clicked:
+                            DG_infAccepted = True
         def singleUnitHp(enemyName):
             global inFight,hp1,hp2
             global activeMain,hpWdth
@@ -1283,25 +1294,25 @@ class Course(pygame.sprite.Sprite):
                         Write(size_w//100*2,"Walka",color3,[size_w/1.97,size_h/1.13]) 
         def singleUnitClickEvent(isBoss):
             global hp1,hp2,courseLvl,soundEnabled
-            global iterator,inFight,notBlocked,chosen,DG_icons
+            global iterator,inFight,notBlocked,chosen,DG_icons, DG_infAccepted
             if event.type == MOUSEBUTTONDOWN:
-                for rect in rects:
-                    if rect.collidepoint(mouse_pos) and inFight and activeMain and not hpBarEmpty:
-                        hp1 -= size_w/70
-                        index = rects.index(rect)
-                        screen.blit(icons[1],[wdth,hght])
-                        course.coursorMarked()
-                        if soundEnabled:
-                            try:
-                                if chosen == 0:
-                                    pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.ogg")
-                                else:
-                                    pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
-                                pygame.mixer.music.play(1)
-                            except:
-                                errorInit("Failed to load sounds: singleUnitClickEvent",fontSize=1.5)
-                        print("CLICK",iterator)
-                        iterator += 1  
+                if DG_infAccepted:
+                    for rect in rects:
+                        if rect.collidepoint(mouse_pos) and inFight and activeMain and not hpBarEmpty:
+                            hp1 -= size_w/70
+                            index = rects.index(rect)
+                            screen.blit(icons[1],[wdth,hght])
+                            course.coursorMarked()
+                            if soundEnabled:
+                                try:
+                                    if chosen == 0:
+                                        pygame.mixer.music.load(f"{dirPath}/Music/monster_hurt.ogg")
+                                    else:
+                                        pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
+                                    pygame.mixer.music.play(1)
+                                except:
+                                    errorInit("Failed to load sounds: singleUnitClickEvent",fontSize=1.5)
+                            iterator += 1  
                 if fightBtn.collidepoint(mouse_pos) and not inFight:
                     inFight = True
                 elif endBtn.collidepoint(mouse_pos) and inFight and hpBarEmpty:
@@ -3060,7 +3071,7 @@ class Course(pygame.sprite.Sprite):
                     if len(customTxt)>0:
                         Write(round(size_w//100*questFontSize),customTxt,dark_blue,[size_w/1.87,size_h/2.92])
                     else:
-                        Write(round(size_w//100*questFontSize),f"Access Granted: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
+                        Write(round(size_w//100*questFontSize),"Access Granted!",dark_blue,[size_w/1.87,size_h/2.92])
                 else:
                     Write(round(size_w//100*questFontSize),f"Access Denied: {perc}%",dark_blue,[size_w/1.87,size_h/2.92])
             
@@ -3579,10 +3590,12 @@ class Course(pygame.sprite.Sprite):
                 index = rects.index(rect)
                 if rect.collidepoint(mouse_pos):
                     storedValue = index
-                    print(storedValue)
             if confirmBtn.collidepoint(mouse_pos):
+                print(storedValue)
                 try:
-                    if storedValue == goodAnswerIndex:
+                    if isinstance(storedValue,str):
+                        pass
+                    elif storedValue == goodAnswerIndex:
                         activeMain = True
                         iterator += 1
                         storedValue = ''
@@ -3593,7 +3606,6 @@ class Course(pygame.sprite.Sprite):
                         hp2 -= size_w/50
                         activeMain = True
                         iterator += 1
-                        print("TEST")
                         storedValue = ''
                         if soundEnabled:
                             pygame.mixer.music.load(f"{dirPath}/Music/ouch.ogg")
@@ -3938,7 +3950,7 @@ class Course(pygame.sprite.Sprite):
                 course.dialogTop(6.41,strs[0],strs[1]) 
                 if event.type == MOUSEBUTTONDOWN:
                     if link.collidepoint(mouse_pos):
-                        os.system(r'https://www.python.org/ftp/python/3.10.1/python-3.10.1-amd64.exe')
+                        os.system(r'start https://www.python.org/ftp/python/3.10.1/python-3.10.1-amd64.exe')
                     elif link2.collidepoint(mouse_pos):
                         os.system(r"start https://www.python.org/downloads/")
                 elif event.type == MOUSEMOTION:
@@ -4419,7 +4431,7 @@ class Course(pygame.sprite.Sprite):
                         if language == "ENG":
                             course.dungeon.singleUnitDraw(cords,0,["Grog smell human, Grog hungry","Grog will eat little human"],"",dialogTop=False,textRect=True)
                             course.dungeon.singleUnitHp("Troll")
-                            questions = ["What numeric type will be result of 15.0-12.0",
+                            questions = ["What type will be result of 15.0-12.0",
                             "What type is [1,2,3]",
                             "{\"one\":\"two\",\"three\":\"four\"} is",
                             "Which one is Set type",
@@ -4475,7 +4487,7 @@ class Course(pygame.sprite.Sprite):
                         if language == "ENG":
                             course.dungeon.singleUnitDraw(cords,0,["I've been looking for you Cursed Knight","Today is your last day"],"",dialogTop=False)
                             course.dungeon.singleUnitHp("Bounty hunter")
-                            questions = ["What numeric type will be result of 3*2.1",
+                            questions = ["What type will be result of 3*2.1",
                             "What type is { 1:2,3:4 }",
                             "(1,1,2,3,3) is",
                             "Which one is Integer type",
@@ -4534,7 +4546,7 @@ class Course(pygame.sprite.Sprite):
                         if language == "ENG":
                             course.dungeon.singleUnitDraw(cords,6.41,[],"That's him! The Cursed Knight!")
                             course.dungeon.singleUnitHp("The Cursed Knight")
-                            questions = ["What numeric type will be result of 3*2.1",
+                            questions = ["What type will be result of 3*2.1",
                             "What type is { 1:2,3:4 }",
                             "(1,1,2,3,3) is",
                             "Which one is Integer type",
@@ -4572,9 +4584,9 @@ class Course(pygame.sprite.Sprite):
                         course.dungeon.singleUnitClickEvent(True)            
             elif courseLvl == 9:
                 if language == "ENG":
-                    course.dialogStandard(2.65,"You did it!","You defeated The Cursed Knight!")
+                    course.dialogStandard(2.55,"You did it!","You defeated The Cursed Knight!")
                 else:
-                    course.dialogStandard(2.65,"Zrobiłeś to!","Pokonałeś Przeklętego Rycerza!")
+                    course.dialogStandard(2.55,"Zrobiłeś to!","Pokonałeś Przeklętego Rycerza!")
             elif courseLvl == 10:
                 if language == "ENG":
                     Write(size_w//100*4,"Not so fast!",color3,[size_w/1.94,size_h/2.45])
@@ -4594,7 +4606,7 @@ class Course(pygame.sprite.Sprite):
                 dragon = pygame.transform.scale(dragon,[int(size_w/2.132),int(size_h/2.4)])
                 screen.blit(dragon,[size_w/3.47,size_h/2.5])
                 if language == "ENG":
-                    course.dialogTop(6.41,"It won't be as easy as earlier","For dragon we have to use","Another tactic")
+                    course.dialogTop(6.41,"It won't be as easy as earlier","For dragon we have to use","another tactic")
                 else:
                     course.dialogTop(6.41,"Nie będzie tak łatwo jak wcześniej","Będziemy musieli użyć","Innej taktyki")
             elif courseLvl == 13:
@@ -4605,7 +4617,7 @@ class Course(pygame.sprite.Sprite):
                         "You will have to write variables",
                         "In rectangle shown below with",
                         "Given values, just by yourself,",
-                        "Lemme show you",
+                        "Let me show you",
                         "Show",
                         "That's a variable named \"damage\"",
                         "With integer type value of 20",
@@ -4907,8 +4919,8 @@ class Course(pygame.sprite.Sprite):
                 if language == "ENG":
                     strs = [
                         "Okay, now you will add second",
-                        "ingredient with extend() function",
-                        "that is used to add list elements to another",
+                        "ingredient with extend() function,",
+                        "it's used to add list elements to another",
                         "list, but as elements not another list",
                         "list1.extend(list2)",
                         "Are you ready?",
@@ -5223,7 +5235,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 19:
                 iterator = 1
                 if language == "ENG":
-                    course.dialogStandard(2.6,"Great job my apprentice, but","it's not over yet, you still","have few things to learn, let's","don't waste no more time")
+                    course.dialogStandard(2.6,"Great job my apprentice, but","it's not over yet, you still","have few things to learn, let's","not waste any more time")
                 else:
                     course.dialogStandard(2.6,"Świetna robota uczniu, ale to","jeszcze nie koniec, wciąż","masz jeszcze pare rzeczy do","nauczenia, nie marnujmy czasu")
             elif courseLvl == 20:
@@ -5303,7 +5315,7 @@ class Course(pygame.sprite.Sprite):
             elif courseLvl == 23:
                 iterator = 1
                 if language == "ENG":
-                    course.dialogStandard(2.6,"Hmm, seems like we got too","many products so you have to","remove one 'cause it can","destroy results of our work,","let me show you how")
+                    course.dialogStandard(2.6,"Hmm, seems like we got too","many products so you have to","remove one because it can","destroy results of our work,","let me show you how")
                 else:
                     course.dialogStandard(2.6,"Hmm wygląda, że mamy za","dużo produktów, więc musisz","usunąć jeden, ponieważ","to może zniszczyć rezultaty","naszej pracy, pokaże Ci")
             elif courseLvl == 24:
@@ -6222,7 +6234,7 @@ class Course(pygame.sprite.Sprite):
                 notBlocked = True
                 course.eventsReset()
                 if language == "ENG":
-                    course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful","and so do I")
+                    course.dialogStandard(2.65,"Great job my apprentice!","People are very grateful","and so am I")
                 else:
                     course.dialogStandard(2.65,"Dobra robota mój uczniu!","Ludzie są ci wdzięczni,","tak jak i ja jestem ci wdzięczny")
             elif courseLvl == 19:
@@ -6576,12 +6588,7 @@ class Course(pygame.sprite.Sprite):
                 ]
                 course.dialogStandard(2.5,strs[0],strs[1],strs[2],strs[3],strs[4],fontSize=1.6)
             elif courseLvl == 10:
-                if selected == 1 and chosen == 0:
-                    course.dialogTop(6.41,"As you see, statement can be","changed whenever you want")
-                elif selected == 0 and chosen == 1:
-                    course.dialogTop(6.41,"With break you're out of loop,","so you can't control it at the same time",fontSize=1.3)
-                else:
-                    course.dialogTop(6.41,"Name is pretty accurate because","it makes program break out of the loop")
+                course.dialogTop(6.41,"Name is pretty accurate because","it makes program break out of the loop")
                 
                 
                 Write(round(size_w/100*2),"Normal while loop",red,[size_w/2.75,size_h/2.99])
@@ -7616,8 +7623,8 @@ class Course(pygame.sprite.Sprite):
                     SR_icons.append(reward)
                 if SR_holder==0:
                     SR_holder = 1
-                screen.blit(SR_icons[0],[size_w/3.16,size_h/3])
-                name = WriteItalic(round(size_w//100*SR_holder),getName(),darker_gray,[size_w/1.81,size_h/1.63])
+                dgtag = screen.blit(SR_icons[0],[size_w/3.16,size_h/3])
+                name = WriteItalic(round(size_w//100*SR_holder),getName(),darker_gray,[size_w/3.16+dgtag.get_width()*0.65,size_h/3+dgtag.get_height()*0.75])
                 nameRect = name.get_rect()
                 if (nameRect[0]+nameRect[2])<size_w/1.66:
                     SR_holder += 2/len(getName())
@@ -9976,6 +9983,7 @@ class Course(pygame.sprite.Sprite):
                 if quest.collidepoint(mouse_pos):
                     courseLvl += 1
                     done = True
+                    storedCords.clear()
 
                 WriteItalic(round(size_w//100*9),"?",purple,[size_w/1.4,size_h/3.88])
             elif courseLvl == 2:
@@ -9993,6 +10001,7 @@ class Course(pygame.sprite.Sprite):
 
                 course.shadowWrite("Text Files",pos=[size_w/1.85,size_h/1.53],rect=False,txtCol=red)
             elif courseLvl == 3:
+
                 notBlocked = False
                 strs = [
                     "Let's get straight to this, we will",
@@ -10137,6 +10146,9 @@ class Course(pygame.sprite.Sprite):
                     notBlocked = True
                 else:
                     notBlocked = False
+
+                Write(round(size_w//100*1.5),"(Click)",orange,[size_w/3.54,size_h/2.67])
+                Write(round(size_w//100*1.5),"(Click)",orange,[size_w/1.25,size_h/2.67])
 
                 pygame.draw.circle(screen, orange, [size_w/3.85,size_h/1.32], size_w//80, size_w//800)
                 WriteItalic(round(size_w//100*1.2),"i",orange,[size_w/3.85,size_h/1.32])
