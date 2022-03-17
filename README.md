@@ -1,6 +1,9 @@
 # VortexPLP
 VortexPLP is an application made to help learning Python in more interactive and creative way.
 
+Supported Operating Systems:
+-Windows 10
+
 # Features:
 1. Course section separated in 9 lessons: 
    - Installation, IDEs etc.
