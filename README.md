@@ -10,7 +10,7 @@ Supported Operating System: Windows 10
 
 &emsp; ![Home](https://github.com/Dunno358/Pictures/blob/main/lessons.png?raw=true)
 
-&emsp; ![Home](https://github.com/Dunno358/Pictures/blob/main/dialog.png?raw=true) ![Home](https://github.com/Dunno358/Pictures/blob/main/game.png?raw=true) ![Home](https://github.com/Dunno358/Pictures/blob/main/game_console.png?raw=true)
+![Home](https://github.com/Dunno358/Pictures/blob/main/dialog.png?raw=true) ![Home](https://github.com/Dunno358/Pictures/blob/main/game.png?raw=true) ![Home](https://github.com/Dunno358/Pictures/blob/main/game_console.png?raw=true)
 
    - Installation, IDEs etc. 
    - Variables
